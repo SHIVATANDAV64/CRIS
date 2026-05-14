@@ -1,5 +1,9 @@
 """
-Build Search Index — Populate SQLite FTS5 index from wiki entries.
+Build Search Index — Populate SQLite FTS5 index from wiki source AND concept pages.
+
+Indexes both:
+- Source pages (data/wiki/sources/*.md) — per-paper summaries
+- Concept pages (data/wiki/concepts/*.md) — cross-paper aggregations
 
 Usage:
     python scripts/build_index.py
@@ -13,11 +17,11 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from rich.console import Console
 from config.settings import WIKI_DIR, RAW_DIR, DB_PATH
 from core.search_engine import create_index, add_entry, get_stats
 
-console = Console()
+SOURCES_DIR = WIKI_DIR / "sources"
+CONCEPTS_DIR = WIKI_DIR / "concepts"
 
 
 def find_paper_metadata(arxiv_id: str) -> dict:
@@ -37,22 +41,23 @@ def main():
     parser.add_argument("--rebuild", action="store_true", help="Delete and rebuild index from scratch")
     args = parser.parse_args()
 
-    console.print(f"\n[bold cyan]=== CRIS Index Builder ===[/bold cyan]")
+    print("\n=== CRIS Index Builder ===")
 
     # Rebuild if requested
     if args.rebuild and DB_PATH.exists():
         DB_PATH.unlink()
-        console.print("[yellow]Deleted existing index[/yellow]")
+        print("Deleted existing index")
 
     # Create/verify index tables
     create_index()
 
-    # Process all wiki entries
-    wiki_files = sorted(WIKI_DIR.glob("*.md"))
-    console.print(f"Wiki entries found: {len(wiki_files)}")
-
     indexed = 0
-    for wiki_file in wiki_files:
+
+    # --- Index source pages ---
+    source_files = sorted(SOURCES_DIR.glob("*.md")) if SOURCES_DIR.exists() else []
+    print(f"Source pages found: {len(source_files)}")
+
+    for wiki_file in source_files:
         arxiv_id = wiki_file.stem.replace("_", "/")
         wiki_content = wiki_file.read_text(encoding="utf-8")
 
@@ -71,11 +76,29 @@ def main():
         )
         indexed += 1
 
+    # --- Index concept pages ---
+    concept_files = sorted(CONCEPTS_DIR.glob("*.md")) if CONCEPTS_DIR.exists() else []
+    print(f"Concept pages found: {len(concept_files)}")
+
+    for concept_file in concept_files:
+        concept_name = concept_file.stem.replace("_", " ")
+        content = concept_file.read_text(encoding="utf-8")
+
+        # Use concept: prefix to distinguish from source pages
+        add_entry(
+            arxiv_id=f"concept:{concept_file.stem}",
+            title=concept_name,
+            wiki_content=content,
+            categories="concept",
+            date_published="",
+        )
+        indexed += 1
+
     # Print stats
     stats = get_stats()
-    console.print(f"\n[bold green]=== Index Built ===[/bold green]")
-    console.print(f"Total indexed: {stats['total_papers']}")
-    console.print(f"Contribution types: {stats['contribution_types']}")
+    print(f"\n=== Index Built ===")
+    print(f"Total indexed: {stats['total_papers']} ({len(source_files)} sources + {len(concept_files)} concepts)")
+    print(f"Contribution types: {stats['contribution_types']}")
 
 
 if __name__ == "__main__":
