@@ -1,0 +1,21 @@
+# CRIS - Cross-Domain Research Intelligence System
+# Core dependencies
+
+# arXiv paper ingestion
+sickle>=0.7.0
+
+# LLM APIs (OpenRouter - OpenAI compatible)
+openai>=1.30.0
+
+# Local LLM inference
+llama-cpp-python>=0.3.0
+
+# Web server
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+jinja2>=3.1.0
+
+# Utilities
+python-dotenv>=1.0.0
+huggingface-hub>=0.25.0
+rich>=13.0.0
