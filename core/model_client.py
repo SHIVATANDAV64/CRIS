@@ -1,12 +1,12 @@
 """
-Model Client — Unified interface for zira-researcher inference.
-Supports both Modal.com (remote T4) and local GGUF fallback.
-Uses OpenAI-compatible API for both modes.
+Model Client — Unified interface for research reasoning inference.
+Supports three modes with automatic fallback:
+  1. Modal.com (remote T4 GPU) — primary, best quality
+  2. OpenRouter (Ring-2.6-1T, free) — fallback when Modal is unavailable
+  3. Local GGUF — offline fallback for consumer GPUs
 """
 import re
 from typing import Optional
-
-from rich.console import Console
 
 from config.settings import (
     MODAL_ENDPOINT_URL,
@@ -18,19 +18,18 @@ from config.settings import (
     LOCAL_MODEL_PATH,
     LOCAL_N_GPU_LAYERS,
     LOCAL_N_CTX,
+    OPENROUTER_API_KEY,
+    OPENROUTER_BASE_URL,
+    COMPILER_MODEL,
 )
 from config.prompts import CHAT_SYSTEM, CHAT_CONTEXT_TEMPLATE
-
-console = Console()
 
 
 class ModelClient:
     """
-    Unified client for zira-researcher inference.
+    Unified client for research reasoning inference.
 
-    Supports two modes:
-    - Modal.com: Remote T4 GPU via OpenAI-compatible API (recommended)
-    - Local: GGUF via llama-cpp-python (fallback for consumer GPUs)
+    Fallback chain: Modal → OpenRouter → Local GGUF → Search-only
     """
 
     def __init__(self, mode: Optional[str] = None):
@@ -38,21 +37,31 @@ class ModelClient:
         Initialize the model client.
 
         Args:
-            mode: 'modal', 'local', or None (auto-detect from config)
+            mode: 'modal', 'openrouter', 'local', or None (auto-detect)
         """
         if mode is None:
-            mode = "local" if USE_LOCAL_MODEL else "modal"
+            if USE_LOCAL_MODEL:
+                mode = "local"
+            elif MODAL_ENDPOINT_URL:
+                mode = "modal"
+            elif OPENROUTER_API_KEY:
+                mode = "openrouter"
+            else:
+                mode = "openrouter"  # default
 
         self.mode = mode
         self._local_model = None
         self._remote_client = None
+        self._openrouter_client = None
 
         if mode == "modal":
             self._init_modal()
+        elif mode == "openrouter":
+            self._init_openrouter()
         elif mode == "local":
             self._init_local()
         else:
-            raise ValueError(f"Unknown mode: {mode}. Use 'modal' or 'local'.")
+            raise ValueError(f"Unknown mode: {mode}. Use 'modal', 'openrouter', or 'local'.")
 
     def _init_modal(self):
         """Initialize Modal.com remote client."""
@@ -66,9 +75,26 @@ class ModelClient:
 
         self._remote_client = OpenAI(
             base_url=MODAL_ENDPOINT_URL,
-            api_key="not-needed",  # Modal uses its own auth
+            api_key="not-needed",
         )
-        console.print("[green]Connected to Modal.com endpoint[/green]")
+        print("[model_client] Connected to Modal.com endpoint")
+
+    def _init_openrouter(self):
+        """Initialize OpenRouter client for reasoning fallback."""
+        from openai import OpenAI
+
+        if not OPENROUTER_API_KEY:
+            raise ValueError("OPENROUTER_API_KEY not set in .env.")
+
+        self._openrouter_client = OpenAI(
+            base_url=OPENROUTER_BASE_URL,
+            api_key=OPENROUTER_API_KEY,
+            default_headers={
+                "HTTP-Referer": "https://github.com/cris-research",
+                "X-Title": "CRIS - Cross-Domain Research Intelligence System",
+            },
+        )
+        print(f"[model_client] Connected to OpenRouter ({COMPILER_MODEL})")
 
     def _init_local(self):
         """Initialize local GGUF model."""
@@ -87,37 +113,40 @@ class ModelClient:
                 "Download with: python scripts/setup_model.py"
             )
 
-        console.print(f"[cyan]Loading local model: {model_path}...[/cyan]")
+        print(f"[model_client] Loading local model: {model_path}...")
         self._local_model = Llama(
             model_path=model_path,
             n_gpu_layers=LOCAL_N_GPU_LAYERS,
             n_ctx=LOCAL_N_CTX,
             verbose=False,
         )
-        console.print("[green]Local model loaded[/green]")
+        print("[model_client] Local model loaded")
 
     def generate(
         self,
         user_message: str,
         wiki_context: Optional[list[dict]] = None,
         system_prompt: Optional[str] = None,
+        conversation_history: str = "",
     ) -> dict:
         """
-        Generate a response using zira-researcher.
+        Generate a response using the reasoning model.
 
         Args:
             user_message: The user's research question
             wiki_context: List of wiki entry dicts to include as context
             system_prompt: Override the default system prompt
+            conversation_history: Formatted conversation history string
 
         Returns:
-            Dict with 'response', 'thinking' (if available), 'tokens_used'
+            Dict with 'response', 'thinking' (if available), 'tokens_used', 'mode'
         """
-        # Build the full prompt with wiki context
         sys_prompt = system_prompt or CHAT_SYSTEM
 
+        # Build the full prompt with wiki context + conversation history
+        full_user_message = ""
+
         if wiki_context:
-            # Format wiki entries as numbered context
             entries_text = ""
             for i, entry in enumerate(wiki_context, 1):
                 entries_text += f"\n### Entry {i}: {entry.get('title', 'Unknown')}\n"
@@ -126,12 +155,31 @@ class ModelClient:
                 entries_text += "---\n"
 
             context_block = CHAT_CONTEXT_TEMPLATE.format(wiki_entries=entries_text)
-            full_user_message = context_block + "\n\n" + user_message
-        else:
-            full_user_message = user_message
+            full_user_message = context_block + "\n\n"
 
+        # Add conversation history if available
+        if conversation_history:
+            full_user_message += conversation_history + "\n\n"
+
+        full_user_message += user_message
+
+        # Try primary mode, fall back if it fails
         if self.mode == "modal":
-            return self._generate_modal(sys_prompt, full_user_message)
+            result = self._generate_modal(sys_prompt, full_user_message)
+            if "Error" not in result["response"] or "error" not in result["response"].lower():
+                return result
+            # Modal failed — try OpenRouter fallback
+            print("[model_client] Modal failed, falling back to OpenRouter...")
+            if not self._openrouter_client:
+                try:
+                    self._init_openrouter()
+                except Exception:
+                    return result  # Return the Modal error if OpenRouter also fails
+            return self._generate_openrouter(sys_prompt, full_user_message)
+
+        elif self.mode == "openrouter":
+            return self._generate_openrouter(sys_prompt, full_user_message)
+
         else:
             return self._generate_local(sys_prompt, full_user_message)
 
@@ -160,12 +208,47 @@ class ModelClient:
             }
 
         except Exception as e:
-            console.print(f"[red]Modal inference error: {e}[/red]")
+            print(f"[model_client] Modal inference error: {e}")
             return {
                 "response": f"Error generating response: {str(e)}",
                 "thinking": "",
                 "tokens_used": 0,
                 "mode": "modal",
+            }
+
+    def _generate_openrouter(self, system_prompt: str, user_message: str) -> dict:
+        """Generate response via OpenRouter (free fallback)."""
+        try:
+            if not self._openrouter_client:
+                self._init_openrouter()
+
+            response = self._openrouter_client.chat.completions.create(
+                model=COMPILER_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message},
+                ],
+                max_tokens=REASONING_MAX_TOKENS,
+                temperature=REASONING_TEMPERATURE,
+            )
+
+            content = response.choices[0].message.content or ""
+            thinking, answer = self._parse_thinking(content)
+
+            return {
+                "response": answer,
+                "thinking": thinking,
+                "tokens_used": response.usage.total_tokens if response.usage else 0,
+                "mode": "openrouter",
+            }
+
+        except Exception as e:
+            print(f"[model_client] OpenRouter inference error: {e}")
+            return {
+                "response": f"Error generating response: {str(e)}",
+                "thinking": "",
+                "tokens_used": 0,
+                "mode": "openrouter",
             }
 
     def _generate_local(self, system_prompt: str, user_message: str) -> dict:
@@ -197,7 +280,7 @@ class ModelClient:
             }
 
         except Exception as e:
-            console.print(f"[red]Local inference error: {e}[/red]")
+            print(f"[model_client] Local inference error: {e}")
             return {
                 "response": f"Error generating response: {str(e)}",
                 "thinking": "",
@@ -207,7 +290,7 @@ class ModelClient:
 
     def _parse_thinking(self, content: str) -> tuple[str, str]:
         """
-        Parse zira-researcher's <think>...</think> blocks.
+        Parse <think>...</think> blocks from reasoning models.
 
         Returns:
             (thinking_text, answer_text) tuple

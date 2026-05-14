@@ -5,7 +5,9 @@ Run with:
     python -m uvicorn server.app:app --reload --port 8000
 """
 import sys
+import uuid
 from pathlib import Path
+from datetime import datetime
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -15,6 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from typing import Optional
 
 from config.settings import SERVER_HOST, SERVER_PORT, CONTEXT_ENTRIES_LIMIT
 from core.search_engine import search, get_stats, create_index, get_all_entries
@@ -39,6 +42,45 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 # Lazy-loaded model client (initialized on first request)
 _model_client = None
 
+# ── Conversation Memory (In-Memory Store) ────────────────────────────────
+# Stores conversation history per session. Each session has a list of
+# {role, content} message dicts. This gives the AI context for follow-ups.
+_conversations: dict[str, list[dict]] = {}
+MAX_HISTORY_MESSAGES = 20  # Keep last N messages per session to manage context size
+
+
+def get_conversation(session_id: str) -> list[dict]:
+    """Get or create a conversation history for a session."""
+    if session_id not in _conversations:
+        _conversations[session_id] = []
+    return _conversations[session_id]
+
+
+def add_to_conversation(session_id: str, role: str, content: str):
+    """Add a message to conversation history."""
+    history = get_conversation(session_id)
+    history.append({"role": role, "content": content, "timestamp": datetime.now().isoformat()})
+    # Trim to keep memory bounded
+    if len(history) > MAX_HISTORY_MESSAGES:
+        _conversations[session_id] = history[-MAX_HISTORY_MESSAGES:]
+
+
+def format_history_for_prompt(session_id: str) -> str:
+    """Format recent conversation history as context for the model."""
+    history = get_conversation(session_id)
+    if not history:
+        return ""
+
+    # Take last 6 messages (3 exchanges) for context
+    recent = history[-6:]
+    lines = ["## Recent Conversation Context", ""]
+    for msg in recent:
+        label = "Researcher" if msg["role"] == "user" else "CRIS"
+        lines.append(f"**{label}:** {msg['content'][:500]}")
+        lines.append("")
+
+    return "\n".join(lines)
+
 
 def get_model_client() -> ModelClient:
     """Lazy-load the model client."""
@@ -56,7 +98,8 @@ def get_model_client() -> ModelClient:
 
 class ChatRequest(BaseModel):
     message: str
-    use_reasoning: bool = True  # Whether to use zira-researcher or just search
+    session_id: Optional[str] = None  # For conversation continuity
+    use_reasoning: bool = True
 
 
 class ChatResponse(BaseModel):
@@ -65,6 +108,7 @@ class ChatResponse(BaseModel):
     sources: list[dict] = []
     tokens_used: int = 0
     mode: str = ""
+    session_id: str = ""  # Return session_id so frontend can track it
 
 
 # ── Routes ───────────────────────────────────────────────────────────────
@@ -84,24 +128,36 @@ async def index(request: Request):
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
     """
-    Main chat endpoint.
+    Main chat endpoint with conversation memory.
 
     Flow:
-    1. Search wiki for relevant entries
-    2. Feed context + question to zira-researcher
-    3. Return reasoning + response + citations
+    1. Get/create session for conversation continuity
+    2. Search wiki for relevant entries
+    3. Build context with conversation history + wiki entries
+    4. Feed to reasoning model (Modal → OpenRouter fallback → search-only)
+    5. Store response in conversation history
+    6. Return reasoning + response + citations
     """
     query = req.message.strip()
     if not query:
         return ChatResponse(response="Please ask a research question.")
 
+    # Session management
+    session_id = req.session_id or str(uuid.uuid4())
+
+    # Store user message in history
+    add_to_conversation(session_id, "user", query)
+
     # Step 1: Search wiki for relevant context
     results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
 
     if not results:
+        response_text = "No relevant papers found in the knowledge base. Try a different query, or ingest more papers."
+        add_to_conversation(session_id, "assistant", response_text)
         return ChatResponse(
-            response="No relevant papers found in the knowledge base. Try a different query, or ingest more papers.",
+            response=response_text,
             sources=[],
+            session_id=session_id,
         )
 
     # Format sources for citation
@@ -115,34 +171,45 @@ async def chat(req: ChatRequest):
         for r in results
     ]
 
-    # Step 2: Generate reasoning response (if model available)
+    # Step 2: Build conversation context
+    history_context = format_history_for_prompt(session_id)
+
+    # Step 3: Generate reasoning response
     if req.use_reasoning:
         client = get_model_client()
         if client:
             result = client.generate(
                 user_message=query,
                 wiki_context=results,
+                conversation_history=history_context,
             )
+
+            # Store AI response in history
+            add_to_conversation(session_id, "assistant", result["response"][:500])
+
             return ChatResponse(
                 response=result["response"],
                 thinking=result.get("thinking", ""),
                 sources=sources,
                 tokens_used=result.get("tokens_used", 0),
                 mode=result.get("mode", ""),
+                session_id=session_id,
             )
 
     # Fallback: return search results without reasoning
     summary = f"Found {len(results)} relevant papers:\n\n"
     for i, r in enumerate(results, 1):
         summary += f"**{i}. {r['title']}** ({r['arxiv_id']})\n"
-        # Show first 200 chars of wiki content
         content_preview = r.get("wiki_content", "")[:200]
         summary += f"  {content_preview}...\n\n"
+
+    add_to_conversation(session_id, "assistant", summary[:500])
 
     return ChatResponse(
         response=summary,
         sources=sources,
         mode="search-only",
+        session_id=session_id,
     )
 
 

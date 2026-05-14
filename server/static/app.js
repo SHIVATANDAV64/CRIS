@@ -1,8 +1,11 @@
-// CRIS Chat Interface — Client-side logic
+// CRIS Chat Interface — Client-side logic with conversation memory
 
 const chatMessages = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
+
+// Session ID for conversation continuity
+let sessionId = null;
 
 // ── Load stats on page load ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -66,10 +69,20 @@ async function sendMessage() {
         const resp = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message, use_reasoning: true }),
+            body: JSON.stringify({
+                message,
+                use_reasoning: true,
+                session_id: sessionId,  // Send session ID for conversation continuity
+            }),
         });
 
         const data = await resp.json();
+
+        // Store session ID from server response
+        if (data.session_id) {
+            sessionId = data.session_id;
+        }
+
         removeLoading(loadingId);
         addAssistantMessage(data);
     } catch (e) {
@@ -115,19 +128,25 @@ function addAssistantMessage(data) {
 
     let sourcesHTML = '';
     if (data.sources && data.sources.length > 0) {
-        const chips = data.sources.map(s => {
-            const typeClass = s.contribution_type || '';
-            const typeLabel = s.contribution_type ?
-                `<span class="source-type ${typeClass}">${s.contribution_type}</span>` : '';
-            return `<span class="source-chip">${typeLabel} ${s.arxiv_id}</span>`;
-        }).join('');
+        // Filter out concept: entries for cleaner display
+        const paperSources = data.sources.filter(s => !s.arxiv_id.startsWith('concept:'));
+        const conceptSources = data.sources.filter(s => s.arxiv_id.startsWith('concept:'));
 
-        sourcesHTML = `
-            <div class="sources-section">
-                <div class="sources-title">Sources (${data.sources.length} papers)</div>
-                ${chips}
-            </div>
-        `;
+        if (paperSources.length > 0) {
+            const chips = paperSources.map(s => {
+                const typeClass = s.contribution_type || '';
+                const typeLabel = s.contribution_type ?
+                    `<span class="source-type ${typeClass}">${s.contribution_type}</span>` : '';
+                return `<span class="source-chip">${typeLabel} ${s.arxiv_id}</span>`;
+            }).join('');
+
+            sourcesHTML = `
+                <div class="sources-section">
+                    <div class="sources-title">Sources (${paperSources.length} papers${conceptSources.length > 0 ? `, ${conceptSources.length} concepts` : ''})</div>
+                    ${chips}
+                </div>
+            `;
+        }
     }
 
     const modeLabel = data.mode ? ` • ${data.mode}` : '';

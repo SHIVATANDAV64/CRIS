@@ -12,11 +12,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
 WIKI_DIR = DATA_DIR / "wiki"
+SOURCES_DIR = WIKI_DIR / "sources"
+CONCEPTS_DIR = WIKI_DIR / "concepts"
+ENTITIES_DIR = WIKI_DIR / "entities"
 DB_PATH = DATA_DIR / "cris.db"
 MODELS_DIR = BASE_DIR / "models"
 
 # Ensure directories exist
-for d in [RAW_DIR, WIKI_DIR, MODELS_DIR]:
+for d in [RAW_DIR, WIKI_DIR, SOURCES_DIR, CONCEPTS_DIR, ENTITIES_DIR, MODELS_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
 # ── arXiv Ingestion ────────────────────────────────────────────────────────
