@@ -1,5 +1,5 @@
 """
-Wiki Compiler — Uses MiniMax M2.5 (Amazon Bedrock) to compile paper metadata
+Wiki Compiler — Uses zira-researcher (Modal.com) to compile paper metadata
 into structured wiki entries for cross-domain discovery.
 """
 import time
@@ -9,8 +9,7 @@ from openai import OpenAI
 from rich.console import Console
 
 from config.settings import (
-    BEDROCK_API_KEY,
-    BEDROCK_BASE_URL,
+    MODAL_API_URL,
     COMPILER_MODEL,
     COMPILER_MAX_TOKENS,
     COMPILER_TEMPERATURE,
@@ -21,19 +20,12 @@ console = Console()
 
 
 class WikiCompiler:
-    """Compiles paper metadata into structured wiki entries using MiniMax M2.5 on Bedrock."""
+    """Compiles paper metadata into structured wiki entries using zira-researcher on Modal."""
 
-    def __init__(self, api_key: Optional[str] = None):
-        key = api_key or BEDROCK_API_KEY
-        if not key:
-            raise ValueError(
-                "BEDROCK_API_KEY not set. Add it to your .env file.\n"
-                "Get a key from: https://console.aws.amazon.com/bedrock/"
-            )
-
+    def __init__(self):
         self.client = OpenAI(
-            base_url=BEDROCK_BASE_URL,
-            api_key=key,
+            base_url=MODAL_API_URL,
+            api_key="not-needed",
         )
         self.model = COMPILER_MODEL
 
@@ -67,8 +59,7 @@ class WikiCompiler:
 
         for attempt in range(max_retries):
             try:
-                # Use streaming since Bedrock has streaming enabled
-                stream = self.client.chat.completions.create(
+                response = self.client.chat.completions.create(
                     model=self.model,
                     messages=[
                         {"role": "system", "content": WIKI_COMPILER_SYSTEM},
@@ -76,16 +67,9 @@ class WikiCompiler:
                     ],
                     max_tokens=COMPILER_MAX_TOKENS,
                     temperature=COMPILER_TEMPERATURE,
-                    stream=True,
                 )
 
-                # Collect streamed chunks into full response
-                content_parts = []
-                for chunk in stream:
-                    if chunk.choices and chunk.choices[0].delta.content:
-                        content_parts.append(chunk.choices[0].delta.content)
-
-                content = "".join(content_parts)
+                content = response.choices[0].message.content or ""
                 if not content:
                     console.print(f"[yellow]Empty response for {paper.get('arxiv_id')}[/yellow]")
                     return None
@@ -144,4 +128,3 @@ class WikiCompiler:
 
         console.print(f"\n[green]Compiled {len(results)}/{len(to_compile)} papers successfully[/green]")
         return results
-

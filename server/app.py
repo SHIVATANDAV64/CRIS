@@ -114,7 +114,7 @@ class ChatResponse(BaseModel):
 # ── Routes ───────────────────────────────────────────────────────────────
 
 @app.on_event("startup")
-async def startup():
+async def startup_event():
     """Initialize search index on startup."""
     create_index()
 
@@ -122,7 +122,7 @@ async def startup():
 @app.get("/")
 async def index(request: Request):
     """Serve the chat interface."""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 
 @app.post("/api/chat", response_model=ChatResponse)
