@@ -38,27 +38,27 @@ ARXIV_CATEGORIES = [
     "q-bio.BM",
 ]
 
-# ── Wiki Compilation (OpenRouter — Ring-2.6-1T free) ──────────────────────
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
-OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
-COMPILER_MODEL = "inclusionai/ring-2.6-1t:free"
+# ── Amazon Bedrock (MiniMax M2.5 via OpenAI-compatible endpoint) ──────────
+# API key: Generate a long-term API key from the Amazon Bedrock console.
+# Region: The AWS region where MiniMax M2.5 is enabled (us-east-1, us-west-2, etc.)
+# Endpoint: Built automatically from region → https://bedrock-mantle.{region}.api.aws/v1
+BEDROCK_API_KEY = os.getenv("BEDROCK_API_KEY", "")
+BEDROCK_REGION = os.getenv("BEDROCK_REGION", "us-east-1")
+BEDROCK_BASE_URL = f"https://bedrock-mantle.{BEDROCK_REGION}.api.aws/v1"
+
+# Model identifier on Amazon Bedrock
+BEDROCK_MODEL = "minimax.minimax-m2.5"
+
+# ── Wiki Compilation Settings (uses Bedrock MiniMax M2.5) ─────────────────
+COMPILER_MODEL = BEDROCK_MODEL
 COMPILER_MAX_TOKENS = 4096
 COMPILER_TEMPERATURE = 0.7
 
-# ── Reasoning Model (zira-researcher on Modal.com) ────────────────────────
-# Modal endpoint URL — set after deploying with `modal deploy`
-MODAL_ENDPOINT_URL = os.getenv("MODAL_ENDPOINT_URL", "")
-
-# Model identifiers
-REASONING_MODEL_HF = "0xvoid0000/zira-researcher"
-REASONING_MODEL_GGUF = "mradermacher/zira-researcher-GGUF"
-REASONING_MODEL_ID = "0xvoid0000/zira-researcher"
-
-# Inference settings for zira-researcher
+# ── Reasoning / Chat Settings (uses Bedrock MiniMax M2.5) ─────────────────
+REASONING_MODEL_ID = BEDROCK_MODEL
 REASONING_MAX_TOKENS = 8192
-REASONING_TEMPERATURE = 1.0
+REASONING_TEMPERATURE = 0.7
 REASONING_TOP_P = 0.95
-REASONING_TOP_K = 20
 
 # ── Local Fallback (if running locally on GPU) ────────────────────────────
 LOCAL_MODEL_PATH = MODELS_DIR / "zira-researcher-Q4_K_M.gguf"

@@ -11,7 +11,7 @@ An AI-powered research intelligence system that ingests scientific papers from a
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
 │   arXiv (OAI)   │────▶│  Wiki Compiler   │────▶│  Knowledge Wiki │
-│   Raw Papers    │     │  (OpenRouter AI)  │     │  sources/       │
+│   Raw Papers    │     │  (Amazon Bedrock) │     │  sources/       │
 │   data/raw/     │     │                  │     │  concepts/      │
 └─────────────────┘     └──────────────────┘     │  index.md       │
                                                   └────────┬────────┘
@@ -23,7 +23,7 @@ An AI-powered research intelligence system that ingests scientific papers from a
                                                            │
 ┌─────────────────┐     ┌──────────────────┐     ┌────────▼────────┐
 │   Web Browser   │◀───▶│   FastAPI Server  │◀───▶│  Reasoning AI   │
-│   Chat UI       │     │   localhost:8000  │     │  Modal/OpenRouter│
+│   Chat UI       │     │   localhost:8000  │     │  Amazon Bedrock  │
 └─────────────────┘     └──────────────────┘     └─────────────────┘
 ```
 
@@ -52,8 +52,7 @@ data/wiki/
 ### Prerequisites
 
 - Python 3.10+
-- An [OpenRouter API key](https://openrouter.ai/settings/keys) (free)
-- Optional: [Modal.com account](https://modal.com) for GPU inference
+- An [Amazon Bedrock API key](https://console.aws.amazon.com/bedrock/) with MiniMax M2.5 model access enabled
 
 ### 1. Install dependencies
 
@@ -66,9 +65,8 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```env
-OPENROUTER_API_KEY=your_key_here
-MODAL_ENDPOINT_URL=         # Optional — leave blank to use OpenRouter for reasoning
-USE_LOCAL_MODEL=false
+BEDROCK_API_KEY=your_bedrock_api_key_here
+BEDROCK_REGION=us-east-1
 ```
 
 ### 3. Ingest papers from arXiv
@@ -107,8 +105,8 @@ Open `http://127.0.0.1:8000` in your browser.
 | Backend & API | Python, FastAPI, Uvicorn |
 | Data Ingestion | Sickle (OAI-PMH) |
 | Database & Search | SQLite3 + FTS5 (BM25 ranking) |
-| Wiki Compilation | OpenRouter API (Ring-2.6-1T) |
-| Reasoning Inference | Modal.com (vLLM) / OpenRouter (fallback) |
+| Wiki Compilation | Amazon Bedrock (MiniMax M2.5) |
+| Reasoning Inference | Amazon Bedrock (MiniMax M2.5) |
 | Frontend | HTML5, CSS3, JavaScript |
 
 ---

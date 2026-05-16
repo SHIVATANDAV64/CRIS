@@ -1,7 +1,7 @@
 """
 build_wiki.py — Builds the Karpathy-style LLM Wiki structure from existing source pages.
 
-This script uses ACTUAL LLM calls (OpenRouter) to generate proper concept page synthesis,
+This script uses ACTUAL LLM calls (Amazon Bedrock) to generate proper concept page synthesis,
 not mechanical regex extraction. Each concept page is written by the LLM after reading
 all source pages that reference that concept.
 
@@ -129,22 +129,18 @@ def normalize_concept_name(name: str) -> str:
 
 
 def build_concept_pages_with_llm(sources: list[dict], delay: float = 3.0) -> dict:
-    """Build concept pages using actual LLM synthesis via OpenRouter."""
+    """Build concept pages using actual LLM synthesis via Amazon Bedrock."""
     from openai import OpenAI
-    from config.settings import OPENROUTER_API_KEY, OPENROUTER_BASE_URL, COMPILER_MODEL
+    from config.settings import BEDROCK_API_KEY, BEDROCK_BASE_URL, COMPILER_MODEL
 
-    if not OPENROUTER_API_KEY:
-        print("  ERROR: OPENROUTER_API_KEY not set. Cannot synthesize concept pages.")
+    if not BEDROCK_API_KEY:
+        print("  ERROR: BEDROCK_API_KEY not set. Cannot synthesize concept pages.")
         print("  Falling back to structural-only concept pages.")
         return build_concept_pages_structural(sources)
 
     client = OpenAI(
-        base_url=OPENROUTER_BASE_URL,
-        api_key=OPENROUTER_API_KEY,
-        default_headers={
-            "HTTP-Referer": "https://github.com/cris-research",
-            "X-Title": "CRIS Wiki Builder",
-        },
+        base_url=BEDROCK_BASE_URL,
+        api_key=BEDROCK_API_KEY,
     )
 
     # Collect all concepts and which papers reference them
@@ -175,15 +171,24 @@ def build_concept_pages_with_llm(sources: list[dict], delay: float = 3.0) -> dic
         )
 
         try:
-            response = client.chat.completions.create(
+            # Use streaming since Bedrock has streaming enabled
+            stream = client.chat.completions.create(
                 model=COMPILER_MODEL,
                 messages=[
                     {"role": "user", "content": prompt},
                 ],
                 max_tokens=2048,
                 temperature=0.7,
+                stream=True,
             )
-            content = response.choices[0].message.content or ""
+
+            # Collect streamed chunks
+            content_parts = []
+            for chunk in stream:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    content_parts.append(chunk.choices[0].delta.content)
+
+            content = "".join(content_parts)
             concept_pages[concept_name] = content.strip()
         except Exception as e:
             print(f"    ERROR: {e}")
@@ -333,7 +338,7 @@ def main():
             print("  Using structural fallback (no LLM)...")
             concept_pages = build_concept_pages_structural(sources)
         else:
-            print("  Using LLM synthesis via OpenRouter...")
+            print("  Using LLM synthesis via Amazon Bedrock...")
             concept_pages = build_concept_pages_with_llm(sources, delay=args.delay)
 
         print(f"  Generated {len(concept_pages)} concept pages.")
