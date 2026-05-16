@@ -129,18 +129,13 @@ def normalize_concept_name(name: str) -> str:
 
 
 def build_concept_pages_with_llm(sources: list[dict], delay: float = 3.0) -> dict:
-    """Build concept pages using actual LLM synthesis via Amazon Bedrock."""
+    """Build concept pages using actual LLM synthesis via Modal (zira-researcher)."""
     from openai import OpenAI
-    from config.settings import BEDROCK_API_KEY, BEDROCK_BASE_URL, COMPILER_MODEL
-
-    if not BEDROCK_API_KEY:
-        print("  ERROR: BEDROCK_API_KEY not set. Cannot synthesize concept pages.")
-        print("  Falling back to structural-only concept pages.")
-        return build_concept_pages_structural(sources)
+    from config.settings import MODAL_API_URL, COMPILER_MODEL
 
     client = OpenAI(
-        base_url=BEDROCK_BASE_URL,
-        api_key=BEDROCK_API_KEY,
+        base_url=MODAL_API_URL,
+        api_key="not-needed",
     )
 
     # Collect all concepts and which papers reference them
