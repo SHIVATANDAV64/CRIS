@@ -20,7 +20,7 @@ from datetime import datetime
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from config.settings import RAW_DIR, WIKI_DIR, OPENROUTER_API_KEY
+from config.settings import RAW_DIR, WIKI_DIR, BEDROCK_API_KEY
 from core.wiki_compiler import WikiCompiler
 from core.arxiv_client import load_papers
 
@@ -64,9 +64,9 @@ def main():
     args = parser.parse_args()
 
     # Check API key
-    if not OPENROUTER_API_KEY or OPENROUTER_API_KEY == "your_openrouter_api_key_here":
-        print("Error: Set OPENROUTER_API_KEY in .env file")
-        print("Get a free key from: https://openrouter.ai/settings/keys")
+    if not BEDROCK_API_KEY:
+        print("Error: Set BEDROCK_API_KEY in .env file")
+        print("Get a key from: https://console.aws.amazon.com/bedrock/")
         sys.exit(1)
 
     print("\n=== CRIS Wiki Compilation ===")

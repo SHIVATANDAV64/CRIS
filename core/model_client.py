@@ -1,15 +1,15 @@
 """
 Model Client — Unified interface for research reasoning inference.
-Supports three modes with automatic fallback:
-  1. Modal.com (remote T4 GPU) — primary, best quality
-  2. OpenRouter (Ring-2.6-1T, free) — fallback when Modal is unavailable
-  3. Local GGUF — offline fallback for consumer GPUs
+Supports two modes with automatic fallback:
+  1. Amazon Bedrock (MiniMax M2.5) — primary, cloud inference
+  2. Local GGUF — offline fallback for consumer GPUs
 """
 import re
 from typing import Optional
 
 from config.settings import (
-    MODAL_ENDPOINT_URL,
+    BEDROCK_API_KEY,
+    BEDROCK_BASE_URL,
     REASONING_MODEL_ID,
     REASONING_MAX_TOKENS,
     REASONING_TEMPERATURE,
@@ -18,9 +18,6 @@ from config.settings import (
     LOCAL_MODEL_PATH,
     LOCAL_N_GPU_LAYERS,
     LOCAL_N_CTX,
-    OPENROUTER_API_KEY,
-    OPENROUTER_BASE_URL,
-    COMPILER_MODEL,
 )
 from config.prompts import CHAT_SYSTEM, CHAT_CONTEXT_TEMPLATE
 
@@ -29,7 +26,7 @@ class ModelClient:
     """
     Unified client for research reasoning inference.
 
-    Fallback chain: Modal → OpenRouter → Local GGUF → Search-only
+    Fallback chain: Amazon Bedrock → Local GGUF → Search-only
     """
 
     def __init__(self, mode: Optional[str] = None):
@@ -37,64 +34,42 @@ class ModelClient:
         Initialize the model client.
 
         Args:
-            mode: 'modal', 'openrouter', 'local', or None (auto-detect)
+            mode: 'bedrock', 'local', or None (auto-detect)
         """
         if mode is None:
             if USE_LOCAL_MODEL:
                 mode = "local"
-            elif MODAL_ENDPOINT_URL:
-                mode = "modal"
-            elif OPENROUTER_API_KEY:
-                mode = "openrouter"
+            elif BEDROCK_API_KEY:
+                mode = "bedrock"
             else:
-                mode = "openrouter"  # default
+                mode = "bedrock"  # default — will error with helpful message
 
         self.mode = mode
         self._local_model = None
-        self._remote_client = None
-        self._openrouter_client = None
+        self._bedrock_client = None
 
-        if mode == "modal":
-            self._init_modal()
-        elif mode == "openrouter":
-            self._init_openrouter()
+        if mode == "bedrock":
+            self._init_bedrock()
         elif mode == "local":
             self._init_local()
         else:
-            raise ValueError(f"Unknown mode: {mode}. Use 'modal', 'openrouter', or 'local'.")
+            raise ValueError(f"Unknown mode: {mode}. Use 'bedrock' or 'local'.")
 
-    def _init_modal(self):
-        """Initialize Modal.com remote client."""
+    def _init_bedrock(self):
+        """Initialize Amazon Bedrock client via OpenAI-compatible endpoint."""
         from openai import OpenAI
 
-        if not MODAL_ENDPOINT_URL:
+        if not BEDROCK_API_KEY:
             raise ValueError(
-                "MODAL_ENDPOINT_URL not set in .env. "
-                "Deploy the model first with: modal deploy modal_deploy/serve_model.py"
+                "BEDROCK_API_KEY not set in .env.\n"
+                "Get a long-term API key from: https://console.aws.amazon.com/bedrock/"
             )
 
-        self._remote_client = OpenAI(
-            base_url=MODAL_ENDPOINT_URL,
-            api_key="not-needed",
+        self._bedrock_client = OpenAI(
+            base_url=BEDROCK_BASE_URL,
+            api_key=BEDROCK_API_KEY,
         )
-        print("[model_client] Connected to Modal.com endpoint")
-
-    def _init_openrouter(self):
-        """Initialize OpenRouter client for reasoning fallback."""
-        from openai import OpenAI
-
-        if not OPENROUTER_API_KEY:
-            raise ValueError("OPENROUTER_API_KEY not set in .env.")
-
-        self._openrouter_client = OpenAI(
-            base_url=OPENROUTER_BASE_URL,
-            api_key=OPENROUTER_API_KEY,
-            default_headers={
-                "HTTP-Referer": "https://github.com/cris-research",
-                "X-Title": "CRIS - Cross-Domain Research Intelligence System",
-            },
-        )
-        print(f"[model_client] Connected to OpenRouter ({COMPILER_MODEL})")
+        print(f"[model_client] Connected to Amazon Bedrock ({REASONING_MODEL_ID})")
 
     def _init_local(self):
         """Initialize local GGUF model."""
@@ -164,29 +139,23 @@ class ModelClient:
         full_user_message += user_message
 
         # Try primary mode, fall back if it fails
-        if self.mode == "modal":
-            result = self._generate_modal(sys_prompt, full_user_message)
-            if "Error" not in result["response"] or "error" not in result["response"].lower():
+        if self.mode == "bedrock":
+            result = self._generate_bedrock(sys_prompt, full_user_message)
+            if not result.get("_error"):
                 return result
-            # Modal failed — try OpenRouter fallback
-            print("[model_client] Modal failed, falling back to OpenRouter...")
-            if not self._openrouter_client:
-                try:
-                    self._init_openrouter()
-                except Exception:
-                    return result  # Return the Modal error if OpenRouter also fails
-            return self._generate_openrouter(sys_prompt, full_user_message)
-
-        elif self.mode == "openrouter":
-            return self._generate_openrouter(sys_prompt, full_user_message)
-
+            # Bedrock failed — try local fallback if available
+            print("[model_client] Bedrock failed, checking for local fallback...")
+            if self._local_model:
+                return self._generate_local(sys_prompt, full_user_message)
+            return result
         else:
             return self._generate_local(sys_prompt, full_user_message)
 
-    def _generate_modal(self, system_prompt: str, user_message: str) -> dict:
-        """Generate response via Modal.com endpoint."""
+    def _generate_bedrock(self, system_prompt: str, user_message: str) -> dict:
+        """Generate response via Amazon Bedrock (streaming)."""
         try:
-            response = self._remote_client.chat.completions.create(
+            # Use streaming since Bedrock has streaming enabled
+            stream = self._bedrock_client.chat.completions.create(
                 model=REASONING_MODEL_ID,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -195,60 +164,33 @@ class ModelClient:
                 max_tokens=REASONING_MAX_TOKENS,
                 temperature=REASONING_TEMPERATURE,
                 top_p=REASONING_TOP_P,
+                stream=True,
             )
 
-            content = response.choices[0].message.content or ""
+            # Collect streamed chunks into full response
+            content_parts = []
+            for chunk in stream:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    content_parts.append(chunk.choices[0].delta.content)
+
+            content = "".join(content_parts)
             thinking, answer = self._parse_thinking(content)
 
             return {
                 "response": answer,
                 "thinking": thinking,
-                "tokens_used": response.usage.total_tokens if response.usage else 0,
-                "mode": "modal",
+                "tokens_used": 0,  # Token count not available in streaming mode
+                "mode": "bedrock",
             }
 
         except Exception as e:
-            print(f"[model_client] Modal inference error: {e}")
+            print(f"[model_client] Bedrock inference error: {e}")
             return {
                 "response": f"Error generating response: {str(e)}",
                 "thinking": "",
                 "tokens_used": 0,
-                "mode": "modal",
-            }
-
-    def _generate_openrouter(self, system_prompt: str, user_message: str) -> dict:
-        """Generate response via OpenRouter (free fallback)."""
-        try:
-            if not self._openrouter_client:
-                self._init_openrouter()
-
-            response = self._openrouter_client.chat.completions.create(
-                model=COMPILER_MODEL,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_message},
-                ],
-                max_tokens=REASONING_MAX_TOKENS,
-                temperature=REASONING_TEMPERATURE,
-            )
-
-            content = response.choices[0].message.content or ""
-            thinking, answer = self._parse_thinking(content)
-
-            return {
-                "response": answer,
-                "thinking": thinking,
-                "tokens_used": response.usage.total_tokens if response.usage else 0,
-                "mode": "openrouter",
-            }
-
-        except Exception as e:
-            print(f"[model_client] OpenRouter inference error: {e}")
-            return {
-                "response": f"Error generating response: {str(e)}",
-                "thinking": "",
-                "tokens_used": 0,
-                "mode": "openrouter",
+                "mode": "bedrock",
+                "_error": True,
             }
 
     def _generate_local(self, system_prompt: str, user_message: str) -> dict:
@@ -301,3 +243,4 @@ class ModelClient:
             answer = content[think_match.end():].strip()
             return thinking, answer
         return "", content.strip()
+

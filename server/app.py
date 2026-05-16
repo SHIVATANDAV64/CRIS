@@ -134,7 +134,7 @@ async def chat(req: ChatRequest):
     1. Get/create session for conversation continuity
     2. Search wiki for relevant entries
     3. Build context with conversation history + wiki entries
-    4. Feed to reasoning model (Modal → OpenRouter fallback → search-only)
+    4. Feed to reasoning model (Amazon Bedrock → Local fallback → search-only)
     5. Store response in conversation history
     6. Return reasoning + response + citations
     """

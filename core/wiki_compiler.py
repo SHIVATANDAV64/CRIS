@@ -1,5 +1,5 @@
 """
-Wiki Compiler — Uses Ring-2.6-1T (OpenRouter, free) to compile paper metadata
+Wiki Compiler — Uses MiniMax M2.5 (Amazon Bedrock) to compile paper metadata
 into structured wiki entries for cross-domain discovery.
 """
 import time
@@ -9,8 +9,8 @@ from openai import OpenAI
 from rich.console import Console
 
 from config.settings import (
-    OPENROUTER_API_KEY,
-    OPENROUTER_BASE_URL,
+    BEDROCK_API_KEY,
+    BEDROCK_BASE_URL,
     COMPILER_MODEL,
     COMPILER_MAX_TOKENS,
     COMPILER_TEMPERATURE,
@@ -21,16 +21,19 @@ console = Console()
 
 
 class WikiCompiler:
-    """Compiles paper metadata into structured wiki entries using Ring-2.6-1T."""
+    """Compiles paper metadata into structured wiki entries using MiniMax M2.5 on Bedrock."""
 
     def __init__(self, api_key: Optional[str] = None):
+        key = api_key or BEDROCK_API_KEY
+        if not key:
+            raise ValueError(
+                "BEDROCK_API_KEY not set. Add it to your .env file.\n"
+                "Get a key from: https://console.aws.amazon.com/bedrock/"
+            )
+
         self.client = OpenAI(
-            base_url=OPENROUTER_BASE_URL,
-            api_key=api_key or OPENROUTER_API_KEY,
-            default_headers={
-                "HTTP-Referer": "https://github.com/cris-research",
-                "X-Title": "CRIS - Cross-Domain Research Intelligence System",
-            },
+            base_url=BEDROCK_BASE_URL,
+            api_key=key,
         )
         self.model = COMPILER_MODEL
 
@@ -61,10 +64,11 @@ class WikiCompiler:
 
         max_retries = 3
         base_delay = 5.0
-        
+
         for attempt in range(max_retries):
             try:
-                response = self.client.chat.completions.create(
+                # Use streaming since Bedrock has streaming enabled
+                stream = self.client.chat.completions.create(
                     model=self.model,
                     messages=[
                         {"role": "system", "content": WIKI_COMPILER_SYSTEM},
@@ -72,9 +76,16 @@ class WikiCompiler:
                     ],
                     max_tokens=COMPILER_MAX_TOKENS,
                     temperature=COMPILER_TEMPERATURE,
+                    stream=True,
                 )
 
-                content = response.choices[0].message.content
+                # Collect streamed chunks into full response
+                content_parts = []
+                for chunk in stream:
+                    if chunk.choices and chunk.choices[0].delta.content:
+                        content_parts.append(chunk.choices[0].delta.content)
+
+                content = "".join(content_parts)
                 if not content:
                     console.print(f"[yellow]Empty response for {paper.get('arxiv_id')}[/yellow]")
                     return None
@@ -83,9 +94,9 @@ class WikiCompiler:
 
             except Exception as e:
                 error_str = str(e)
-                if "429" in error_str and attempt < max_retries - 1:
+                if ("429" in error_str or "throttl" in error_str.lower()) and attempt < max_retries - 1:
                     sleep_time = base_delay * (2 ** attempt)
-                    console.print(f"    [yellow]Rate limited (429). Retrying in {sleep_time}s...[/yellow]")
+                    console.print(f"    [yellow]Rate limited. Retrying in {sleep_time}s...[/yellow]")
                     time.sleep(sleep_time)
                 else:
                     console.print(f"[red]Compilation error for {paper.get('arxiv_id')}: {e}[/red]")
@@ -127,9 +138,10 @@ class WikiCompiler:
             else:
                 console.print(f"    [red]x Failed[/red]")
 
-            # Rate limiting for free tier
+            # Rate limiting
             if i < len(to_compile) - 1:
                 time.sleep(delay_seconds)
 
         console.print(f"\n[green]Compiled {len(results)}/{len(to_compile)} papers successfully[/green]")
         return results
+

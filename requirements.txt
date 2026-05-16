@@ -4,7 +4,7 @@
 # arXiv paper ingestion
 sickle>=0.7.0
 
-# LLM APIs (OpenRouter - OpenAI compatible)
+# LLM APIs (Amazon Bedrock - OpenAI compatible)
 openai>=1.30.0
 
 # Local LLM inference
