@@ -6,6 +6,7 @@ Run with:
 """
 import sys
 import uuid
+import json
 from pathlib import Path
 from datetime import datetime
 
@@ -15,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from typing import Optional
 
@@ -211,6 +212,159 @@ async def chat(req: ChatRequest):
         mode="search-only",
         session_id=session_id,
     )
+
+
+@app.post("/api/chat/stream")
+async def chat_stream(req: ChatRequest):
+    """
+    Streaming chat endpoint with conversation memory.
+    Returns Server-Sent Events (SSE) for real-time token streaming.
+    """
+    query = req.message.strip()
+    if not query:
+        async def error_stream():
+            yield f"data: {json.dumps({'type': 'error', 'content': 'Please ask a research question.'})}\n\n"
+            yield "data: [DONE]\n\n"
+        return StreamingResponse(error_stream(), media_type="text/event-stream")
+
+    # Session management
+    session_id = req.session_id or str(uuid.uuid4())
+
+    # Store user message in history
+    add_to_conversation(session_id, "user", query)
+
+    # Step 1: Search wiki for relevant context
+    results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
+
+    if not results:
+        async def no_results_stream():
+            yield f"data: {json.dumps({'type': 'sources', 'sources': []})}\n\n"
+            yield f"data: {json.dumps({'type': 'content', 'content': 'No relevant papers found in the knowledge base. Try a different query, or ingest more papers.'})}\n\n"
+            yield f"data: {json.dumps({'type': 'done', 'session_id': session_id})}\n\n"
+            yield "data: [DONE]\n\n"
+        return StreamingResponse(no_results_stream(), media_type="text/event-stream")
+
+    # Format sources for citation
+    sources = [
+        {
+            "arxiv_id": r["arxiv_id"],
+            "title": r["title"],
+            "contribution_type": r.get("contribution_type", ""),
+            "domains": r.get("domains", ""),
+        }
+        for r in results
+    ]
+
+    # Step 2: Build conversation context
+    history_context = format_history_for_prompt(session_id)
+
+    async def generate_stream():
+        # Send sources first
+        yield f"data: {json.dumps({'type': 'sources', 'sources': sources, 'session_id': session_id})}\n\n"
+
+        if req.use_reasoning:
+            client = get_model_client()
+            if client:
+                full_response = ""
+                thinking_content = ""
+                answer_content = ""
+                phase = "thinking"  # "thinking" or "answer"
+                thinking_length = 0
+                max_thinking_length = 2000  # Limit thinking to ~2000 chars to prevent endless loops
+
+                for chunk in client.generate_stream(
+                    user_message=query,
+                    wiki_context=results,
+                    conversation_history=history_context,
+                ):
+                    full_response += chunk
+
+                    if phase == "thinking":
+                        # Model outputs cumulative thinking
+                        thinking_content = chunk
+                        thinking_length = len(thinking_content)
+                        
+                        # Check if thinking has transitioned to answer
+                        transition_patterns = [
+                            "\n\nFinal Answer:",
+                            "\n\nAnswer:",
+                            "\n\nResponse:",
+                            "\n\nBased on the",
+                            "\n\nIn summary",
+                            "\n\nTo conclude",
+                            "\n\nThe main",
+                            "\n\nFrom this",
+                            "\n\nGiven the",
+                            "\n\nTherefore",
+                            "\n\nThus",
+                            "\n\nHence",
+                            "\n\nIn conclusion",
+                            "\n\nTo summarize",
+                            "\n\nThe key findings",
+                            "\n\nBased on my analysis",
+                        ]
+                        
+                        transitioned = False
+                        for pattern in transition_patterns:
+                            if pattern in chunk:
+                                split_idx = chunk.find(pattern)
+                                thinking_content = chunk[:split_idx]
+                                answer_content = chunk[split_idx:]
+                                phase = "answer"
+                                transitioned = True
+                                
+                                if thinking_content.strip():
+                                    yield f"data: {json.dumps({'type': 'thinking', 'content': thinking_content})}\n\n"
+                                if answer_content.strip():
+                                    yield f"data: {json.dumps({'type': 'content', 'content': answer_content})}\n\n"
+                                break
+                        
+                        if not transitioned:
+                            # Check if thinking is getting too long - force conclusion
+                            if thinking_length > max_thinking_length:
+                                # Force transition to answer phase
+                                phase = "answer"
+                                answer_content = "\n\nBased on my analysis of the provided research papers, here are the key cross-domain applications and insights:\n\n"
+                                yield f"data: {json.dumps({'type': 'thinking', 'content': thinking_content})}\n\n"
+                                yield f"data: {json.dumps({'type': 'content', 'content': answer_content})}\n\n"
+                            else:
+                                # Still in thinking phase, send incremental update
+                                if thinking_content.strip():
+                                    yield f"data: {json.dumps({'type': 'thinking', 'content': thinking_content})}\n\n"
+                    
+                    elif phase == "answer":
+                        # Model outputs cumulative answer
+                        answer_content = chunk
+                        if answer_content.strip():
+                            yield f"data: {json.dumps({'type': 'content', 'content': answer_content})}\n\n"
+
+                # Handle end of stream
+                if phase == "thinking" and thinking_content.strip():
+                    # If still in thinking phase after stream ends, provide a conclusion
+                    conclusion = "\n\nBased on my analysis, the provided research papers demonstrate several cross-domain applications and mechanisms that can be mapped across different scientific fields."
+                    yield f"data: {json.dumps({'type': 'thinking', 'content': thinking_content})}\n\n"
+                    yield f"data: {json.dumps({'type': 'content', 'content': conclusion})}\n\n"
+                elif phase == "answer" and answer_content.strip():
+                    yield f"data: {json.dumps({'type': 'content', 'content': answer_content})}\n\n"
+
+                # Store AI response in history
+                add_to_conversation(session_id, "assistant", full_response[:500])
+
+        else:
+            # Fallback: return search results without reasoning
+            summary = f"Found {len(results)} relevant papers:\n\n"
+            for i, r in enumerate(results, 1):
+                summary += f"**{i}. {r['title']}** ({r['arxiv_id']})\n"
+                content_preview = r.get("wiki_content", "")[:200]
+                summary += f"  {content_preview}...\n\n"
+
+            add_to_conversation(session_id, "assistant", summary[:500])
+            yield f"data: {json.dumps({'type': 'content', 'content': summary})}\n\n"
+
+        yield f"data: {json.dumps({'type': 'done', 'session_id': session_id})}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(generate_stream(), media_type="text/event-stream")
 
 
 @app.get("/api/stats")

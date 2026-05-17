@@ -3,8 +3,9 @@ Model Client — Unified interface for research reasoning inference.
 Uses zira-researcher deployed on Modal.com via OpenAI-compatible endpoint.
 """
 import re
+import json
 import requests
-from typing import Optional
+from typing import Optional, Generator
 
 from config.settings import (
     MODAL_API_URL,
@@ -68,6 +69,39 @@ class ModelClient:
 
         return self._generate(sys_prompt, full_user_message)
 
+    def generate_stream(
+        self,
+        user_message: str,
+        wiki_context: Optional[list[dict]] = None,
+        system_prompt: Optional[str] = None,
+        conversation_history: str = "",
+    ) -> Generator[str, None, None]:
+        """
+        Generate a streaming response using the reasoning model.
+        Yields chunks of text as they arrive from the model.
+        """
+        sys_prompt = system_prompt or CHAT_SYSTEM
+
+        full_user_message = ""
+
+        if wiki_context:
+            entries_text = ""
+            for i, entry in enumerate(wiki_context, 1):
+                entries_text += f"\n### Entry {i}: {entry.get('title', 'Unknown')}\n"
+                entries_text += f"**arXiv ID**: {entry.get('arxiv_id', '')}\n"
+                entries_text += entry.get("wiki_content", "") + "\n"
+                entries_text += "---\n"
+
+            context_block = CHAT_CONTEXT_TEMPLATE.format(wiki_entries=entries_text)
+            full_user_message = context_block + "\n\n"
+
+        if conversation_history:
+            full_user_message += conversation_history + "\n\n"
+
+        full_user_message += user_message
+
+        yield from self._generate_stream(sys_prompt, full_user_message)
+
     def _generate(self, system_prompt: str, user_message: str) -> dict:
         """Generate response via Modal endpoint."""
         try:
@@ -108,6 +142,51 @@ class ModelClient:
                 "tokens_used": 0,
                 "mode": "modal",
             }
+
+    def _generate_stream(self, system_prompt: str, user_message: str) -> Generator[str, None, None]:
+        """Generate streaming response via Modal endpoint using SSE."""
+        try:
+            payload = {
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message},
+                ],
+                "max_tokens": REASONING_MAX_TOKENS,
+                "temperature": REASONING_TEMPERATURE,
+                "stream": True,
+            }
+
+            response = requests.post(
+                self._base_url,
+                json=payload,
+                headers={"Content-Type": "application/json", "Accept": "text/event-stream"},
+                stream=True,
+                timeout=300,
+            )
+            response.raise_for_status()
+
+            full_content = ""
+            for line in response.iter_lines():
+                if not line:
+                    continue
+                line = line.decode("utf-8")
+                if line.startswith("data: "):
+                    data_str = line[6:]
+                    if data_str.strip() == "[DONE]":
+                        break
+                    try:
+                        data = json.loads(data_str)
+                        delta = data.get("choices", [{}])[0].get("delta", {})
+                        content = delta.get("content", "")
+                        if content:
+                            full_content += content
+                            yield content
+                    except json.JSONDecodeError:
+                        continue
+
+        except Exception as e:
+            print(f"[model_client] Modal streaming error: {e}")
+            yield f"\n\n[Error: {str(e)}]"
 
     def _parse_thinking(self, content: str) -> tuple[str, str]:
         """
