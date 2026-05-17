@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from config.settings import RAW_DIR, WIKI_DIR, BEDROCK_API_KEY
 from core.wiki_compiler import WikiCompiler
 from core.arxiv_client import load_papers
+from core.domain_manager import get_raw_sources
 
 SOURCES_DIR = WIKI_DIR / "sources"
 LOG_PATH = WIKI_DIR / "log.md"
@@ -31,7 +32,6 @@ LOG_PATH = WIKI_DIR / "log.md"
 def get_existing_wiki_ids() -> set:
     """Get set of arxiv IDs that already have wiki entries in sources/."""
     existing = set()
-    # Check both old location (wiki/*.md) and new (wiki/sources/*.md)
     for f in SOURCES_DIR.glob("*.md"):
         existing.add(f.stem.replace("_", "/"))
     return existing
@@ -63,7 +63,6 @@ def main():
                         help="Rebuild concept pages and index after compilation (default: True)")
     args = parser.parse_args()
 
-    # Check API key
     if not BEDROCK_API_KEY:
         print("Error: Set BEDROCK_API_KEY in .env file")
         print("Get a key from: https://console.aws.amazon.com/bedrock/")
@@ -74,9 +73,15 @@ def main():
     # Gather papers to compile
     papers = []
     if args.all:
-        for date_dir in sorted(RAW_DIR.iterdir()):
-            if date_dir.is_dir():
-                papers.extend(load_papers(date_dir.name))
+        # Load from both old date-based and new domain-based structures
+        raw_sources = get_raw_sources()
+        seen_ids = set()
+        for dg in raw_sources:
+            for cat in dg['categories']:
+                for p in cat['papers']:
+                    if p['arxiv_id'] not in seen_ids:
+                        seen_ids.add(p['arxiv_id'])
+                        papers.append(p)
     elif args.date:
         papers = load_papers(args.date)
     else:
@@ -87,17 +92,14 @@ def main():
         print("No papers found to compile")
         sys.exit(0)
 
-    # Limit if requested
     if args.max:
         papers = papers[:args.max]
 
     print(f"Papers to process: {len(papers)}")
 
-    # Get existing wiki entries to skip
     existing = get_existing_wiki_ids()
     print(f"Already compiled: {len(existing)}")
 
-    # Initialize compiler and run
     compiler = WikiCompiler()
     results = compiler.compile_batch(
         papers,
@@ -105,7 +107,6 @@ def main():
         skip_existing_ids=existing,
     )
 
-    # Save results to sources/
     saved = 0
     for arxiv_id, wiki_content in results.items():
         save_wiki_entry(arxiv_id, wiki_content)
@@ -113,11 +114,9 @@ def main():
 
     print(f"\nSaved {saved} source pages to {SOURCES_DIR}")
 
-    # Log the compilation
     if saved > 0:
         append_to_log(f"Compiled {saved} new source pages")
 
-    # Rebuild full wiki structure (concept pages, index, log)
     if saved > 0 and args.rebuild_wiki:
         print("\nRebuilding wiki structure (concept pages, index)...")
         import subprocess

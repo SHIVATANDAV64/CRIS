@@ -129,13 +129,18 @@ def normalize_concept_name(name: str) -> str:
 
 
 def build_concept_pages_with_llm(sources: list[dict], delay: float = 3.0) -> dict:
-    """Build concept pages using actual LLM synthesis via Modal (zira-researcher)."""
+    """Build concept pages using actual LLM synthesis via Amazon Bedrock."""
     from openai import OpenAI
-    from config.settings import MODAL_API_URL, COMPILER_MODEL
+    from config.settings import BEDROCK_API_KEY, BEDROCK_BASE_URL, COMPILER_MODEL
+
+    if not BEDROCK_API_KEY:
+        print("  ERROR: BEDROCK_API_KEY not set. Cannot synthesize concept pages.")
+        print("  Falling back to structural-only concept pages.")
+        return build_concept_pages_structural(sources)
 
     client = OpenAI(
-        base_url=MODAL_API_URL,
-        api_key="not-needed",
+        base_url=BEDROCK_BASE_URL,
+        api_key=BEDROCK_API_KEY,
     )
 
     # Collect all concepts and which papers reference them
@@ -166,7 +171,6 @@ def build_concept_pages_with_llm(sources: list[dict], delay: float = 3.0) -> dic
         )
 
         try:
-            # Use streaming since Bedrock has streaming enabled
             stream = client.chat.completions.create(
                 model=COMPILER_MODEL,
                 messages=[
@@ -177,17 +181,19 @@ def build_concept_pages_with_llm(sources: list[dict], delay: float = 3.0) -> dic
                 stream=True,
             )
 
-            # Collect streamed chunks
             content_parts = []
             for chunk in stream:
-                if chunk.choices and chunk.choices[0].delta.content:
-                    content_parts.append(chunk.choices[0].delta.content)
+                if chunk.choices:
+                    delta = dict(chunk.choices[0].delta)
+                    if delta.get('content'):
+                        content_parts.append(delta['content'])
+                    if delta.get('reasoning'):
+                        content_parts.append(delta['reasoning'])
 
             content = "".join(content_parts)
             concept_pages[concept_name] = content.strip()
         except Exception as e:
             print(f"    ERROR: {e}")
-            # Fallback: create a minimal structural page
             concept_pages[concept_name] = _build_structural_page(concept_name, papers)
 
         if i < total:
@@ -218,7 +224,6 @@ def _build_structural_page(concept_name: str, papers: list[dict]) -> str:
     for p in papers:
         lines.append(f"- **{p['title']}** (arXiv: {p['arxiv_id']})")
     lines.append("")
-    # Related concepts
     related = set()
     for p in papers:
         for link in p["links"]:
@@ -245,7 +250,6 @@ def build_index(sources: list[dict], concept_pages: dict) -> str:
     lines.append("---")
     lines.append("")
 
-    # Source pages
     lines.append("## Source Pages")
     lines.append("")
     lines.append("| arXiv ID | Title | Domains | Date |")
@@ -254,7 +258,6 @@ def build_index(sources: list[dict], concept_pages: dict) -> str:
         lines.append(f"| [[{s['arxiv_id']}]] | {s['title'][:60]} | {s['domains'][:40]} | {s['date']} |")
     lines.append("")
 
-    # Concept pages
     concept_counts = defaultdict(int)
     for s in sources:
         for link in s["links"]:
@@ -313,7 +316,6 @@ def main():
     print("CRIS Wiki Builder")
     print("=" * 60)
 
-    # 1. Read all source pages
     print("\n[1] Reading source pages...")
     source_files = sorted(SOURCES_DIR.glob("*.md"))
     if not source_files:
@@ -326,7 +328,6 @@ def main():
         sources.append(parse_source_page(f))
     print(f"  Found {len(sources)} source pages.")
 
-    # 2. Build concept pages
     if not args.index_only:
         print("\n[2] Building concept pages...")
         if args.no_llm:
@@ -344,24 +345,20 @@ def main():
             outpath.write_text(content, encoding="utf-8")
             print(f"  + {fname}")
     else:
-        # Just count existing concept pages
         concept_pages = {}
         for f in CONCEPTS_DIR.glob("*.md"):
             concept_pages[f.stem] = f.read_text(encoding="utf-8")
 
-    # 3. Build index.md
     print("\n[3] Building index.md...")
     index_content = build_index(sources, concept_pages)
     INDEX_PATH.write_text(index_content, encoding="utf-8")
     print(f"  Written: {INDEX_PATH}")
 
-    # 4. Build log.md
     print("\n[4] Building log.md...")
     log_content = build_log(sources, concept_pages)
     LOG_PATH.write_text(log_content, encoding="utf-8")
     print(f"  Written: {LOG_PATH}")
 
-    # Summary
     print("\n" + "=" * 60)
     print("Wiki Build Complete!")
     print(f"  Source pages:  {len(sources)}")
