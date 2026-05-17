@@ -67,6 +67,7 @@ html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--
 .assistant-message .message-text{line-height:1.7;font-size:.9rem;color:var(--text-primary)}
 .assistant-message .message-text p{margin-bottom:12px}
 .assistant-message .message-text strong{color:var(--accent-cyan)}
+.thinking-section{margin-bottom:12px}
 .thinking-toggle{display:flex;align-items:center;gap:6px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--radius-sm);padding:8px 12px;margin-bottom:12px;cursor:pointer;font-size:.78rem;color:var(--accent-amber);transition:all var(--transition-fast);font-family:inherit;width:100%;text-align:left}
 .thinking-toggle:hover{background:rgba(245,158,11,.12)}
 .thinking-toggle .arrow{transition:transform var(--transition-fast);font-size:.65rem}
