@@ -112,6 +112,7 @@ class ModelClient:
                 ],
                 "max_tokens": REASONING_MAX_TOKENS,
                 "temperature": REASONING_TEMPERATURE,
+                "top_p": REASONING_TOP_P,
             }
 
             response = requests.post(
@@ -153,6 +154,7 @@ class ModelClient:
                 ],
                 "max_tokens": REASONING_MAX_TOKENS,
                 "temperature": REASONING_TEMPERATURE,
+                "top_p": REASONING_TOP_P,
                 "stream": True,
             }
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRIS — Cross-Domain Research Intelligence System</title>
     <meta name="description" content="AI-powered research assistant for discovering cross-domain connections across scientific disciplines">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -15,17 +15,18 @@
             <div class="sidebar-header">
                 <div class="logo">
                     <div class="logo-icon">
-                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                            <circle cx="14" cy="14" r="12" stroke="url(#grad1)" stroke-width="2"/>
-                            <circle cx="14" cy="14" r="6" stroke="url(#grad1)" stroke-width="1.5" opacity="0.6"/>
-                            <circle cx="14" cy="14" r="2" fill="url(#grad1)"/>
-                            <line x1="14" y1="2" x2="14" y2="8" stroke="url(#grad1)" stroke-width="1" opacity="0.4"/>
-                            <line x1="14" y1="20" x2="14" y2="26" stroke="url(#grad1)" stroke-width="1" opacity="0.4"/>
-                            <line x1="2" y1="14" x2="8" y2="14" stroke="url(#grad1)" stroke-width="1" opacity="0.4"/>
-                            <line x1="20" y1="14" x2="26" y2="14" stroke="url(#grad1)" stroke-width="1" opacity="0.4"/>
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="14" stroke="url(#grad1)" stroke-width="2.5"/>
+                            <circle cx="16" cy="16" r="8" stroke="url(#grad1)" stroke-width="1.5" opacity="0.5"/>
+                            <circle cx="16" cy="16" r="3" fill="url(#grad1)"/>
+                            <line x1="16" y1="2" x2="16" y2="8" stroke="url(#grad1)" stroke-width="1.5" opacity="0.4"/>
+                            <line x1="16" y1="24" x2="16" y2="30" stroke="url(#grad1)" stroke-width="1.5" opacity="0.4"/>
+                            <line x1="2" y1="16" x2="8" y2="16" stroke="url(#grad1)" stroke-width="1.5" opacity="0.4"/>
+                            <line x1="24" y1="16" x2="30" y2="16" stroke="url(#grad1)" stroke-width="1.5" opacity="0.4"/>
                             <defs>
-                                <linearGradient id="grad1" x1="0" y1="0" x2="28" y2="28">
+                                <linearGradient id="grad1" x1="0" y1="0" x2="32" y2="32">
                                     <stop offset="0%" stop-color="#06b6d4"/>
+                                    <stop offset="50%" stop-color="#8b5cf6"/>
                                     <stop offset="100%" stop-color="#3b82f6"/>
                                 </linearGradient>
                             </defs>
@@ -37,8 +38,8 @@
                     </div>
                 </div>
                 <button class="new-chat-btn" onclick="createNewChat()">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+                        <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                     </svg>
                     New Chat
                 </button>
@@ -47,25 +48,32 @@
             <!-- Navigation Tabs -->
             <nav class="sidebar-nav">
                 <button class="nav-tab active" data-tab="history" onclick="switchTab('history')">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M8 4v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M9 5v4l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
                     History
                 </button>
+                <button class="nav-tab" data-tab="memory" onclick="switchTab('memory')">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M3 3h12v12H3z" stroke="currentColor" stroke-width="1.5" rx="2"/>
+                        <path d="M6 6h6M6 9h6M6 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Memory
+                </button>
                 <button class="nav-tab" data-tab="sources" onclick="switchTab('sources')">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
-                        <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
-                        <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
-                        <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="10" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="2" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="10" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
                     Raw Sources
                 </button>
                 <button class="nav-tab" data-tab="settings" onclick="switchTab('settings')">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <circle cx="9" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M9 1.5v2M9 14.5v2M1.5 9h2M14.5 9h2M3.5 3.5l1.5 1.5M13 13l1.5 1.5M3.5 14.5l1.5-1.5M13 5l1.5-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
                     Settings
                 </button>
@@ -75,6 +83,30 @@
             <div class="sidebar-content active" id="tab-history">
                 <div class="history-list" id="history-list">
                     <div class="loading-placeholder">Loading conversations...</div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Memory -->
+            <div class="sidebar-content" id="tab-memory">
+                <div class="memory-panel" id="memory-panel">
+                    <div class="memory-stats" id="memory-stats">
+                        <div class="loading-placeholder">Loading memory...</div>
+                    </div>
+                    <div class="memory-entities" id="memory-entities">
+                        <h4>Extracted Entities</h4>
+                        <div class="entity-list" id="entity-list"></div>
+                    </div>
+                    <div class="memory-notes" id="memory-notes">
+                        <h4>Conversation Notes</h4>
+                        <div class="note-list" id="note-list"></div>
+                    </div>
+                    <button class="memory-rebuild-btn" onclick="rebuildWiki()">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M2 8a6 6 0 0111.47-2.47M14 8a6 6 0 01-11.47 2.47" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                            <path d="M14 2v4h-4M2 14v-4h4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                        </svg>
+                        Rebuild Wiki
+                    </button>
                 </div>
             </div>
 
@@ -105,15 +137,37 @@
         <main class="chat-main">
             <header class="chat-header">
                 <button class="menu-btn" onclick="toggleSidebar()">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor">
+                        <path d="M4 6h14M4 11h14M4 16h14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                     </svg>
                 </button>
                 <div class="header-title">
                     <h2 id="chat-title">Cross-Domain Research Assistant</h2>
                     <span class="header-subtitle" id="chat-subtitle">Powered by wiki-style knowledge synthesis</span>
                 </div>
+                <div class="header-actions">
+                    <button class="web-search-btn" onclick="toggleWebSearch()" title="Web Search">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
             </header>
+
+            <!-- Web Search Panel -->
+            <div class="web-search-panel" id="web-search-panel" style="display: none;">
+                <div class="web-search-input">
+                    <input type="text" id="web-search-input" placeholder="Search the web..." onkeydown="if(event.key==='Enter')performWebSearch()">
+                    <button onclick="performWebSearch()">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+                            <circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="web-search-results" id="web-search-results"></div>
+            </div>
 
             <div class="chat-messages" id="chat-messages">
                 <!-- Welcome message -->
@@ -121,7 +175,7 @@
                     <div class="message-content">
                         <div class="welcome-card">
                             <h2>Welcome to CRIS</h2>
-                            <p>I'm your cross-domain research intelligence assistant. I can help you discover connections between scientific disciplines by reasoning over a curated knowledge base of research papers.</p>
+                            <p>Your cross-domain research intelligence assistant. I discover connections between scientific disciplines by reasoning over a curated knowledge base that grows with every conversation.</p>
                             <div class="welcome-features">
                                 <div class="feature">
                                     <span class="feature-icon">🔬</span>
@@ -134,6 +188,10 @@
                                 <div class="feature">
                                     <span class="feature-icon">📚</span>
                                     <span>Wiki-powered knowledge that compounds over time</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">🌐</span>
+                                    <span>Web search for real-time research</span>
                                 </div>
                             </div>
                             <p class="welcome-hint">Try asking a cross-domain question, or click an example below →</p>
@@ -154,8 +212,8 @@
                         oninput="autoResize(this)"
                     ></textarea>
                     <button class="send-btn" id="send-btn" onclick="sendMessage()">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M3 10L17 3L10 17L9 11L3 10Z" fill="currentColor"/>
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                            <path d="M4 11L18 4L11 18L10 12L4 11Z" fill="currentColor"/>
                         </svg>
                     </button>
                 </div>
@@ -167,8 +225,8 @@
         <div class="sources-detail-panel" id="sources-detail-panel">
             <div class="sources-detail-header">
                 <button class="back-btn" onclick="closeSourcesDetail()">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor">
+                        <path d="M13 5l-7 7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                     </svg>
                     Back
                 </button>
@@ -186,8 +244,8 @@
                 <div class="paper-modal-header">
                     <h3 id="paper-modal-title">Paper Details</h3>
                     <button class="close-modal-btn" onclick="closePaperModal()">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor">
+                            <path d="M6 6l10 10M16 6L6 16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                         </svg>
                     </button>
                 </div>

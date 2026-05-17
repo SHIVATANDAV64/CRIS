@@ -83,13 +83,17 @@ class WikiCompiler:
                         delta = dict(chunk.choices[0].delta)
                         if delta.get('content'):
                             content_parts.append(delta['content'])
-                        if delta.get('reasoning'):
-                            content_parts.append(delta['reasoning'])
 
                 content = "".join(content_parts)
                 if not content:
                     console.print(f"[yellow]Empty response for {paper.get('arxiv_id')}[/yellow]")
                     return None
+
+                # Strip any thinking/reasoning before the frontmatter
+                # Keep only from the first --- onwards
+                fm_start = content.find("---")
+                if fm_start != -1:
+                    content = content[fm_start:]
 
                 return content.strip()
 

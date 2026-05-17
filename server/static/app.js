@@ -1,4 +1,4 @@
-// CRIS Chat Interface v2.0 — Client-side logic with session management, domain browsing, and settings
+// CRIS Chat Interface v2.0 — Client-side logic with session management, domain browsing, settings, memory, and web search
 
 const chatMessages = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
@@ -9,6 +9,7 @@ let sessionId = null;
 let currentTab = 'history';
 let selectedPapers = new Set();
 let droppedPapers = new Map(); // arxiv_id -> {title, id}
+let webSearchVisible = false;
 
 // ── Initialization ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -38,6 +39,7 @@ function switchTab(tab) {
     document.getElementById(`tab-${tab}`).classList.add('active');
 
     if (tab === 'history') loadHistory();
+    if (tab === 'memory') loadMemory();
     if (tab === 'sources') loadRawSources();
     if (tab === 'settings') loadSettings();
 }
@@ -167,6 +169,166 @@ async function deleteSession(sessionIdToDelete) {
         loadHistory();
     } catch (e) {
         console.error('Failed to delete session:', e);
+    }
+}
+
+// ── Memory Panel ────────────────────────────────────────────────────────
+async function loadMemory() {
+    const statsContainer = document.getElementById('memory-stats');
+    const entityContainer = document.getElementById('entity-list');
+    const noteContainer = document.getElementById('note-list');
+
+    statsContainer.innerHTML = '<div class="loading-placeholder">Loading memory...</div>';
+    entityContainer.innerHTML = '';
+    noteContainer.innerHTML = '';
+
+    try {
+        // Load stats
+        const statsResp = await fetch('/api/wiki/stats');
+        const stats = await statsResp.json();
+
+        statsContainer.innerHTML = `
+            <div class="memory-stat">
+                <div class="memory-stat-value">${stats.sources}</div>
+                <div class="memory-stat-label">Sources</div>
+            </div>
+            <div class="memory-stat">
+                <div class="memory-stat-value">${stats.concepts}</div>
+                <div class="memory-stat-label">Concepts</div>
+            </div>
+            <div class="memory-stat">
+                <div class="memory-stat-value">${stats.entities}</div>
+                <div class="memory-stat-label">Entities</div>
+            </div>
+            <div class="memory-stat">
+                <div class="memory-stat-value">${stats.notes}</div>
+                <div class="memory-stat-label">Notes</div>
+            </div>
+        `;
+
+        // Load entities
+        const entitiesResp = await fetch('/api/wiki/entities');
+        const entities = await entitiesResp.json();
+
+        if (entities.entities.length === 0) {
+            entityContainer.innerHTML = '<div class="empty-state">No entities extracted yet. Start a conversation!</div>';
+        } else {
+            entityContainer.innerHTML = entities.entities.map(e => `
+                <div class="entity-item">
+                    <span class="entity-type ${e.type}">${e.type}</span>
+                    <span class="entity-name">${escapeHtml(e.name)}</span>
+                    <span class="entity-mentions">${e.mentions} mentions</span>
+                </div>
+            `).join('');
+        }
+
+        // Load notes
+        const notesResp = await fetch('/api/wiki/notes');
+        const notes = await notesResp.json();
+
+        if (notes.notes.length === 0) {
+            noteContainer.innerHTML = '<div class="empty-state">No conversation notes yet.</div>';
+        } else {
+            noteContainer.innerHTML = notes.notes.map(n => `
+                <div class="note-item">
+                    <div class="note-title">${escapeHtml(n.title)}</div>
+                    <div class="note-date">${formatDate(n.date)}</div>
+                </div>
+            `).join('');
+        }
+    } catch (e) {
+        statsContainer.innerHTML = '<div class="error-state">Failed to load memory</div>';
+        console.error(e);
+    }
+}
+
+async function rebuildWiki() {
+    if (!confirm('Rebuild wiki summaries and graph? This may take a moment.')) return;
+
+    try {
+        const resp = await fetch('/api/wiki/rebuild', { method: 'POST' });
+        const result = await resp.json();
+        if (result.status === 'success') {
+            alert('Wiki rebuilt successfully!');
+            loadMemory();
+        }
+    } catch (e) {
+        alert('Failed to rebuild wiki');
+        console.error(e);
+    }
+}
+
+// ── Web Search ──────────────────────────────────────────────────────────
+function toggleWebSearch() {
+    webSearchVisible = !webSearchVisible;
+    const panel = document.getElementById('web-search-panel');
+    panel.style.display = webSearchVisible ? 'block' : 'none';
+    if (webSearchVisible) {
+        document.getElementById('web-search-input').focus();
+    }
+}
+
+async function performWebSearch() {
+    const input = document.getElementById('web-search-input');
+    const resultsContainer = document.getElementById('web-search-results');
+    const query = input.value.trim();
+
+    if (!query) return;
+
+    resultsContainer.innerHTML = '<div class="loading-placeholder">Searching...</div>';
+
+    try {
+        const resp = await fetch('/api/web/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query, num_results: 5 }),
+        });
+        const data = await resp.json();
+
+        if (data.results.length === 0) {
+            resultsContainer.innerHTML = '<div class="empty-state">No results found. Web search may not be configured.</div>';
+            return;
+        }
+
+        resultsContainer.innerHTML = data.results.map(r => `
+            <div class="web-search-result" onclick="scrapeUrl('${r.url}')">
+                <div class="web-search-result-title">${escapeHtml(r.title)}</div>
+                <div class="web-search-result-url">${escapeHtml(r.url)}</div>
+                <div class="web-search-result-snippet">${escapeHtml(r.snippet || '').substring(0, 150)}...</div>
+            </div>
+        `).join('');
+    } catch (e) {
+        resultsContainer.innerHTML = '<div class="error-state">Search failed</div>';
+        console.error(e);
+    }
+}
+
+async function scrapeUrl(url) {
+    const resultsContainer = document.getElementById('web-search-results');
+    resultsContainer.innerHTML = '<div class="loading-placeholder">Scraping page...</div>';
+
+    try {
+        const resp = await fetch('/api/web/scrape', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url }),
+        });
+        const data = await resp.json();
+
+        if (data.status === 'success') {
+            resultsContainer.innerHTML = `
+                <div class="web-search-result">
+                    <div class="web-search-result-title">${escapeHtml(data.title)}</div>
+                    <div class="web-search-result-url">${escapeHtml(data.url)}</div>
+                    <div class="web-search-result-snippet">${escapeHtml(data.content).substring(0, 500)}...</div>
+                </div>
+            `;
+        } else {
+            resultsContainer.innerHTML = `<div class="error-state">Failed to scrape: ${data.error}</div>`;
+        }
+    } catch (e) {
+        resultsContainer.innerHTML = '<div class="error-state">Scrape failed</div>';
+        console.error(e);
     }
 }
 

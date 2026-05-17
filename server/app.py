@@ -20,7 +20,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from typing import Optional
 
-from config.settings import CONTEXT_ENTRIES_LIMIT, get_config, update_config, reset_config
+from config.settings import CONTEXT_ENTRIES_LIMIT, MAX_THINKING_LENGTH, get_config, update_config, reset_config
 from core.search_engine import search, get_stats, create_index, get_all_entries
 from core.model_client import ModelClient
 from core.chat_store import (
@@ -42,6 +42,10 @@ from core.domain_manager import (
     get_raw_sources as load_raw_sources,
     get_paper_by_id,
 )
+from core.chat_memory import extract_and_store_memory
+from core.wiki_manager import WikiManager
+from core.web_tools import get_scraper, get_search
+from config.settings import WIKI_DIR
 
 # ── App Setup ────────────────────────────────────────────────────────────
 
@@ -105,6 +109,15 @@ class SessionTitleUpdate(BaseModel):
     title: str
 
 
+class WebSearchRequest(BaseModel):
+    query: str
+    num_results: int = 5
+
+
+class WebScrapeRequest(BaseModel):
+    url: str
+
+
 # ── Routes ───────────────────────────────────────────────────────────────
 
 @app.on_event("startup")
@@ -149,7 +162,8 @@ async def chat(req: ChatRequest):
                 # Fallback: load raw paper JSON and create a temporary wiki-like entry
                 raw_paper = get_paper_by_id(arxiv_id)
                 if raw_paper:
-                    wiki_content = f"# {raw_paper['title']}\n\n**arXiv ID**: {raw_paper['arxiv_id']}\n**Categories**: {raw_paper.get('categories', '')}\n**Authors**: {', '.join(raw_paper.get('authors', []))}\n\n## Abstract\n{raw_paper.get('abstract', '')}\n"
+                    authors = [a for a in raw_paper.get('authors', []) if a]
+                    wiki_content = f"# {raw_paper['title']}\n\n**arXiv ID**: {raw_paper['arxiv_id']}\n**Categories**: {raw_paper.get('categories', '')}\n**Authors**: {', '.join(authors)}\n\n## Abstract\n{raw_paper.get('abstract', '')}\n"
                     results.append({
                         "arxiv_id": raw_paper["arxiv_id"],
                         "title": raw_paper["title"],
@@ -211,6 +225,18 @@ async def chat(req: ChatRequest):
                 sources=sources,
             )
 
+            # Extract memory from conversation
+            try:
+                extract_and_store_memory(
+                    user_message=query,
+                    assistant_response=result["response"],
+                    session_id=session_id,
+                    wiki_dir=WIKI_DIR,
+                    sources=sources,
+                )
+            except Exception as e:
+                print(f"Memory extraction failed: {e}")
+
             return ChatResponse(
                 response=result["response"],
                 thinking=result.get("thinking", ""),
@@ -264,7 +290,8 @@ async def chat_stream(req: ChatRequest):
             else:
                 raw_paper = get_paper_by_id(arxiv_id)
                 if raw_paper:
-                    wiki_content = f"# {raw_paper['title']}\n\n**arXiv ID**: {raw_paper['arxiv_id']}\n**Categories**: {raw_paper.get('categories', '')}\n**Authors**: {', '.join(raw_paper.get('authors', []))}\n\n## Abstract\n{raw_paper.get('abstract', '')}\n"
+                    authors = [a for a in raw_paper.get('authors', []) if a]
+                    wiki_content = f"# {raw_paper['title']}\n\n**arXiv ID**: {raw_paper['arxiv_id']}\n**Categories**: {raw_paper.get('categories', '')}\n**Authors**: {', '.join(authors)}\n\n## Abstract\n{raw_paper.get('abstract', '')}\n"
                     results.append({
                         "arxiv_id": raw_paper["arxiv_id"],
                         "title": raw_paper["title"],
@@ -317,7 +344,7 @@ async def chat_stream(req: ChatRequest):
                 answer_content = ""
                 phase = "thinking"
                 thinking_length = 0
-                max_thinking_length = 2000
+                max_thinking_length = MAX_THINKING_LENGTH
 
                 for chunk in client.generate_stream(
                     user_message=query,
@@ -394,6 +421,18 @@ async def chat_stream(req: ChatRequest):
                     thinking=thinking_content,
                     sources=sources,
                 )
+
+                # Extract memory from conversation
+                try:
+                    extract_and_store_memory(
+                        user_message=query,
+                        assistant_response=full_response,
+                        session_id=session_id,
+                        wiki_dir=WIKI_DIR,
+                        sources=sources,
+                    )
+                except Exception as e:
+                    print(f"Memory extraction failed: {e}")
 
         else:
             summary = f"Found {len(results)} relevant papers:\n\n"
@@ -552,3 +591,119 @@ async def list_papers(limit: int = 50):
     """List all papers in the knowledge base."""
     entries = get_all_entries()
     return {"count": len(entries), "papers": entries[:limit]}
+
+
+# ── Memory & Wiki Endpoints ───────────────────────────────────────────────
+
+@app.post("/api/memory/extract")
+async def extract_memory(req: ChatRequest):
+    """Manually trigger memory extraction for a conversation."""
+    session_id = req.session_id
+    if not session_id:
+        raise HTTPException(status_code=400, detail="session_id required")
+
+    messages = get_messages(session_id, limit=2)
+    if len(messages) < 2:
+        return {"status": "no_conversation", "message": "Need at least one exchange"}
+
+    user_msg = messages[-2] if messages[-2]["role"] == "user" else None
+    assistant_msg = messages[-1] if messages[-1]["role"] == "assistant" else None
+
+    if not user_msg or not assistant_msg:
+        return {"status": "no_exchange", "message": "Need user+assistant exchange"}
+
+    result = extract_and_store_memory(
+        user_message=user_msg["content"],
+        assistant_response=assistant_msg["content"],
+        session_id=session_id,
+        wiki_dir=WIKI_DIR,
+        sources=assistant_msg.get("sources", []),
+    )
+
+    return {"status": "success", "result": result}
+
+
+@app.get("/api/wiki/stats")
+async def wiki_stats():
+    """Get wiki knowledge base statistics."""
+    wiki_manager = WikiManager(WIKI_DIR)
+
+    sources = wiki_manager.get_all_sources()
+    notes = wiki_manager.get_notes()
+    concepts = list(wiki_manager.concepts_dir.glob("*.md"))
+    entities = list(wiki_manager.entities_dir.glob("*.md"))
+
+    return {
+        "sources": len(sources),
+        "concepts": len(concepts),
+        "entities": len(entities),
+        "notes": len(notes),
+        "last_updated": datetime.now().isoformat(),
+    }
+
+
+@app.post("/api/wiki/rebuild")
+async def wiki_rebuild():
+    """Rebuild wiki structure (summaries, graph, etc.)."""
+    wiki_manager = WikiManager(WIKI_DIR)
+    wiki_manager.rebuild_all()
+    return {"status": "success"}
+
+
+@app.get("/api/wiki/entities")
+async def wiki_entities():
+    """List all extracted entities."""
+    wiki_manager = WikiManager(WIKI_DIR)
+    entities = []
+    for f in wiki_manager.entities_dir.glob("*.md"):
+        content = f.read_text(encoding="utf-8")
+        fm, body = wiki_manager.parse_frontmatter(content)
+        entities.append({
+            "name": fm.get("name", f.stem),
+            "type": fm.get("type", "term"),
+            "mentions": fm.get("mentions", 0),
+            "first_seen": fm.get("first_seen", ""),
+        })
+    return {"count": len(entities), "entities": entities}
+
+
+@app.get("/api/wiki/notes")
+async def wiki_notes():
+    """List all conversation notes."""
+    wiki_manager = WikiManager(WIKI_DIR)
+    notes = []
+    for f in wiki_manager.notes_dir.glob("*.md"):
+        content = f.read_text(encoding="utf-8")
+        fm, body = wiki_manager.parse_frontmatter(content)
+        notes.append({
+            "title": fm.get("title", f.stem),
+            "date": fm.get("date", ""),
+            "session_id": fm.get("session_id", ""),
+        })
+    return {"count": len(notes), "notes": notes}
+
+
+# ── Web Search & Scraper Endpoints ────────────────────────────────────────
+
+@app.post("/api/web/search")
+async def web_search(req: WebSearchRequest):
+    """Search the web for a query."""
+    search = get_search()
+    results = await search.search(req.query, req.num_results)
+    return {"query": req.query, "count": len(results), "results": results}
+
+
+@app.post("/api/web/scrape")
+async def web_scrape(req: WebScrapeRequest):
+    """Scrape a URL and return cleaned content."""
+    scraper = get_scraper()
+    result = await scraper.scrape_url(req.url)
+    return result
+
+
+@app.post("/api/web/search-and-scrape")
+async def web_search_and_scrape(req: WebSearchRequest):
+    """Search the web and scrape top results."""
+    search = get_search()
+    results = await search.search_and_scrape(req.query, req.num_results)
+    return {"query": req.query, "count": len(results), "results": results}
