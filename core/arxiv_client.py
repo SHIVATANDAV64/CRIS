@@ -1,6 +1,8 @@
 """
 arXiv OAI-PMH Client — Fetches paper metadata from arXiv using the OAI-PMH protocol.
 Uses the `sickle` library which handles resumption tokens and pagination automatically.
+
+Supports both legacy date-based storage and new domain-based storage.
 """
 import json
 import time
@@ -8,8 +10,6 @@ import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
-
-
 
 from config.settings import (
     ARXIV_OAI_URL,
@@ -19,8 +19,6 @@ from config.settings import (
 )
 
 
-
-
 def _parse_arxiv_record(record) -> Optional[dict]:
     """Parse a single OAI-PMH record into a clean paper dict."""
     try:
@@ -28,8 +26,6 @@ def _parse_arxiv_record(record) -> Optional[dict]:
         if not meta:
             return None
 
-        # Extract arXiv ID from the OAI identifier
-        # Format: oai:arXiv.org:YYMM.NNNNN
         header = record.header
         oai_id = header.identifier if header else ""
         arxiv_id = oai_id.replace("oai:arXiv.org:", "") if oai_id else ""
@@ -37,14 +33,12 @@ def _parse_arxiv_record(record) -> Optional[dict]:
         if not arxiv_id:
             return None
 
-        # Get fields (sickle returns lists for some fields)
         title = meta.get("title", [""])[0] if isinstance(meta.get("title"), list) else meta.get("title", "")
         abstract = meta.get("abstract", [""])[0] if isinstance(meta.get("abstract"), list) else meta.get("abstract", "")
         authors = meta.get("authors", []) if isinstance(meta.get("authors"), list) else [meta.get("authors", "")]
         categories = meta.get("categories", [""])[0] if isinstance(meta.get("categories"), list) else meta.get("categories", "")
         created = meta.get("created", [""])[0] if isinstance(meta.get("created"), list) else meta.get("created", "")
 
-        # Clean up whitespace in abstract and title
         title = re.sub(r'\s+', ' ', title).strip()
         abstract = re.sub(r'\s+', ' ', abstract).strip()
 
@@ -109,7 +103,6 @@ def fetch_papers(
                 if paper is None:
                     continue
 
-                # Filter by specific category
                 paper_cats = paper.get("categories", "")
                 if category not in paper_cats:
                     continue
@@ -121,7 +114,6 @@ def fetch_papers(
                 if max_papers and len(category_papers) >= max_papers:
                     break
 
-                # Rate limiting
                 time.sleep(ARXIV_RATE_LIMIT_SECONDS)
 
         except Exception as e:
@@ -139,7 +131,7 @@ def fetch_papers(
 
 def save_papers(papers: list[dict], date_str: str) -> Path:
     """
-    Save fetched papers as individual JSON files organized by date.
+    Save fetched papers as individual JSON files organized by date (legacy mode).
 
     Args:
         papers: List of paper dicts from fetch_papers()
@@ -156,7 +148,6 @@ def save_papers(papers: list[dict], date_str: str) -> Path:
 
     for paper in papers:
         arxiv_id = paper["arxiv_id"]
-        # Replace / with _ for filename safety (old-style IDs like math/0601001)
         safe_id = arxiv_id.replace("/", "_")
         filepath = date_dir / f"{safe_id}.json"
 
@@ -175,8 +166,47 @@ def save_papers(papers: list[dict], date_str: str) -> Path:
     return date_dir
 
 
+def save_papers_by_domain(papers: list[dict]) -> dict[str, int]:
+    """
+    Save papers organized by domain folders.
+
+    Structure: data/raw/<domain>/<date>/<paper_id>.json
+
+    Args:
+        papers: List of paper dicts from fetch_papers()
+
+    Returns:
+        Dict mapping domain -> count of papers saved
+    """
+    from core.domain_manager import save_paper_by_domain, _extract_domains
+
+    counts = {}
+    saved = 0
+    skipped = 0
+
+    for paper in papers:
+        domains = _extract_domains(paper)
+        date_str = paper.get("created", "")[:10] or datetime.now().strftime("%Y-%m-%d")
+
+        for domain in domains:
+            filepath = save_paper_by_domain(paper, domain, date_str)
+            if filepath.exists():
+                is_new = filepath.stat().st_mtime > time.time() - 5
+                if is_new:
+                    counts[domain] = counts.get(domain, 0) + 1
+                    saved += 1
+                else:
+                    skipped += 1
+
+    print(f"\nSaved {saved} papers by domain")
+    if skipped:
+        print(f"Skipped {skipped} already existing")
+
+    return counts
+
+
 def load_papers(date_str: str) -> list[dict]:
-    """Load all paper JSONs for a given date."""
+    """Load all paper JSONs for a given date (legacy mode)."""
     date_dir = RAW_DIR / date_str
     if not date_dir.exists():
         return []
@@ -186,3 +216,9 @@ def load_papers(date_str: str) -> list[dict]:
         with open(f, "r", encoding="utf-8") as fh:
             papers.append(json.load(fh))
     return papers
+
+
+def load_papers_by_domain(domain: str) -> list[dict]:
+    """Load all papers for a domain from domain-based storage."""
+    from core.domain_manager import get_papers_for_domain
+    return get_papers_for_domain(domain)

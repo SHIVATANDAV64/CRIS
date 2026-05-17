@@ -1,5 +1,5 @@
 """
-Wiki Compiler — Uses zira-researcher (Modal.com) to compile paper metadata
+Wiki Compiler — Uses MiniMax M2.5 (Amazon Bedrock) to compile paper metadata
 into structured wiki entries for cross-domain discovery.
 """
 import time
@@ -9,7 +9,8 @@ from openai import OpenAI
 from rich.console import Console
 
 from config.settings import (
-    MODAL_API_URL,
+    BEDROCK_API_KEY,
+    BEDROCK_BASE_URL,
     COMPILER_MODEL,
     COMPILER_MAX_TOKENS,
     COMPILER_TEMPERATURE,
@@ -20,12 +21,19 @@ console = Console()
 
 
 class WikiCompiler:
-    """Compiles paper metadata into structured wiki entries using zira-researcher on Modal."""
+    """Compiles paper metadata into structured wiki entries using MiniMax M2.5 on Bedrock."""
 
-    def __init__(self):
+    def __init__(self, api_key: Optional[str] = None):
+        key = api_key or BEDROCK_API_KEY
+        if not key:
+            raise ValueError(
+                "BEDROCK_API_KEY not set. Add it to your .env file.\n"
+                "Get a key from: https://console.aws.amazon.com/bedrock/"
+            )
+
         self.client = OpenAI(
-            base_url=MODAL_API_URL,
-            api_key="not-needed",
+            base_url=BEDROCK_BASE_URL,
+            api_key=key,
         )
         self.model = COMPILER_MODEL
 
@@ -39,7 +47,6 @@ class WikiCompiler:
         Returns:
             Wiki entry as markdown string, or None on failure
         """
-        # Format the user message with paper details
         authors_list = [a for a in paper.get("authors", []) if a]
         authors_str = ", ".join(authors_list[:5])
         if len(authors_list) > 5:
@@ -59,7 +66,7 @@ class WikiCompiler:
 
         for attempt in range(max_retries):
             try:
-                response = self.client.chat.completions.create(
+                stream = self.client.chat.completions.create(
                     model=self.model,
                     messages=[
                         {"role": "system", "content": WIKI_COMPILER_SYSTEM},
@@ -67,9 +74,19 @@ class WikiCompiler:
                     ],
                     max_tokens=COMPILER_MAX_TOKENS,
                     temperature=COMPILER_TEMPERATURE,
+                    stream=True,
                 )
 
-                content = response.choices[0].message.content or ""
+                content_parts = []
+                for chunk in stream:
+                    if chunk.choices:
+                        delta = dict(chunk.choices[0].delta)
+                        if delta.get('content'):
+                            content_parts.append(delta['content'])
+                        if delta.get('reasoning'):
+                            content_parts.append(delta['reasoning'])
+
+                content = "".join(content_parts)
                 if not content:
                     console.print(f"[yellow]Empty response for {paper.get('arxiv_id')}[/yellow]")
                     return None
@@ -122,7 +139,6 @@ class WikiCompiler:
             else:
                 console.print(f"    [red]x Failed[/red]")
 
-            # Rate limiting
             if i < len(to_compile) - 1:
                 time.sleep(delay_seconds)
 

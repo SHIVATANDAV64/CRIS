@@ -36,47 +36,68 @@
                         <span class="logo-subtitle">Research Intelligence</span>
                     </div>
                 </div>
+                <button class="new-chat-btn" onclick="createNewChat()">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    New Chat
+                </button>
             </div>
 
-            <div class="sidebar-stats" id="stats-panel">
-                <div class="stat-card">
-                    <span class="stat-value" id="stat-papers">—</span>
-                    <span class="stat-label">Papers Indexed</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="stat-domains">—</span>
-                    <span class="stat-label">Domains</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="stat-types">—</span>
-                    <span class="stat-label">Contribution Types</span>
+            <!-- Navigation Tabs -->
+            <nav class="sidebar-nav">
+                <button class="nav-tab active" data-tab="history" onclick="switchTab('history')">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 4v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    History
+                </button>
+                <button class="nav-tab" data-tab="sources" onclick="switchTab('sources')">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    Raw Sources
+                </button>
+                <button class="nav-tab" data-tab="settings" onclick="switchTab('settings')">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Settings
+                </button>
+            </nav>
+
+            <!-- Tab Content: History -->
+            <div class="sidebar-content active" id="tab-history">
+                <div class="history-list" id="history-list">
+                    <div class="loading-placeholder">Loading conversations...</div>
                 </div>
             </div>
 
-            <div class="sidebar-section">
-                <h3>Example Queries</h3>
-                <div class="example-queries">
-                    <button class="example-btn" onclick="setQuery(this.textContent)">
-                        What techniques from biology could improve NLP models?
-                    </button>
-                    <button class="example-btn" onclick="setQuery(this.textContent)">
-                        Find cross-domain applications of attention mechanisms
-                    </button>
-                    <button class="example-btn" onclick="setQuery(this.textContent)">
-                        What new proposals combine graph neural networks with other fields?
-                    </button>
-                    <button class="example-btn" onclick="setQuery(this.textContent)">
-                        Show papers that use hybrid approaches across ML and biology
-                    </button>
+            <!-- Tab Content: Raw Sources -->
+            <div class="sidebar-content" id="tab-sources">
+                <div class="sources-browser" id="sources-browser">
+                    <div class="loading-placeholder">Loading domains...</div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Settings -->
+            <div class="sidebar-content" id="tab-settings">
+                <div class="settings-panel" id="settings-panel">
+                    <div class="loading-placeholder">Loading settings...</div>
                 </div>
             </div>
 
             <div class="sidebar-footer">
                 <div class="model-badge">
                     <div class="badge-dot"></div>
-                    <span>MiniMax M2.5 • Bedrock</span>
+                    <span id="model-name">MiniMax M2.5 • Bedrock</span>
                 </div>
-                <p class="version-text">CRIS v1.0 • BCA Project 2025-26</p>
+                <p class="version-text">CRIS v2.0 • 2025-26</p>
             </div>
         </aside>
 
@@ -89,8 +110,8 @@
                     </svg>
                 </button>
                 <div class="header-title">
-                    <h2>Cross-Domain Research Assistant</h2>
-                    <span class="header-subtitle">Powered by wiki-style knowledge synthesis</span>
+                    <h2 id="chat-title">Cross-Domain Research Assistant</h2>
+                    <span class="header-subtitle" id="chat-subtitle">Powered by wiki-style knowledge synthesis</span>
                 </div>
             </header>
 
@@ -115,18 +136,19 @@
                                     <span>Wiki-powered knowledge that compounds over time</span>
                                 </div>
                             </div>
-                            <p class="welcome-hint">Try asking a cross-domain question, or click an example from the sidebar →</p>
+                            <p class="welcome-hint">Try asking a cross-domain question, or click an example below →</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Input Area -->
-            <div class="chat-input-area">
+            <div class="chat-input-area" id="chat-input-area" ondragover="onChatDragOver(event)" ondragleave="onChatDragLeave(event)" ondrop="onChatDrop(event)">
+                <div class="dropped-papers" id="dropped-papers" style="display: none;"></div>
                 <div class="input-container">
                     <textarea
                         id="chat-input"
-                        placeholder="Ask a cross-domain research question..."
+                        placeholder="Ask a cross-domain research question... (drag papers here to reference)"
                         rows="1"
                         onkeydown="handleKeyDown(event)"
                         oninput="autoResize(this)"
@@ -137,9 +159,43 @@
                         </svg>
                     </button>
                 </div>
-                <p class="input-hint">Press Enter to send • Shift+Enter for new line</p>
+                <p class="input-hint">Press Enter to send • Shift+Enter for new line • Drag papers from Raw Sources to reference</p>
             </div>
         </main>
+
+        <!-- Raw Sources Detail Panel (overlay) -->
+        <div class="sources-detail-panel" id="sources-detail-panel">
+            <div class="sources-detail-header">
+                <button class="back-btn" onclick="closeSourcesDetail()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    Back
+                </button>
+                <h3 id="sources-detail-title">Domain Details</h3>
+            </div>
+            <div class="sources-detail-content" id="sources-detail-content">
+                <div class="loading-placeholder">Loading papers...</div>
+            </div>
+        </div>
+
+        <!-- Paper Detail Modal -->
+        <div class="paper-modal" id="paper-modal">
+            <div class="paper-modal-overlay" onclick="closePaperModal()"></div>
+            <div class="paper-modal-content">
+                <div class="paper-modal-header">
+                    <h3 id="paper-modal-title">Paper Details</h3>
+                    <button class="close-modal-btn" onclick="closePaperModal()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="paper-modal-body" id="paper-modal-body">
+                    <div class="loading-placeholder">Loading paper details...</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="/static/app.js"></script>
