@@ -39,16 +39,16 @@ _DEFAULTS = {
         "model": "minimax.minimax-m2.5",
     },
     "model": {
-        "modal_api_url": os.getenv("MODAL_API_URL", "https://naveen95190--cris-zira-researcher-ziraresearcher-chat-co-f403d9.modal.run"),
+        "modal_api_url": os.getenv("MODAL_API_URL", "https://naveenreddy11011--cris-zira-researcher-ziraresearcher-ch-1a7567.modal.run"),
         "modal_model": "0xvoid0000/zira-researcher",
-        "max_tokens": 4096,
-        "temperature": 0.7,
+        "max_tokens": 8192,
+        "temperature": 1.0,
         "top_p": 0.95,
     },
     "chat": {
         "max_history_messages": 20,
         "context_exchanges": 3,
-        "max_thinking_length": 2000,
+        "max_thinking_length": 8000,
         "streaming_enabled": True,
     },
     "search": {
@@ -60,7 +60,7 @@ _DEFAULTS = {
         "port": 8000,
     },
     "wiki": {
-        "compiler_max_tokens": 4096,
+        "compiler_max_tokens": 8192,
         "compiler_temperature": 0.7,
     },
 }
