@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2408.16307",
+  "title": "Safe Bayesian Optimization for Complex Control Systems via Additive Gaussian Processes",
+  "abstract": "Automatic controller tuning is attractive for robotics and mechatronic systems whose dynamics are difficult to model accurately, but direct black-box optimization can be unsafe because each query is executed on the physical plant. Existing safe Bayesian optimization (BO) methods provide high-probability safety guarantees, yet their practical use in multi-loop control is limited by two coupled difficulties: the controller parameter space is often moderately high-dimensional, and hardware evaluations are too expensive to allow hundreds or thousands of exploratory trials. This paper proposes \\textsc{SafeCtrlBO}, a safe BO method for simultaneously tuning multiple coupled controllers. The method uses additive Gaussian-process kernels to encode low-order structure across controller gains and reduce the sample complexity associated with dense full-dimensional kernels. It also replaces the expensive potential-expander computation used in \\textsc{SafeOpt}-style exploration with a boundary-based expansion rule that preserves the intended safe-set expansion behavior under explicit geometric conditions and is validated empirically. Experiments on synthetic benchmarks and on a permanent magnet synchronous motor (PMSM) speed-control platform show that \\textsc{SafeCtrlBO} reaches high-performing controller parameters with fewer hardware evaluations than representative safe BO baselines, while maintaining the prescribed high-probability safety criterion and avoiding violations of the hard signal-safety constraint in the hardware study. The code implementation is publicly available at https://github.com/hxwangnus/SafeCtrlBO.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.AI",
+  "created": "2026-05-14",
+  "fetched_at": "2026-05-17T00:36:34.350897"
+}

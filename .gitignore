@@ -12,9 +12,7 @@ temp
 
 # Data (large files)
 models/*.gguf
-data/raw/
-data/wiki/
-data/cris.db
+
 
 # IDE
 .vscode/

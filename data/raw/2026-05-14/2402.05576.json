@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2402.05576",
+  "title": "Tighter Learning Guarantees on Digital Computers via Concentration of Measure on Finite Spaces",
+  "abstract": "Machine learning models with inputs in a Euclidean space $\\mathbb{R}^d$, when implemented on digital computers, generalize, and their generalization gap converges to $0$ at a rate of $c/N^{1/2}$ concerning the sample size $N$. However, the constant $c>0$ obtained through classical methods can be large in terms of the ambient dimension $d$ and machine precision, posing a challenge when $N$ is small to realistically large. In this paper, we derive a family of generalization bounds $\\{c_m/N^{1/(2\\vee m)}\\}_{m=1}^{\\infty}$ tailored for learning models on digital computers, which adapt to both the sample size $N$ and the so-called geometric representation dimension $m$ of the discrete learning problem. Adjusting the parameter $m$ according to $N$ results in significantly tighter generalization bounds for practical sample sizes $N$, while setting $m$ small maintains the optimal dimension-free worst-case rate of $\\mathcal{O}(1/N^{1/2})$. Notably, $c_{m}\\in \\mathcal{O}(m^{1/2})$ for learning models on discretized Euclidean domains. Furthermore, our adaptive generalization bounds are formulated based on our new non-asymptotic result for concentration of measure in finite metric spaces, established via leveraging metric embedding arguments.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:35:56.024515"
+}

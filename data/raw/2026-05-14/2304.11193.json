@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2304.11193",
+  "title": "Multi-Modal World Model for Physical Robot Interactions: Simultaneous Visual and Tactile Predictions for Enhanced Accuracy",
+  "abstract": "Predicting the outcomes of robotic actions, often referred to as learning a world model, in complex environments remains a fundamental challenge in robotics. Existing approaches primarily rely on visual observations and action inputs to generate video-based predictions, frequently overlooking the critical role of tactile feedback in understanding physical interactions. In this work, we investigate the integration of tactile and visual information within predictive perception systems for physical robot interaction. We demonstrate that visuo-tactile prediction provides the greatest benefits in physically ambiguous interaction regimes, while improvements are naturally limited when object dynamics are visually inferable. Furthermore, we introduce two novel robot-pushing datasets collected using a magnetic-based tactile sensor for unsupervised learning. The first dataset comprises visually identical objects with varying physical properties, explicitly isolating physical ambiguity, while the second mirrors existing robot-pushing benchmarks involving clusters of household objects. Our results show that tactile-visual integration improves prediction accuracy and robustness under physical ambiguity, while offering limited gains in visually unambiguous settings. Code and datasets are publicly available.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.AI cs.CV",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-17T00:35:31.437824"
+}

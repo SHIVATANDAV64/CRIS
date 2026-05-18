@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2303.14511",
+  "title": "Improving robustness of jet tagging algorithms with adversarial training: exploring the loss surface",
+  "abstract": "In the field of high-energy physics, deep learning algorithms continue to gain in relevance and provide performance improvements over traditional methods, for example when identifying rare signals or finding complex patterns. From an analyst's perspective, obtaining highest possible performance is desirable, but recently, some attention has been shifted towards studying robustness of models to investigate how well these perform under slight distortions of input features. Especially for tasks that involve many (low-level) inputs, the application of deep neural networks brings new challenges. In the context of jet flavor tagging, adversarial attacks are used to probe a typical classifier's vulnerability and can be understood as a model for systematic uncertainties. A corresponding defense strategy, adversarial training, improves robustness, while maintaining high performance. Investigating the loss surface corresponding to the inputs and models in question reveals geometric interpretations of robustness, taking correlations into account.",
+  "authors": [
+    null
+  ],
+  "categories": "hep-ex cs.AI cs.LG hep-ph physics.data-an",
+  "created": "2023-03-25",
+  "fetched_at": "2026-05-17T00:36:25.347920"
+}

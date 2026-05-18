@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2410.14375",
+  "title": "Causal Fine-Tuning under Latent Confounded Shift",
+  "abstract": "Adapting to latent confounded shift remains a core challenge in modern AI. This setting is driven by hidden variables that induce spurious correlations between inputs and outputs during training, leading models to rely on non-causal shortcuts. For example, a model may learn to treat metadata (e.g., data source like \"Amazon\") as a proxy for positive sentiment, causing failure when the source becomes predominantly negative during deployment. To address this latent confounded shift, we introduce Causal Fine-Tuning(CFT). Using a structural causal model as an inductive bias, we derive sufficient identification conditions that motivate a fine-tuning objective for decomposing representations into high-level stable and low-level shift-sensitive components. Instantiating this framework in BERT, we show that learning such causal/spurious representations and adjusting them accordingly yield a more robust predictor. Experiments on spurious correlation injection attacks in text demonstrate that our method outperforms black-box domain generalization baselines, highlighting the benefits of explicitly modeling causal structure.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CL",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-17T00:35:47.881806"
+}

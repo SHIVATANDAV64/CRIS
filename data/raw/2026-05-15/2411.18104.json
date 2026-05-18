@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.18104",
+  "title": "Training and Evaluating Language Models with Template-based Data Generation",
+  "abstract": "The rapid advancement of large language models (LLMs) such as GPT-3, PaLM, and Llama has significantly transformed natural language processing, showcasing remarkable capabilities in understanding and generating language. However, a fundamental bottleneck persists: these models often struggle with tasks requiring complex, multi-step reasoning, particularly in mathematical problem-solving. This deficiency stems from the critical scarcity of large-scale, high-quality, domain-specific datasets necessary for cultivating sophisticated reasoning abilities. To overcome this challenge, we introduce Template-based Data Generation (TDG), a novel and scalable paradigm that harnesses frontier LLMs (GPT-4) to automatically generate parameterized meta-templates, which in turn synthesize a virtually infinite stream of high-quality problems and solutions. Using this paradigm, we create TemplateMath Part I: TemplateGSM, a foundational dataset of over 7 million synthetically generated grade school math problems. Each problem is accompanied by a programmatically verifiable solution, offering an unprecedented level of quality at scale. This resource not only resolves the data scarcity issue for supervised fine-tuning but also provides a robust mechanism for model alignment through Reinforcement Learning with Verifiable Rewards (RLVR). Our approach elevates data augmentation by leveraging GPT-4 to generate meta-templates, ensuring diverse and complex problem structures. By providing a scalable solution to the data and verification bottleneck, TDG and TemplateGSM pave the way for a new generation of LLMs with powerful, reliable reasoning skills.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.LG",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:36:42.617241"
+}

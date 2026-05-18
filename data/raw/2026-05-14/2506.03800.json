@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.03800",
+  "title": "STELLA: A Multimodal LLM for Protein Functional Annotation via Unified Sequence-Structure Encoding",
+  "abstract": "Understanding the intricate interplay among sequence, structure, and function remains a fundamental challenge in proteomics. The sequence-structure-function paradigm posits that biological roles are governed by the tertiary geometric conformations encoded within primary sequences; consequently, integrating these multi-modal descriptors is imperative for accurate functional annotation. While protein language models (pLMs) have achieved significant progress via representation learning on massive sequence data, they often lack the capacity to incorporate high-resolution structural information and the rich textual context that characterizes protein roles. In this work, we present STELLA, a multimodal LLM that synergistically aligns bimodal (sequence-structure) representations with the textual modality to advance protein functional annotation. By leveraging ESM3 for unified bimodal encoding and Llama-3.1-8B-Instruct for natural language modeling, STELLA achieves state-of-the-art performance in two critical tasks: Functional Description Prediction and Enzyme-catalyzed Reaction Prediction. This study demonstrates that multimodal LLMs represent a paradigm shift beyond pure pLMs, offering a new frontier for protein biology and biomedical discovery. The codes can be accessed via https://github.com/ocx-lab/STELLA.",
+  "authors": [
+    null
+  ],
+  "categories": "q-bio.BM",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:36:04.576646"
+}

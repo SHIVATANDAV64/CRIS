@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2409.10038",
+  "title": "On the Diagram of Thought",
+  "abstract": "Large Language Models (LLMs) excel at many tasks but often falter on complex problems that require structured, multi-step reasoning. We introduce the Diagram of Thought (DoT), a framework that enables a single LLM to build and navigate a mental map of its reasoning. Instead of thinking in a straight line, the model constructs a dynamic diagram of ideas, where it can propose different lines of thought, critique its own steps, and synthesize validated insights into a final conclusion. This process is controller-light: it does not require an external search algorithm or planner, but it does use a deterministic online validator for grammar-constrained typed traces, register constraints, and optional solver checks. To clarify the reliability target of this process, we ground DoT in a mathematical framework from category theory. We interpret accepted typed reasoning records as diagrams in a slice topos and model synthesis of the selected proposer subdiagram as a finite limit. In the predicate fragment, this same object is equivalently a variance-reversed colimit in the opposite information order. The resulting formalism gives an auditable, step-by-step trace of the LLM's typed reasoning and separates semantic guarantees for the typed subtrace from unconstrained natural-language text and uncertified operational edges.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.LG",
+  "created": "2026-05-14",
+  "fetched_at": "2026-05-17T00:36:37.351684"
+}

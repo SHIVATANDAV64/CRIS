@@ -1,0 +1,10 @@
+---
+  name: Computer Vision / Graphics
+  description: Extracted from conversation on 2026-05-18
+  created: 2026-05-18T17:28:42.420734
+  source: chat_memory
+---
+
+# Computer Vision / Graphics
+
+Extracted from conversation on 2026-05-18

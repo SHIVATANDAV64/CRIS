@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.07738",
+  "title": "Automated Construction of a Knowledge Graph of Nuclear Fusion Energy for Effective Elicitation and Retrieval of Information",
+  "abstract": "In this document, we discuss a multi-step approach to automated construction of a knowledge graph, for structuring and representing domain-specific knowledge from large document corpora. We apply our method to build the first knowledge graph of nuclear fusion energy, a highly specialized field characterized by vast scope and heterogeneity. This is an ideal benchmark to test the key features of our pipeline, including automatic named entity recognition and entity resolution. We show how pre-trained large language models can be used to address these challenges and we evaluate their performance against Zipf's law, which characterizes human natural language. Additionally, we develop a knowledge-graph retrieval-augmented generation system that uses multiple prompts with large language models to provide contextually relevant answers to natural-language queries, including complex multi-hop questions requiring reasoning across interconnected entities.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-14",
+  "fetched_at": "2026-05-17T00:36:48.620199"
+}

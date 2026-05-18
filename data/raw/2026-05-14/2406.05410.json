@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2406.05410",
+  "title": "ChatSR: Multimodal Large Language Models for Scientific Formula Discovery",
+  "abstract": "Current multimodal large language models (MLLMs) are mainly focused on the understanding and processing of perceptual modalities such as images and videos, while their capability for scientific data understanding remains insufficient. To this end, we propose ChatSR, a novel multimodal large language model tailored for scientific data understanding. ChatSR treats scientific data as a new modality analogous to visual content and, through carefully designed encoders and modality alignment mechanisms, maps scientific data into a representation space that can be processed by large language models, enabling the model to grasp the structural characteristics and underlying regularities of scientific data. Building on this foundation, ChatSR further exploits the rich domain knowledge and strong reasoning abilities of large language models to emulate a knowledgeable human scientist: based on user-specified prior constraints and preferences expressed (such as requirements on periodicity, symmetry, etc.), it automatically generates mathematical formulas that not only accurately fit the observed data but also conform to domain priors, thereby characterizing the latent laws embodied in scientific data and promoting the automation of scientific discovery. Experiments on 13 datasets show that ChatSR achieves state-of-the-art performance on traditional symbolic regression benchmarks. In addition, ChatSR exhibits a promising zero-shot ability to understand and utilize types of prior knowledge that are not present in its training data.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:35:34.438533"
+}

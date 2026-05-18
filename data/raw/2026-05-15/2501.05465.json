@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2501.05465",
+  "title": "Small Language Models (SLMs) Can Still Pack a Punch: A survey (updated 2026)",
+  "abstract": "As foundation AI models continue to increase in size, an important question arises - is massive scale the only path forward? This survey of about 160 papers presents a family of Small Language Models (SLMs) in the 1 to 8 billion parameter range that demonstrate smaller models can perform as well, or even outperform large models. We explore task agnostic, general purpose SLMs, task-specific SLMs and techniques to create SLMs that can guide the community to build models while balancing performance, efficiency, scalability and cost. Furthermore we define and characterize SLMs' effective sizes, representing increased capability with respect to LLMs.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-14",
+  "fetched_at": "2026-05-17T00:36:45.618444"
+}

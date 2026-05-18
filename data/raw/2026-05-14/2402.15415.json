@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2402.15415",
+  "title": "Understanding Catastrophic Forgetting In LoRA via Mean-Field Attention Dynamics",
+  "abstract": "Low-Rank Adaptation (LoRA) is the dominant parameter-efficient fine-tuning method due to its favorable compute-performance trade-off, yet it suffers from catastrophic forgetting. We study forgetting through a tractable _mean-field self-attention_ toy model, where tokens evolve as an interacting particle system and LoRA acts as a low-rank perturbation. Using tools from partial differential equations and dynamical systems, we characterize regimes suggesting a phase transition between forgetting and non-forgetting behavior. We show that one phase transition appears with respect to the norm of the perturbation, and the other with respect to the depth of the Transformers. We further bound the time-to-deviation in terms of the perturbation size and spectral quantities, and corroborate the predicted trends with experiments and exploratory analyses on real models under LoRA fine-tuning.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG math.DS stat.ML",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:35:59.025277"
+}

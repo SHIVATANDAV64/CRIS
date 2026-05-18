@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2406.13619",
+  "title": "Generative Modeling by Minimizing the Wasserstein-2 Loss",
+  "abstract": "This paper develops a generative model by minimizing the second-order Wasserstein loss (the $W_2$ loss) through a distribution-dependent ordinary differential equation (ODE), whose dynamics involves the Kantorovich potential associated with the true data distribution and a current estimate of it. A main result shows that the time-marginal laws of the ODE form a gradient flow for the $W_2$ loss, which converges exponentially to the true data distribution. An Euler scheme for the ODE is proposed and it is shown to recover the gradient flow for the $W_2$ loss in the limit. An algorithm is designed by following the scheme and applying persistent training, which naturally fits our gradient-flow approach. In both low- and high-dimensional experiments, our algorithm outperforms Wasserstein generative adversarial networks by increasing the level of persistent training appropriately.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ML cs.LG",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-17T00:36:02.025910"
+}

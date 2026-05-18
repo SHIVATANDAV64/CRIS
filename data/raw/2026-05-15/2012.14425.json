@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2012.14425",
+  "title": "Vendor-Conditioned Contrastive Learning for Predicting Organizational Cyber Threat Targets",
+  "abstract": "Cyberattacks cause billions of dollars in damage annually, with malicious hackers often sharing exploit code and techniques on underground forums. Identifying which organizations are targeted by these exploits is critical for proactive Cyber Threat Intelligence (CTI). To address that gap, we propose Temporal Representation and Classification of Exploits (TRACE), a vendor-conditioned contrastive learning framework built on CySecBERT that jointly optimizes organizational target classification and vendor-coherent representations while evaluating robustness under temporal distribution shift. Unlike prior work limited to small, single-source datasets, we leverage a large-scale, multi-source corpus spanning 9 exploit databases and hacker forums, comprising 352,866 posts collected over three decades, yielding a 129,126-sample dataset across seven organizational categories. In the temporal out-of-distribution evaluation, TRACE achieves macro F1=97.00\\%, substantially outperforming 17 benchmark classical ML methods, deep learning with GloVe/FastText embeddings, and pretrained transformer models.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CR cs.LG",
+  "created": "2026-05-14",
+  "fetched_at": "2026-05-17T00:36:53.524794"
+}

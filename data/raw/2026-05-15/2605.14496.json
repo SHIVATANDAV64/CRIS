@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2605.14496",
+  "title": "Detection of residual native state entropy changes upon mutation in Fyn SH3",
+  "abstract": "NMR relaxation experiments have shown that there are small but measurable changes in the native state dynamics of the Fyn SH3 domain associated with the substitution by other amino acids of a phenylalanine residue (F20) in the hydrophobic core. We have here used experimental values of NMR order parameters for the wild type protein and two mutational variants (F20L and F20V) as restraints in molecular dynamics simulations. This approach is highly sensitive and provides an atomistic description of the subtle perturbations in native state fluctuations accompanying the mutations. The structural ensembles that we have determined using this method allow the changes in the native state entropy of the protein caused by each of the mutations to be estimated. These entropy changes correspond to free energy variations of several kcal/mol and therefore represent sizable contributions to the overall changes in stability that are associated with the amino acid mutations.",
+  "authors": [
+    null
+  ],
+  "categories": "q-bio.BM",
+  "created": "2026-05-14",
+  "fetched_at": "2026-05-17T00:37:13.615263"
+}

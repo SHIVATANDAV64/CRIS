@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2511.16868",
+  "title": "The Joint Gromov Wasserstein Objective for Multiple Object Matching",
+  "abstract": "The Gromov-Wasserstein (GW) distance serves as a powerful tool for matching objects in metric spaces. However, its traditional formulation is constrained to pairwise matching between single objects, limiting its utility in scenarios and applications requiring multiple-to-one or multiple-to-multiple object matching. In this paper, we introduce the Joint Gromov-Wasserstein (JGW) objective and extend the original framework of GW to enable simultaneous matching between collections of objects. Our formulation provides a non-negative dissimilarity measure that identifies partially isomorphic distributions of mm-spaces, with point sampling convergence. We also show that the objective can be formulated and solved for point cloud representations by adapting traditional algorithms in Optimal Transport, including entropic regularization. Our benchmarking with other variants of GW for partial matching indicates superior performance in accuracy and computational efficiency of our method, while experiments on both synthetic and real-world datasets show its effectiveness for multiple shape matching, including geometric shapes and biomolecular complexes, suggesting promising applications for solving complex matching problems across diverse domains, including computer graphics and atomic model building for structural biology.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV q-bio.BM",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:36:10.578776"
+}

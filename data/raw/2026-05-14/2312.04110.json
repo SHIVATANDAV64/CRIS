@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2312.04110",
+  "title": "Small Area Estimation of Case Growths for Timely COVID-19 Outbreak Detection",
+  "abstract": "The COVID-19 pandemic has exerted a profound impact on the global economy and continues to exact a significant toll on human lives. The COVID-19 case growth rate stands as a key epidemiological parameter to estimate and monitor for effective detection and containment of the resurgence of outbreaks. A fundamental challenge in growth rate estimation and hence outbreak detection is balancing the accuracy-speed tradeoff, where accuracy typically degrades with shorter fitting windows. In this paper, we provide a transfer learning framework, which we call Transfer Learning Random Forest (TLRF), for an effective implementation of the random forests algorithm that balances this accuracy-speed tradeoff. Specifically, we develop an identification strategy that converts the growth rate estimation problem into a regression task, which enables effective transfer learning across space and time through random forests' adaptive weighting mechanism. As such, through adaptively choosing fitting window sizes based on relevant day-level and county-level features affecting the disease spread, TLRF can accurately estimate case growth rates for counties with small sample sizes. Out-of-sample prediction analysis shows that TLRF outperforms established growth rate estimation methods. Furthermore, we conducted a case study based on outbreak case data from the state of Colorado and showed that TLRF could improve timely detections of outbreaks up to 224% when compared to the decisions made by Colorado's Department of Health and Environment (CDPHE). To demonstrate practical implementation, we developed a publicly available outbreak detection tool that operated from September 2020 through March 2023, receiving substantial attention from policymakers across all 50 states.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ML cs.LG physics.soc-ph",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:35:53.023878"
+}

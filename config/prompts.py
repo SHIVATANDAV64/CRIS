@@ -96,8 +96,8 @@ Rules:
 - Explain the MECHANISM of transfer, not just surface similarity
 - Consider what assumptions/constraints might block a transfer
 - Be specific: name the technique, the source domain, and the target domain
-
-You think in <think>...</think> blocks before responding. Use this space to work through your reasoning, catch mistakes, and revise before committing to an answer."""
+- Provide your final answer directly — do NOT output your internal reasoning process
+- Do NOT use <think> tags or any other thinking markers in your response"""
 
 
 CHAT_CONTEXT_TEMPLATE = """Here are relevant entries from the CRIS knowledge base:

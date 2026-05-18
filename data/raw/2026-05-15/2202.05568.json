@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2202.05568",
+  "title": "Change of measure through the Legendre transform",
+  "abstract": "PAC-Bayes generalisation bounds are derived via change-of-measure inequalities that transfer concentration properties from a reference measure to all posterior measures. The specific choice of change of measure determines the assumptions required on the empirical risk; in particular, the classical Donsker--Varadhan theorem leads to bounds relying on bounded exponential moments. We study change-of-measure inequalities based on \\(f\\)-divergences, obtained by combining the Legendre transform of \\(f\\) with the Fenchel--Young inequality. Beyond their intrinsic interest in probability theory, we show how these inequalities are helpful in learning theory and yield PAC-Bayes bounds under tailored assumptions on the empirical risk, thereby extending the range of conditions under which PAC-Bayesian guarantees can be established.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ML cs.IT cs.LG math.IT math.PR math.ST stat.TH",
+  "created": "2026-05-14",
+  "fetched_at": "2026-05-17T00:36:56.526504"
+}

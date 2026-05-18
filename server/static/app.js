@@ -10,11 +10,15 @@ let currentTab = 'history';
 let selectedPapers = new Set();
 let droppedPapers = new Map(); // arxiv_id -> {title, id}
 let webSearchVisible = false;
+let selectedModel = 'darwin-opus';
+let availableModels = [];
 
 // ── Initialization ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadHistory();
     loadModelName();
+    loadModels();
+    loadSelectedModel();
 });
 
 async function loadModelName() {
@@ -27,6 +31,69 @@ async function loadModelName() {
         console.error('Failed to load model name:', e);
     }
 }
+
+async function loadModels() {
+    try {
+        const resp = await fetch('/api/models');
+        const data = await resp.json();
+        availableModels = data.models;
+        renderModelDropdown();
+    } catch (e) {
+        console.error('Failed to load models:', e);
+    }
+}
+
+function loadSelectedModel() {
+    const saved = localStorage.getItem('cris_selected_model');
+    if (saved && availableModels.find(m => m.id === saved)) {
+        selectedModel = saved;
+    }
+    updateModelSelectorDisplay();
+}
+
+function renderModelDropdown() {
+    const list = document.getElementById('model-dropdown-list');
+    if (!list || availableModels.length === 0) return;
+
+    list.innerHTML = availableModels.map(m => `
+        <div class="model-dropdown-item ${m.id === selectedModel ? 'active' : ''}" onclick="selectModel('${m.id}')">
+            <div class="model-dropdown-item-info">
+                <div class="model-dropdown-item-name">${escapeHtml(m.name)}</div>
+                <div class="model-dropdown-item-desc">${escapeHtml(m.description)}</div>
+            </div>
+            <span class="model-dropdown-item-provider">${m.provider}</span>
+        </div>
+    `).join('');
+}
+
+function toggleModelDropdown() {
+    const dropdown = document.getElementById('model-dropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectModel(modelId) {
+    selectedModel = modelId;
+    localStorage.setItem('cris_selected_model', modelId);
+    updateModelSelectorDisplay();
+    renderModelDropdown();
+    document.getElementById('model-dropdown').style.display = 'none';
+}
+
+function updateModelSelectorDisplay() {
+    const nameEl = document.getElementById('model-selector-name');
+    const model = availableModels.find(m => m.id === selectedModel);
+    if (nameEl && model) {
+        nameEl.textContent = model.name;
+    }
+}
+
+document.addEventListener('click', (e) => {
+    const selector = document.getElementById('model-selector');
+    const dropdown = document.getElementById('model-dropdown');
+    if (selector && dropdown && !selector.contains(e.target)) {
+        dropdown.style.display = 'none';
+    }
+});
 
 // ── Tab Navigation ─────────────────────────────────────────────────────
 function switchTab(tab) {
@@ -486,6 +553,7 @@ async function sendSelectedToChat() {
                 use_reasoning: true,
                 session_id: sessionId,
                 source_papers: sourcePapers,
+                model_id: selectedModel,
             }),
         });
 
@@ -584,7 +652,7 @@ async function sendSelectedToChat() {
                             contentStarted = true;
                             textDiv.innerHTML = '';
                         }
-                        fullContent = data.content;
+                        fullContent += data.content;
                         textDiv.innerHTML = formatMarkdown(fullContent);
                         scrollToBottom();
                     } else if (data.type === 'done') {
@@ -910,6 +978,7 @@ async function sendMessage() {
                 use_reasoning: true,
                 session_id: sessionId,
                 source_papers: sourcePaperIds,
+                model_id: selectedModel,
             }),
         });
 
@@ -1008,7 +1077,7 @@ async function sendMessage() {
                             contentStarted = true;
                             textDiv.innerHTML = '';
                         }
-                        fullContent = data.content;
+                        fullContent += data.content;
                         textDiv.innerHTML = formatMarkdown(fullContent);
                         scrollToBottom();
                     } else if (data.type === 'done') {
@@ -1180,9 +1249,10 @@ function getDomainIcon(domain) {
 
 function formatMarkdown(text) {
     if (!text) return '';
+    if (text.length > 50000) return escapeHtml(text.substring(0, 50000)) + '... (truncated)';
     let html = escapeHtml(text);
-    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    html = html.replace(/\*\*([^\*]+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*([^\*]+?)\*/g, '<em>$1</em>');
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
     html = html.split('\n\n').map(p => `<p>${p}</p>`).join('');
     html = html.replace(/\n/g, '<br>');

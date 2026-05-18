@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2211.16113",
+  "title": "Timing-Based Backpropagation in Spiking Neural Networks Without Single-Spike Restrictions",
+  "abstract": "We propose a novel backpropagation algorithm for training spiking neural networks (SNNs) that encodes information in the relative multiple spike timing of individual neurons without single-spike restrictions. The proposed algorithm inherits the advantages of conventional timing-based methods in that it computes accurate gradients with respect to spike timing, which promotes ideal temporal coding. Unlike conventional methods where each neuron fires at most once, the proposed algorithm allows each neuron to fire multiple times. This extension naturally improves the computational capacity of SNNs. Our SNN model outperformed comparable SNN models and achieved as high accuracy as non-convolutional artificial neural networks. The spike count property of our networks was altered depending on the time constant of the postsynaptic current and the membrane potential. Moreover, we found that there existed the optimal time constant with the maximum test accuracy. That was not seen in conventional SNNs with single-spike restrictions on time-to-fast-spike (TTFS) coding. This result demonstrates the computational properties of SNNs that biologically encode information into the multi-spike timing of individual neurons. Our code would be publicly available.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.NE cs.LG",
+  "created": "2022-11-29",
+  "fetched_at": "2026-05-17T00:36:59.526864"
+}

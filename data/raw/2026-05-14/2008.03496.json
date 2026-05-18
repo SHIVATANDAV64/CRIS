@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2008.03496",
+  "title": "Human Robot Collaborative Assembly Planning: An Answer Set Programming Approach",
+  "abstract": "For planning an assembly of a product from a given set of parts, robots necessitate certain cognitive skills: high-level planning is needed to decide the order of actuation actions, while geometric reasoning is needed to check the feasibility of these actions. For collaborative assembly tasks with humans, robots require further cognitive capabilities, such as commonsense reasoning, sensing, and communication skills, not only to cope with the uncertainty caused by incomplete knowledge about the humans' behaviors but also to ensure safer collaborations. We propose a novel method for collaborative assembly planning under uncertainty, that utilizes hybrid conditional planning extended with commonsense reasoning and a rich set of communication actions for collaborative tasks. Our method is based on answer set programming. We show the applicability of our approach in a real-world assembly domain, where a bi-manual Baxter robot collaborates with a human teammate to assemble furniture. This manuscript is under consideration for acceptance in TPLP.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.LO cs.RO",
+  "created": "2020-08-08",
+  "fetched_at": "2026-05-17T00:35:28.436019"
+}

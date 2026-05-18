@@ -146,6 +146,19 @@
                     <span class="header-subtitle" id="chat-subtitle">Powered by wiki-style knowledge synthesis</span>
                 </div>
                 <div class="header-actions">
+                    <div class="model-selector" id="model-selector">
+                        <button class="model-selector-btn" id="model-selector-btn" onclick="toggleModelDropdown()">
+                            <span class="model-selector-dot"></span>
+                            <span class="model-selector-name" id="model-selector-name">Darwin-36B-Opus</span>
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                        <div class="model-dropdown" id="model-dropdown" style="display: none;">
+                            <div class="model-dropdown-header">Select Model</div>
+                            <div class="model-dropdown-list" id="model-dropdown-list"></div>
+                        </div>
+                    </div>
                     <button class="web-search-btn" onclick="toggleWebSearch()" title="Web Search">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                             <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>

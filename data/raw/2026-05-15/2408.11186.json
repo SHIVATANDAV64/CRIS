@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2408.11186",
+  "title": "Sequential Resource Trading Using Comparison-Based Gradient Estimation",
+  "abstract": "We study sequential multi-issue trading between two greedily rational agents who exchange resources from a finite set of categories. Each agent's utility depends on its allocation, but the offering agent does not know the responding agent's utility function and receives only accept or reject feedback. We propose a comparison-based algorithm that interprets acceptance and rejection responses as pairwise state comparisons, allowing the offering agent to iteratively estimate the responding agent's gradient. Rejected offers prune the space of feasible gradient directions, enabling systematic refinement of possibly mutually beneficial trades. The algorithm guarantees that each accepted trade strictly improves both agents' utilities and, after finitely many rejected offers, either identifies a mutually beneficial trade or certifies that the current allocation is weakly Pareto optimal. We further show that the sequence of accepted trades asymptotically converges to the Pareto front under mild assumptions. We evaluate the method against standard baselines and show that it achieves higher societal benefit with fewer offers across multiple trading settings. We further validate the approach in a user study, demonstrating strong performance in scenarios with substantial resource conflict.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.MA cs.AI math.OC",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:36:31.350471"
+}

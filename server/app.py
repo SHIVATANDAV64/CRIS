@@ -64,20 +64,21 @@ STATIC_DIR.mkdir(exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
-# Lazy-loaded model client
-_model_client = None
+# Lazy-loaded model clients (one per backend)
+_model_clients: dict[str, ModelClient] = {}
 
 
-def get_model_client() -> ModelClient:
-    """Lazy-load the model client."""
-    global _model_client
-    if _model_client is None:
+def get_model_client(model_id: Optional[str] = None) -> ModelClient:
+    """Lazy-load the model client for the requested backend."""
+    global _model_clients
+    key = model_id or "darwin-opus"
+    if key not in _model_clients:
         try:
-            _model_client = ModelClient()
+            _model_clients[key] = ModelClient(model_id=model_id)
         except Exception as e:
-            print(f"Warning: Could not initialize model client: {e}")
+            print(f"Warning: Could not initialize model client ({key}): {e}")
             print("Chat will work in search-only mode.")
-    return _model_client
+    return _model_clients[key]
 
 
 # ── Request/Response Models ──────────────────────────────────────────────
@@ -87,6 +88,7 @@ class ChatRequest(BaseModel):
     session_id: Optional[str] = None
     use_reasoning: bool = True
     source_papers: Optional[list[str]] = None  # arxiv_ids of papers to use as context
+    model_id: Optional[str] = None  # 'darwin-opus' or 'minimax-m2.5'
 
 
 class ChatResponse(BaseModel):
@@ -242,41 +244,41 @@ async def chat(req: ChatRequest):
     history_context = format_history_for_prompt(session_id)
 
     if req.use_reasoning:
-        client = get_model_client()
-        if client:
-            result = client.generate(
-                user_message=query,
-                wiki_context=results if is_research else None,
-                conversation_history=history_context,
-            )
-
-            add_message(
-                session_id,
-                "assistant",
-                result["response"],
-                thinking=result.get("thinking", ""),
-                sources=sources,
-            )
-
-            try:
-                extract_and_store_memory(
+            client = get_model_client(req.model_id)
+            if client:
+                result = client.generate(
                     user_message=query,
-                    assistant_response=result["response"],
-                    session_id=session_id,
-                    wiki_dir=WIKI_DIR,
+                    wiki_context=results if is_research else None,
+                    conversation_history=history_context,
+                )
+
+                add_message(
+                    session_id,
+                    "assistant",
+                    result["response"],
+                    thinking=result.get("thinking", ""),
                     sources=sources,
                 )
-            except Exception as e:
-                print(f"Memory extraction failed: {e}")
 
-            return ChatResponse(
-                response=result["response"],
-                thinking=result.get("thinking", ""),
-                sources=sources,
-                tokens_used=result.get("tokens_used", 0),
-                mode=result.get("mode", ""),
-                session_id=session_id,
-            )
+                try:
+                    extract_and_store_memory(
+                        user_message=query,
+                        assistant_response=result["response"],
+                        session_id=session_id,
+                        wiki_dir=WIKI_DIR,
+                        sources=sources,
+                    )
+                except Exception as e:
+                    print(f"Memory extraction failed: {e}")
+
+                return ChatResponse(
+                    response=result["response"],
+                    thinking=result.get("thinking", ""),
+                    sources=sources,
+                    tokens_used=result.get("tokens_used", 0),
+                    mode=result.get("mode", ""),
+                    session_id=session_id,
+                )
 
     summary = f"Found {len(results)} relevant papers:\n\n"
     for i, r in enumerate(results, 1):
@@ -365,36 +367,44 @@ async def chat_stream(req: ChatRequest):
             yield f"data: {json.dumps({'type': 'sources', 'sources': sources, 'session_id': session_id})}\n\n"
 
         if req.use_reasoning:
-            client = get_model_client()
+            client = get_model_client(req.model_id)
             if client:
                 full_response = ""
-
-                for chunk in client.generate_stream(
-                    user_message=query,
-                    wiki_context=results if is_research else None,
-                    conversation_history=history_context,
-                ):
-                    full_response += chunk
-                    if chunk:
-                        yield f"data: {json.dumps({'type': 'content', 'content': chunk})}\n\n"
-
-                add_message(
-                    session_id,
-                    "assistant",
-                    full_response,
-                    sources=sources,
-                )
+                stream_timed_out = False
 
                 try:
-                    extract_and_store_memory(
+                    for chunk in client.generate_stream(
                         user_message=query,
-                        assistant_response=full_response,
-                        session_id=session_id,
-                        wiki_dir=WIKI_DIR,
+                        wiki_context=results if is_research else None,
+                        conversation_history=history_context,
+                    ):
+                        full_response += chunk
+                        if chunk:
+                            yield f"data: {json.dumps({'type': 'content', 'content': chunk})}\n\n"
+                except Exception as e:
+                    print(f"[chat_stream] Streaming error: {e}")
+                    if not full_response:
+                        yield f"data: {json.dumps({'type': 'content', 'content': f'**Error**: {str(e)}'})}\n\n"
+                    stream_timed_out = True
+
+                if full_response or stream_timed_out:
+                    add_message(
+                        session_id,
+                        "assistant",
+                        full_response if full_response else f"Error: {str(e) if 'e' in dir() else 'Stream failed'}",
                         sources=sources,
                     )
-                except Exception as e:
-                    print(f"Memory extraction failed: {e}")
+
+                    try:
+                        extract_and_store_memory(
+                            user_message=query,
+                            assistant_response=full_response,
+                            session_id=session_id,
+                            wiki_dir=WIKI_DIR,
+                            sources=sources,
+                        )
+                    except Exception as e:
+                        print(f"Memory extraction failed: {e}")
 
         else:
             summary = f"Found {len(results)} relevant papers:\n\n"
@@ -438,6 +448,28 @@ async def get_session_messages(session_id: str):
 
     messages = get_messages(session_id)
     return {"session": session, "messages": messages}
+
+
+@app.get("/api/sessions/{session_id}/export")
+async def export_session(session_id: str):
+    """Export a session as a downloadable JSON file."""
+    session = get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    messages = get_messages(session_id)
+    export_data = {
+        "session": session,
+        "messages": messages,
+        "exported_at": datetime.now().isoformat(),
+    }
+
+    return JSONResponse(
+        content=export_data,
+        headers={
+            "Content-Disposition": f'attachment; filename="cris-session-{session_id[:8]}.json"',
+        },
+    )
 
 
 @app.patch("/api/sessions/{session_id}")
@@ -511,6 +543,28 @@ async def get_raw_paper(arxiv_id: str):
 
 
 # ── Settings Endpoints ───────────────────────────────────────────────────
+
+@app.get("/api/models")
+async def list_models():
+    """List available models for the model selector."""
+    return {
+        "models": [
+            {
+                "id": "darwin-opus",
+                "name": "Darwin-36B-Opus",
+                "provider": "Modal",
+                "description": "Fine-tuned Qwen3.6-35B-A3B for research reasoning",
+            },
+            {
+                "id": "minimax-m2.5",
+                "name": "MiniMax M2.5",
+                "provider": "Bedrock",
+                "description": "AWS Bedrock hosted MiniMax model",
+            },
+        ],
+        "default": "darwin-opus",
+    }
+
 
 @app.get("/api/settings")
 async def get_settings():

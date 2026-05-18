@@ -1,6 +1,8 @@
 """
 Model Client — Unified interface for research reasoning inference.
-Uses FINAL-Bench/Darwin-36B-Opus (base: Qwen/Qwen3.6-35B-A3B) deployed on Modal.com via vLLM OpenAI-compatible endpoint.
+Supports:
+  - FINAL-Bench/Darwin-36B-Opus (base: Qwen/Qwen3.6-35B-A3B) via Modal.com
+  - MiniMax M2.5 via AWS Bedrock (OpenAI-compatible endpoint)
 """
 import re
 import json
@@ -13,18 +15,45 @@ from config.settings import (
     REASONING_MAX_TOKENS,
     REASONING_TEMPERATURE,
     REASONING_TOP_P,
+    BEDROCK_BASE_URL,
+    BEDROCK_MODEL,
+    BEDROCK_API_KEY,
 )
 from config.prompts import CHAT_SYSTEM, CHAT_CONTEXT_TEMPLATE
 
 
 class ModelClient:
     """
-    Client for research reasoning inference via Modal.com (FINAL-Bench/Darwin-36B-Opus).
+    Client for research reasoning inference.
+    Supports Modal (Darwin-36B-Opus) and Bedrock (MiniMax M2.5) backends.
     """
 
-    def __init__(self):
-        self._base_url = MODAL_API_URL.rstrip("/")
-        print(f"[model_client] Connected to Modal ({REASONING_MODEL_ID})")
+    def __init__(self, model_id: Optional[str] = None):
+        """
+        Args:
+            model_id: 'darwin-opus' (Modal) or 'minimax-m2.5' (Bedrock).
+                      Defaults to 'darwin-opus' for backward compatibility.
+        """
+        self._model_id = model_id or "darwin-opus"
+
+        if self._model_id == "minimax-m2.5":
+            self._base_url = BEDROCK_BASE_URL.rstrip("/") + "/chat/completions"
+            self._model_name = BEDROCK_MODEL
+            self._use_bedrock = True
+            print(f"[model_client] Using Bedrock ({self._model_name})")
+        else:
+            self._base_url = MODAL_API_URL.rstrip("/")
+            self._model_name = REASONING_MODEL_ID
+            self._use_bedrock = False
+            print(f"[model_client] Connected to Modal ({self._model_name})")
+
+    @property
+    def model_id(self) -> str:
+        return self._model_id
+
+    @property
+    def model_name(self) -> str:
+        return self._model_name
 
     def generate(
         self,
@@ -103,9 +132,10 @@ class ModelClient:
         yield from self._generate_stream(sys_prompt, full_user_message)
 
     def _generate(self, system_prompt: str, user_message: str) -> dict:
-        """Generate response via Modal endpoint."""
+        """Generate response via Modal or Bedrock endpoint."""
         try:
             payload = {
+                "model": self._model_name if self._use_bedrock else None,
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_message},
@@ -114,11 +144,17 @@ class ModelClient:
                 "temperature": REASONING_TEMPERATURE,
                 "top_p": REASONING_TOP_P,
             }
+            if not self._use_bedrock:
+                payload.pop("model")
+
+            headers = {"Content-Type": "application/json"}
+            if self._use_bedrock and BEDROCK_API_KEY:
+                headers["Authorization"] = f"Bearer {BEDROCK_API_KEY}"
 
             response = requests.post(
                 self._base_url,
                 json=payload,
-                headers={"Content-Type": "application/json"},
+                headers=headers,
                 timeout=300,
             )
             response.raise_for_status()
@@ -128,26 +164,33 @@ class ModelClient:
             thinking, answer = self._parse_thinking(content)
             tokens = data.get("usage", {}).get("total_tokens", 0)
 
+            mode_label = "bedrock" if self._use_bedrock else "modal"
+
             return {
                 "response": answer,
                 "thinking": thinking,
                 "tokens_used": tokens,
-                "mode": "modal",
+                "mode": mode_label,
             }
 
         except Exception as e:
-            print(f"[model_client] Modal inference error: {e}")
+            provider = "Bedrock" if self._use_bedrock else "Modal"
+            print(f"[model_client] {provider} inference error: {e}")
             return {
                 "response": f"Error generating response: {str(e)}",
                 "thinking": "",
                 "tokens_used": 0,
-                "mode": "modal",
+                "mode": "modal" if not self._use_bedrock else "bedrock",
             }
 
     def _generate_stream(self, system_prompt: str, user_message: str) -> Generator[str, None, None]:
-        """Generate streaming response via Modal endpoint using SSE."""
+        """Generate streaming response via Modal or Bedrock endpoint using SSE.
+        For Modal: collects full response, strips thinking, yields clean answer.
+        For Bedrock: streams with real-time thinking tag filtering.
+        """
         try:
             payload = {
+                "model": self._model_name if self._use_bedrock else None,
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_message},
@@ -157,17 +200,59 @@ class ModelClient:
                 "top_p": REASONING_TOP_P,
                 "stream": True,
             }
+            if not self._use_bedrock:
+                payload.pop("model")
+
+            headers = {"Content-Type": "application/json", "Accept": "text/event-stream"}
+            if self._use_bedrock and BEDROCK_API_KEY:
+                headers["Authorization"] = f"Bearer {BEDROCK_API_KEY}"
 
             response = requests.post(
                 self._base_url,
                 json=payload,
-                headers={"Content-Type": "application/json", "Accept": "text/event-stream"},
+                headers=headers,
                 stream=True,
                 timeout=300,
             )
             response.raise_for_status()
 
-            full_content = ""
+            content_type = response.headers.get("content-type", "")
+            if "text/event-stream" not in content_type and "application/json" in content_type:
+                data = response.json()
+                content = data["choices"][0]["message"]["content"] or ""
+                _, answer = self._parse_thinking(content)
+                if answer:
+                    yield answer
+                return
+
+            if not self._use_bedrock:
+                # Modal: collect full response, strip thinking, yield clean answer
+                full_content = ""
+                for line in response.iter_lines():
+                    if not line:
+                        continue
+                    line = line.decode("utf-8")
+                    if line.startswith("data: "):
+                        data_str = line[6:]
+                        if data_str.strip() == "[DONE]":
+                            break
+                        try:
+                            data = json.loads(data_str)
+                            delta = data.get("choices", [{}])[0].get("delta", {})
+                            chunk = delta.get("content", "")
+                            if chunk:
+                                full_content += chunk
+                        except json.JSONDecodeError:
+                            continue
+                _, answer = self._parse_thinking(full_content)
+                if answer:
+                    yield answer
+                return
+
+            # Bedrock: stream with real-time thinking tag filtering
+            in_thinking = False
+            pending = ""
+
             for line in response.iter_lines():
                 if not line:
                     continue
@@ -179,15 +264,39 @@ class ModelClient:
                     try:
                         data = json.loads(data_str)
                         delta = data.get("choices", [{}])[0].get("delta", {})
-                        content = delta.get("content", "")
-                        if content:
-                            full_content += content
-                            yield content
+                        chunk = delta.get("content", "")
+                        if not chunk:
+                            continue
+
+                        pending += chunk
+
+                        while pending:
+                            if not in_thinking:
+                                idx = pending.find("<think>")
+                                if idx != -1:
+                                    before = pending[:idx]
+                                    if before:
+                                        yield before
+                                    pending = pending[idx + 9:]
+                                    in_thinking = True
+                                else:
+                                    yield pending
+                                    pending = ""
+                            else:
+                                idx = pending.find("</think>")
+                                if idx != -1:
+                                    pending = pending[idx + 10:]
+                                    in_thinking = False
+                                else:
+                                    pending = ""
+                                    break
+
                     except json.JSONDecodeError:
                         continue
 
         except Exception as e:
-            print(f"[model_client] Modal streaming error: {e}")
+            provider = "Bedrock" if self._use_bedrock else "Modal"
+            print(f"[model_client] {provider} streaming error: {e}")
             yield f"\n\n[Error: {str(e)}]"
 
     def _parse_thinking(self, content: str) -> tuple[str, str]:

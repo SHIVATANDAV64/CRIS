@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2409.02038",
+  "title": "BEAVER: An Enterprise Benchmark for Text-to-SQL",
+  "abstract": "Existing text-to-SQL benchmarks have largely been constructed from public databases with well-structured schemas and simplistic question-SQL pairs. While large language models (LLMs) excel on these settings, their efficacy in complex private enterprise environments, characterized by intricate schemas, domain knowledge, and analytical user queries involving sophisticated structures and functions, remains unproven. To bridge this gap, we introduce BEAVER, the first text-to-SQL benchmark derived from private data warehouses. It comprises 9128 question-SQL pairs sourced from real-world query logs and 812 tables across 19 diverse domains. Building this benchmark is challenging because (1) enterprise query logs are scarce due to privacy constraints, and (2) existing all-or-nothing evaluation metrics based on accuracy make error diagnosis difficult -- especially when producing a correct query involves solving multiple compounded challenges, such as domain knowledge and query complexity. We address these issues at two levels. At the dataset level, we synthesize high-fidelity, expert-verified queries that increase dataset size and isolate individual challenges or combine them, producing queries focused on domain knowledge, query complexity, and both. At the evaluation level, we provide human annotations and evaluation metrics for five critical subtasks to enable fine-grained analysis. Our evaluation reveals a significant performance gap compared to existing benchmarks: SOTA agentic frameworks using the advanced model GPT-5.2 achieve only 10.8% accuracy. When provided with all subtask annotations as oracle hints, accuracy increases to 30.1%, confirming that a major bottleneck lies in correctly resolving these subtasks. Finally, we provide a taxonomy of the residual errors that persist even with subtask hints, identifying specific challenges such as the use of advanced functions.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.DB",
+  "created": "2026-05-13",
+  "fetched_at": "2026-05-17T00:35:44.880943"
+}

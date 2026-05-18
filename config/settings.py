@@ -140,7 +140,7 @@ COMPILER_MODEL = BEDROCK_MODEL
 COMPILER_MAX_TOKENS = _config["wiki"]["compiler_max_tokens"]
 COMPILER_TEMPERATURE = _config["wiki"]["compiler_temperature"]
 
-REASONING_MODEL_ID = BEDROCK_MODEL
+REASONING_MODEL_ID = _config["model"]["modal_model"]
 REASONING_MAX_TOKENS = _config["model"]["max_tokens"]
 REASONING_TEMPERATURE = _config["model"]["temperature"]
 REASONING_TOP_P = _config["model"]["top_p"]
