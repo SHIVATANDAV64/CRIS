@@ -11,6 +11,8 @@ Deploy with:
 import modal
 import json
 import time
+import asyncio
+from threading import Thread
 from pydantic import BaseModel
 from typing import Optional, AsyncGenerator
 from fastapi.responses import StreamingResponse
@@ -110,8 +112,10 @@ class DarwinOpus:
 
     @modal.method()
     def generate_stream(self, messages: list[dict], max_tokens: int = 8192, temperature: float = 0.7, top_p: float = 0.95):
-        """Generate response token-by-token for streaming."""
+        """Generate response token-by-token using TextIteratorStreamer for real streaming."""
         import torch
+        from transformers import TextIteratorStreamer
+
         prompt = self.tokenizer.apply_chat_template(
             messages,
             tokenize=False,
@@ -121,42 +125,53 @@ class DarwinOpus:
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
         input_len = inputs["input_ids"].shape[1]
 
-        with torch.no_grad():
-            outputs = self.model.generate(
-                **inputs,
-                max_new_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                do_sample=True,
-                pad_token_id=self.tokenizer.eos_token_id,
-            )
+        streamer = TextIteratorStreamer(
+            self.tokenizer,
+            skip_prompt=True,
+            skip_special_tokens=True,
+            timeout=300,
+        )
 
-        full_text = ""
-        for i in range(input_len, len(outputs[0])):
-            token = self.tokenizer.decode(outputs[0][i], skip_special_tokens=True)
-            full_text += token
-            yield full_text
+        generation_kwargs = {
+            **inputs,
+            "max_new_tokens": max_tokens,
+            "temperature": temperature,
+            "top_p": top_p,
+            "do_sample": True,
+            "pad_token_id": self.tokenizer.eos_token_id,
+            "streamer": streamer,
+        }
+
+        thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
+        thread.start()
+
+        for new_text in streamer:
+            yield new_text
+
+        thread.join()
 
     @modal.fastapi_endpoint(method="POST", docs=True)
-    def chat_completions(self, request: ChatRequest):
+    async def chat_completions(self, request: ChatRequest):
         """OpenAI-compatible /v1/chat/completions endpoint with streaming support."""
         if request.stream:
             async def event_generator() -> AsyncGenerator[str, None]:
                 chunk_id = f"cris-{int(time.time())}"
+                full_text = ""
                 try:
-                    for full_text in self.generate_stream.remote_gen(
+                    async for token in self.generate_stream.remote_gen.aio(
                         request.messages,
                         request.max_tokens,
                         request.temperature,
                         request.top_p,
                     ):
+                        full_text += token
                         chunk = {
                             "id": chunk_id,
                             "object": "chat.completion.chunk",
                             "model": MODEL_ID,
                             "choices": [{
                                 "index": 0,
-                                "delta": {"content": full_text},
+                                "delta": {"content": token},
                                 "finish_reason": None,
                             }],
                         }
@@ -180,7 +195,7 @@ class DarwinOpus:
 
             return StreamingResponse(event_generator(), media_type="text/event-stream")
         else:
-            result = self.generate.remote(
+            result = await self.generate.remote.aio(
                 request.messages,
                 request.max_tokens,
                 request.temperature,
