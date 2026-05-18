@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2402.07619",
+  "title": "Developing a Multi-variate Prediction Model For COVID-19 From Crowd-sourced Respiratory Voice Data",
+  "abstract": "COVID-19 has affected more than 223 countries worldwide and in the Post-COVID Era, there is a pressing need for non-invasive, low-cost, and highly scalable solutions to detect COVID-19. We develop a deep learning model to identify COVID-19 from voice recording data. The novelty of this work is in the development of deep learning models for COVID-19 identification from only voice recordings. We use the Cambridge COVID-19 Sound database which contains 893 speech samples, crowd-sourced from 4352 participants via a COVID-19 Sounds app. Voice features including Mel-spectrograms and Mel-frequency cepstral coefficients (MFCC) and CNN Encoder features are extracted. Based on the voice data, we develop deep learning classification models to detect COVID-19 cases. These models include Long Short-Term Memory (LSTM) and Convolutional Neural Network (CNN) and Hidden-Unit BERT (HuBERT). We compare their predictive power to baseline machine learning models. HuBERT achieves the highest accuracy of 86\\% and the highest AUC of 0.93. The results achieved with the proposed models suggest promising results in COVID-19 diagnosis from voice recordings when compared to the results obtained from the state-of-the-art.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.SD cs.AI eess.AS",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:36:01.982243"
+}

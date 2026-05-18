@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2410.01308",
+  "title": "How Hard Is It for Message-Passing GNNs to Simulate One Weisfeiler-Lehman Color-Refinement Step?",
+  "abstract": "Message-passing graph neural networks (MPGNNs) are commonly compared with the Weisfeiler-Lehman (WL) color-refinement procedure, but this comparison does not quantify the resource parameters a network needs to realize color refinement with bounded-size messages and finite numerical precision. We study the cost of simulating a single color-refinement step on unattributed graphs. We distinguish input-independent, or oblivious, simulation from instance-dependent simulation. In the former, the parameters, or their distributions in randomized models, are fixed before the input instance is known. Our results show that the local form of WL color refinement hides a global relabeling problem. In the oblivious setting, deterministic and zero-error randomized MPGNNs cannot solve this problem in the worst case using only shallow networks with small messages. We complement this lower bound with a nearly matching construction in a stronger rooted, port-aware model. By contrast, when the color set is large, bounded-error randomness can greatly reduce the cost, and a one-layer MPGNN with messages of logarithmic size and a logarithmic number of random bits suffices. We show that this logarithmic number of random bits is essentially necessary for shallow, small-message simulations. When the color set is small, we still obtain a rooted, port-aware simulation, but this construction requires more layers or larger messages. We also prove that this extra cost is partly unavoidable, as small color sets force a nontrivial trade-off between the number of layers and the message size. Finally, instance-dependent simulation can be much shallower, but the required instance-specific parameters are not necessarily easy to find. Together, these results reveal quantitative structure hidden behind the statement that MPGNNs match WL color refinement.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:28:15.018923"
+}

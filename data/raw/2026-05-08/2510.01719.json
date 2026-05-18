@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.01719",
+  "title": "What MLLMs Learn about When they Learn about Multimodal Reasoning",
+  "abstract": "Evaluation of multimodal reasoning models is typically reduced to a single accuracy score, implicitly treating reasoning as a unitary capability. We introduce MathLens, a benchmark of textbook-style geometry problems that exposes this assumption by operationally decomposing performance into perception, reasoning, and multimodal-specific components. Each problem is derived from a symbolic specification and accompanied by visual diagrams, text-only variants, multimodal questions, and targeted perceptual probes, enabling controlled measurement of each component. Using this decomposition, we show that common training strategies induce systematically different capability profiles that are invisible under aggregate accuracy. Reinforcement learning primarily improves perceptual grounding and robustness to diagram variation, while textual SFT yields gains through reflective reasoning. In contrast, as perception and reasoning improve, a growing fraction of remaining errors fall outside these components and are categorized as multimodal-specific. These results suggest that apparent progress in multimodal reasoning reflects shifting balances among subskills rather than uniform advancement, motivating evaluation beyond scalar accuracy.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:46.987546"
+}

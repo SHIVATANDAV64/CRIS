@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2502.01941",
+  "title": "Semantic Integrity Matters: Benchmarking and Preserving High-Density Reasoning in KV Cache Compression",
+  "abstract": "While Key-Value (KV) cache compression is essential for efficient LLM inference, current evaluations disproportionately focus on sparse retrieval tasks, potentially masking the degradation of High-Density Reasoning where Chain-of-Thought (CoT) coherence is critical. We introduce KVFundaBench to systematically evaluate this gap, revealing a sharp dichotomy: while retrieval tasks remain robust, reasoning tasks exhibit severe Task-Dependent Degradation under aggressive compression due to disrupted CoT links. Extending our analysis to the DeepSeek-R1 model, we uncover that its specialized attention patterns offer unique insights into the fragility of reasoning chains. Guided by these findings -- specifically the necessity of preserving few-shot examples as indivisible Semantic Units -- we propose ShotKV. This approach explicitly separates prefill and decoding phases to prioritize semantic integrity. Empirical results demonstrate that ShotKV achieves 9%-18% accuracy improvements on long-context generation tasks and effectively generalizes to document QA, all while delivering an 11% latency reduction compared to full cache inference.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:36:31.992313"
+}

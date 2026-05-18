@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.05085",
+  "title": "S2S-Arena: Evaluating Paralinguistic Instruction Following in Speech-to-Speech Models",
+  "abstract": "Recent advances in large language models (LLMs) have fundamentally reshaped speech-to-speech (S2S) systems, enabling increasingly natural spoken interaction. However, existing benchmarks still rely heavily on text-based evaluation and largely ignore paralinguistic cues such as prosody, emotion, and speaker traits, which are central to expressive and human-like communication. We introduce S2S-Arena, a speech-native benchmark for evaluating instruction-following S2S models with explicit assessment of both semantic understanding and paralinguistic expression. S2S-Arena features a four-level interaction protocol that systematically probes models under increasing paralinguistic complexity, a two-stage data construction pipeline that produces 1,243 speech samples spanning 100+ real-world tasks, and an arena-style evaluation framework that enables reference-free, pairwise comparison directly in the speech modality. Benchmarking 10 state-of-the-art S2S systems over 1,000+ comparisons reveals substantial performance gaps (especially under complex paralinguistic demands) between current academic and industrial systems. Our analysis further identifies key design factors governing expressive instruction following, providing actionable insights for building more natural, robust, and human-aligned speech agents.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.SD eess.AS",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:26:50.070622"
+}

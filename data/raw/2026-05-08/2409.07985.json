@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2409.07985",
+  "title": "Games for AI Control: Models of Safety Evaluations of AI Deployment Protocols",
+  "abstract": "To evaluate the safety and usefulness of deployment protocols for untrusted AIs, AI Control uses a red-teaming exercise played between a protocol designer and an adversary. This paper introduces AI-Control Games, a formal decision-making model of the red-teaming exercise as a multi-objective, partially observable, stochastic game. We also introduce reductions from AI-Control Games to a special case of zero-sum partially observable stochastic games that allow us to leverage existing algorithms to find Pareto-optimal protocols. We apply our formalism to model, evaluate and synthesise protocols for deploying untrusted language models as programming assistants, focusing on Trusted Monitoring protocols, which use weaker language models and limited human assistance. To demonstrate the utility of our formalism, we show improvements over empirical studies in existing settings, evaluate protocols in new settings, and analyse how modelling assumptions affect the safety and usefulness of protocols. Finally, we leverage our formalism to precisely describe some of the implicit assumptions in prior control work.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.LG",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:03.622512"
+}

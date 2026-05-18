@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2501.19337",
+  "title": "Token-Level Entropy Reveals Demographic Disparities in Language Models",
+  "abstract": "We ask whether demographic identity, signaled by a name alone, systematically reshapes the generative distribution of a language model. Measuring full-vocabulary Shannon entropy at temperature zero across six open-weight base models and 5,760 implicit sentence-completion prompts (e.g., \"Tanisha walked into the office on a Monday morning and\"), we find that Black-associated names produce higher first-token entropy than White-associated names across all six architectures - opposite to the output-level homogeneity bias documented under explicit demographic prompting (Lee et al., 2024) - and Black-associated names always produce greater entropy above identity-neutral baselines than White-associated names ($ΔΔ> 0$ in all six models). Women-associated names co-occur with lower first-token entropy (DL-pooled $\\hatβ= -0.041, p = .019$) and more homogeneous outputs ($\\hatα= +0.024, p < .001$) than men-associated names - a pattern convergent with homogeneity bias; race and gender effects are additive. Instruction tuning does not attenuate the race gap (matched-format DL-pooled $\\hatβ=+0.153$). Running the same templates with explicit group labels instead of names yields null race effects in 10 of 12 models where implicit probing is significant - establishing that probing methodology is a primary determinant of which distributional structure is recovered.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.CV",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:13.970180"
+}

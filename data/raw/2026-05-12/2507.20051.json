@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2507.20051",
+  "title": "$K^4$: Online Log Anomaly Detection Via Unsupervised Typicality Learning",
+  "abstract": "Existing Log Anomaly Detection (LogAD) methods are often slow, dependent on error-prone parsing, and use unrealistic evaluation protocols. We introduce $K^4$, an unsupervised and parser-independent framework for high-performance online detection. $K^4$ transforms arbitrary log embeddings into compact four-dimensional descriptors (Precision, Recall, Density, Coverage) using efficient k-nearest neighbor (k-NN) statistics. These descriptors enable lightweight detectors to accurately score anomalies without retraining. Using a more realistic online evaluation protocol, $K^4$ sets a new state-of-the-art (AUROC: 0.995-0.999), outperforming baselines by large margins while being orders of magnitude faster, with training under 4 seconds and inference as low as 4 $μ$s.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CL cs.DC",
+  "created": "2025-07-26",
+  "fetched_at": "2026-05-13T23:34:48.674292"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2511.00751",
+  "title": "Self-Consistency Is Losing Its Edge: Diminishing Returns and Rising Costs in Modern LLMs",
+  "abstract": "Self-consistency -- sampling multiple reasoning paths and selecting the most frequent answer -- was designed for an era when language models made frequent, unpredictable errors. This study argues that the technique has become increasingly wasteful as models grow stronger, and may degrade performance on problems that modern models already solve reliably. Using Gemini 2.5 models on HotpotQA and MATH-500, we show that accuracy gains from increasing the number of sampled reasoning paths are minimal -- 0.4% on HotpotQA across 20 samples, and 1.6% on MATH-500 -- while token costs scale nearly linearly with sample count. Critically, performance plateaued early and in some configurations declined at high sample counts, suggesting that additional paths introduce noise rather than signal when models already solve problems reliably. As inference costs rise with model scale, indiscriminate self-consistency is difficult to justify. We recommend reserving multi-path sampling for problems that demonstrably exceed a model's single-pass reliability.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:25:10.995084"
+}

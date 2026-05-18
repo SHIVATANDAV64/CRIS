@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2410.21438",
+  "title": "UFT: Unifying Fine-Tuning of SFT and RLHF/DPO/UNA through a Generalized Implicit Reward Function",
+  "abstract": "By pretraining on trillions of tokens, an LLM gains the capability of text generation. However, to enhance its utility and reduce potential harm, SFT and alignment are applied sequentially to the pretrained model. Because SFT and alignment have different objectives and underlying processes, performance on certain tasks can decline. To address this, we seamlessly introduce Unified Fine-Tuning (UFT), which integrates SFT and alignment into a single training stage using the same objective and loss functions through an implicit reward function. Our experimental results demonstrate that UFT outperforms SFT on instruction-tuning data alone. Moreover, when combining instruction-tuning data with alignment data, UFT effectively prevents the degradation on some tasks across these two stages and shows a clear advantage over sequentially applying SFT and alignment. This is evident in the significant improvements observed in the \\textbf{ifeval} task for instruction-following and the \\textbf{truthful} task for factuality. The proposed general fine-tuning framework UFT establishes an effective and efficient paradigm for LLM post-training.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.LG",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:29:23.895360"
+}

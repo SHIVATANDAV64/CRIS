@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.12285",
+  "title": "A Resilience Framework for Bi-Criteria Combinatorial Optimization with Bandit Feedback",
+  "abstract": "We study bi-criteria combinatorial optimization under noisy function evaluations. While resilience and black-box offline-to-online reductions have been studied in single-objective settings, extending these ideas to bi-criteria problems introduces new challenges due to the coupled degradation of approximation guarantees for objectives and constraints. We introduce a notion of $(α,β,δ,\\texttt{N})$-resilience for bi-criteria approximation algorithms, capturing how joint approximation guarantees degrade under bounded (possibly worst-case) oracle noise, and develop a general black-box framework that converts any resilient offline algorithm into an online algorithm for bi-criteria combinatorial multi-armed bandits with bandit feedback. The resulting online guarantees achieve sublinear regret and cumulative constraint violation of order $\\tilde{O}(δ^{2/3}\\texttt{N}^{1/3}T^{2/3})$ without requiring structural assumptions such as linearity, submodularity, or semi-bandit feedback on the noisy functions. We demonstrate the applicability of the framework by establishing resilience for several classical greedy algorithms in submodular optimization.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.GT cs.SY eess.SY stat.ML",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:25:51.522116"
+}

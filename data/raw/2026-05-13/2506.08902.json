@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.08902",
+  "title": "Intention-Conditioned Flow Occupancy Models",
+  "abstract": "Large-scale pre-training has fundamentally changed how machine learning research is done today: large foundation models are trained once, and then can be used by anyone in the community (including those without data or compute resources to train a model from scratch) to adapt and fine-tune to specific tasks. Applying this same framework to reinforcement learning (RL) is appealing because it offers compelling avenues for addressing core challenges in RL, including sample efficiency and robustness. However, there remains a fundamental challenge to pre-train large models in the context of RL: actions have long-term dependencies, so training a foundation model that reasons across time is important. Recent advances in generative AI have provided new tools for modeling highly complex distributions. In this paper, we build a probabilistic model to predict which states an agent will visit in the temporally distant future (i.e., an occupancy measure) using flow matching. As large datasets are often constructed by many distinct users performing distinct tasks, we include in our model a latent variable capturing the user intention. This intention increases the expressivity of our model, and enables adaptation with generalized policy improvement. We call our proposed method intention-conditioned flow occupancy models (InFOM). Comparing with alternative methods for pre-training, our experiments on $36$ state-based and $4$ image-based benchmark tasks demonstrate that the proposed method achieves $1.8 \\times$ median improvement in returns and increases success rates by $36\\%$. Website: https://chongyi-zheng.github.io/infom Code: https://github.com/chongyi-zheng/infom",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:37:02.002502"
+}

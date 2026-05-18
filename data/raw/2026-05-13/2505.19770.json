@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.19770",
+  "title": "Understanding the Performance Gap in Preference Learning: A Dichotomy of RLHF and DPO",
+  "abstract": "We present a fine-grained theoretical analysis of the performance gap between two-stage reinforcement learning from human feedback~(RLHF) and direct preference optimization~(DPO). Our study decomposes this gap into two sources: the explicit representation gap under exact optimization and the implicit representation gap under finite samples. In the exact optimization setting, we characterize how the relative capacities of the reward and policy model classes influence the final policy qualities. We show that RLHF, DPO, or online DPO can outperform one another depending on type of model mis-specifications. Notably, online DPO can outperform both RLHF and standard DPO when the reward and policy model classes are isomorphic and both mis-specified. In the approximate optimization setting, we provide a concrete construction where the ground-truth reward is sparse and show that RLHF requires significantly fewer samples than DPO to recover an effective reward model, highlighting a statistical advantage of two-stage learning. Together, these results provide a comprehensive understanding of the performance gap between RLHF and DPO under various settings, and offer practical insights into when each method is preferred.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CL",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:38:12.159569"
+}

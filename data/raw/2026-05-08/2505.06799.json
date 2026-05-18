@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.06799",
+  "title": "Quantum Observers: A NISQ Hardware Demonstration of Chaotic State Prediction Using Quantum Echo-state Networks",
+  "abstract": "Recent advances in artificial intelligence have highlighted the remarkable capabilities of neural network (NN)-powered systems on classical computers. However, these systems face significant computational challenges that limit scalability and efficiency. Quantum computers hold the potential to overcome these limitations and increase processing power beyond classical systems. Despite this, integrating quantum computing with NNs remains largely unrealized due to challenges posed by noise, decoherence, and high error rates in current quantum hardware. Here, we propose a novel quantum echo-state network (QESN) design and implementation algorithm that can operate within the presence of noise on current IBM hardware. We apply classical control-theoretic response analysis to characterize the QESN, emphasizing its rich nonlinear dynamics and memory, as well as its ability to be fine-tuned with sparsity and re-uploading blocks. We validate our approach through a comprehensive demonstration of QESNs functioning as quantum observers, applied in both high-fidelity simulations and hardware experiments utilizing data from a prototypical chaotic Lorenz system. Our results show that the QESN can predict long time-series with persistent memory, running over 100 times longer than the median T1 and T2 of the IBM Marrakesh QPU, achieving state-of-the-art time-series performance on superconducting hardware.",
+  "authors": [
+    null
+  ],
+  "categories": "quant-ph cs.AI",
+  "created": "2025-07-12",
+  "fetched_at": "2026-05-13T23:23:33.633304"
+}

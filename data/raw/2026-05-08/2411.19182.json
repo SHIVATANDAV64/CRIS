@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.19182",
+  "title": "SOWing Information: Cultivating Contextual Coherence with MLLMs in Image Generation",
+  "abstract": "Originating from the diffusion phenomenon in physics, which describes the random movement and collisions of particles, diffusion generative models simulate a random walk in the data space along the denoising trajectory. This allows information to diffuse across regions, yielding harmonious outcomes. However, the chaotic and disordered nature of information diffusion in diffusion models often results in undesired interference between image regions, causing degraded detail preservation and contextual inconsistency. In this work, we address these challenges by reframing disordered diffusion as a powerful tool for text-vision-to-image generation (TV2I) tasks, achieving pixel-level condition fidelity while maintaining visual and semantic coherence throughout the image. We first introduce Cyclic One-Way Diffusion (COW), which provides an efficient unidirectional diffusion framework for precise information transfer while minimizing disruptive interference. Building on COW, we further propose Selective One-Way Diffusion (SOW), which utilizes Multimodal Large Language Models (MLLMs) to clarify the semantic and spatial relationships within the image. Based on these insights, SOW combines attention mechanisms to dynamically regulate the direction and intensity of diffusion according to contextual relationships. Extensive experiments demonstrate the untapped potential of controlled information diffusion, offering a path to more adaptive and versatile generative models in a learning-free manner.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:18.627771"
+}

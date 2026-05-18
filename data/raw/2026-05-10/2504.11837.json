@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.11837",
+  "title": "FiSMiness: A Finite State Machine Based Paradigm for Emotional Support Conversations",
+  "abstract": "Emotional support conversation (ESC) aims to alleviate the emotional distress of individuals through effective conversations. Although large language models (LLMs) have obtained remarkable progress on ESC, most of these studies might not define the diagram from the state model perspective, therefore providing a suboptimal solution for long-term satisfaction. To address such an issue, we leverage the Finite State Machine (FSM) on LLMs, and propose a framework called FiSMiness. Our framework allows a single LLM to bootstrap the planning during ESC, and self-reason the seeker's emotion, support strategy and the final response upon each conversational turn. Substantial experiments on ESC datasets suggest that FiSMiness outperforms many baselines, including direct inference, self-refine, chain of thought, finetuning, and external-assisted methods, even those with many more parameters.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:28:39.025972"
+}

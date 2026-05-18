@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2511.14045",
+  "title": "Auditing Data Membership in Reinforcement Learning With Verifiable Rewards",
+  "abstract": "Reinforcement Learning with Verifiable Rewards (RLVR) has become a core training stage in recent large language models (LLMs). Its reliance on non-public, high-value prompt sets raises concerns about unauthorized data use, creating a need for exposure auditing. A natural tool is membership inference attacks (MIAs), but existing methods detect fitting to a fixed target string. This does not apply to RLVR, which generates responses from the model itself and reinforces successful ones, thus hindering the auditing of data exposure. We show that it remains detectable: RLVR reshapes the model's response distribution on training prompts, producing behavioral traces that can be surfaced through targeted auditing. We propose Divergence-in-Behavior Auditing (DIBA), a white-box query-level auditing framework for RLVR. DIBA compares a fine-tuned model against its pre-RLVR checkpoint along two axes: reward-side evidence capturing changes in verifiable task success, and policy-side evidence capturing prompt-conditioned behavioral drift. By aggregating over multiple stochastic rollouts, DIBA produces a stable query-level auditing signal. Under a white-box setting, DIBA consistently outperforms strong transferred likelihood-based baselines, including calibrated and self-generated variants, achieving around 0.8 AUC and an order-of-magnitude stronger TPR@0.1%FPR. We further show that RLVR auditing is stronger when training leaves non-trivial prompt-specific traces and weaker when the base model already performs well on the prompt. Under a practical grey-box setting, transfer is often robust across model sizes under the same RLVR algorithm, but more varied across algorithms, and can remain useful under distribution shift with carefully chosen shadow data.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CR cs.AI cs.CL",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:35:30.700768"
+}

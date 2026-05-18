@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2507.13841",
+  "title": "The Challenge and Reward of Fair Play in Narrative: A Computational Approach",
+  "abstract": "Good storytelling involves surprise -- unpredictability in how the story unfolds -- and sense-making, the requirement that the story forms a coherent sequence. However, to date, these two qualities have largely been addressed in isolation. We formalize these qualities and their relationship in an information-theoretic framework, using detective fiction as a paradigm case of narratives in which a hidden truth is discovered through reasoning. Our central theoretical result shows that surprise and coherence must trade off for any *single* reader model, but can coexist when two reader modes are distinguished: a pre-revelation mode that forms expectations while the ending is unknown, and a post-resolution hindsight mode that re-evaluates the story after the culprit is revealed. The balance of these two dimensions is realized in the common requirement of *fair play*, giving the reader a chance to solve the mystery while maintaining a challenge. We operationalize the framework using large language models as simulated readers, and define reference-less evaluation metrics for surprise, coherence, and fair play. Experiments on LLM-generated stories validate our theoretical predictions: while models generally succeed in creating surprise or coherence, achieving fair play poses a challenge even for strong models. Moreover, surprise and coherence do not positively correlate across stories, resisting reduction to a single latent quality. A human study validates the metrics, confirming they capture aspects of narrative quality that matter to readers. Our metrics also reproduce established literary intuitions, finding Christie's stories more surprising and more fair-playing than Conan Doyle's.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:38:18.165808"
+}

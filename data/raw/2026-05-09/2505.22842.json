@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.22842",
+  "title": "Bayesian Attention Mechanism: A Probabilistic Framework for Positional Encoding and Context Length Extrapolation",
+  "abstract": "Transformer-based language models rely on positional encoding (PE) to handle token order and support context length extrapolation. However, existing PE methods lack theoretical clarity and rely on limited evaluation metrics to substantiate their extrapolation claims. We propose the Bayesian Attention Mechanism (BAM), a theoretical framework that formulates positional encoding as a prior within a probabilistic model. BAM unifies existing methods (e.g., NoPE and ALiBi) and motivates a new Generalized Gaussian positional prior that substantially improves long-context generalization. Empirically, BAM enables accurate information retrieval at $500\\times$ the training context length, outperforming previous state-of-the-art context length generalization in long context retrieval accuracy while maintaining comparable perplexity and introducing minimal additional parameters.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.LG",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:26:56.074152"
+}

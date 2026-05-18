@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.17656",
+  "title": "Pretraining a Foundation Model for Small-Molecule Natural Products",
+  "abstract": "Natural products, as metabolites from microorganisms, animals, or plants, exhibit diverse biological activities, making them crucial for drug discovery. Nowadays, existing deep learning methods for natural products research primarily rely on supervised learning approaches designed for specific downstream tasks. However, such one-model-for-a-task paradigm often lacks generalizability and leaves significant room for performance improvement. Additionally, existing molecular characterization methods are not well-suited for the unique tasks associated with natural products. To address these limitations, we have pre-trained a foundation model for natural products based on their unique properties. Our approach employs a novel pretraining strategy that is especially tailored to natural products. By incorporating contrastive learning and masked graph learning objectives, we emphasize evolutional information from molecular scaffolds while capturing side-chain information. Our framework achieves state-of-the-art (SOTA) results in various downstream tasks related to natural product mining and drug discovery. We first compare taxonomy classification with synthesized molecule-focused baselines to demonstrate that current models are inadequate for understanding natural synthesis. Furthermore, by diving into a fine-grained analysis at both the gene and microbial levels, NaFM demonstrates the ability to capture evolutionary information. Eventually, our method is experimented with virtual screening, illustrating informative natural product representations that can lead to more effective identification of potential drug candidates.",
+  "authors": [
+    null
+  ],
+  "categories": "q-bio.QM cs.AI cs.LG",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:31:09.135387"
+}

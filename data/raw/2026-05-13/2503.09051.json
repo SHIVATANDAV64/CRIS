@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.09051",
+  "title": "Model-Level GNN Explanations via Rule-to-Graph Readout for Logit Reconstruction",
+  "abstract": "We propose a novel model-level GNN explanation framework that shifts the explanation target from class-wise rule extraction to rule-based logit reconstruction. Our method recasts the graph-level readout of a pretrained GNN as a weighted rule-level readout: grounded subgraph concepts are composed into logical rules, rule embeddings are computed directly from their symbolic structure, and active rules are passed through the frozen classifier head to reconstruct the GNN's raw multiclass logits. As a result, our approach provides global explanations that remain instantiable on unseen graphs, support subgraph-level grounding, and admit rule-level contribution analysis at test-time. Experiments on three synthetic and two real-world graph classification benchmarks show that our approach faithfully reconstructs the base GNN's raw multiclass logits, achieving high probability-level fidelity across datasets. Rule-level ablations further demonstrate that the identified critical rules actively support the predicted class while suppressing non-target classes, suggesting that they act as functional units rather than merely serving as post-hoc symbolic artifacts. Compared with prior class-wise rule-based explainers, our approach achieves competitive or better prediction agreement while being up to \\(20\\times\\) faster, and additionally provides rule weights, test-time grounding, and logit-level contribution analysis.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:36:37.994467"
+}

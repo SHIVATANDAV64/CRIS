@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.14399",
+  "title": "Factored Classifier-Free Guidance",
+  "abstract": "Counterfactual generation aims to simulate realistic hypothetical outcomes under causal interventions. Diffusion models have emerged as a powerful tool for this task, combining DDIM inversion with conditional generation and classifier-free guidance (CFG). In this work, we identify a key limitation of CFG for counterfactual generation: it prescribes a global guidance scale for all attributes, leading to significant spurious changes in inferred counterfactuals. To mitigate this, we propose Factored Classifier-Free Guidance (FCFG), a flexible and model-agnostic guidance technique that enables attribute-wise control following a causal graph. FCFG complements recent advances in classifier-free guidance and can be seamlessly extended to advanced guidance schemes such as CFG++ and APG. Our experiments demonstrate that FCFG significantly improves the axiomatic soundness of inferred counterfactuals across both natural and medical image datasets, mitigating spurious amplification effects, and enhancing counterfactual reversibility.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:31:39.144213"
+}

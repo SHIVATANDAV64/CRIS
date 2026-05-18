@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.06047",
+  "title": "DSGBench: A Diverse Strategic Game Benchmark for Evaluating LLM-based Agents in Complex Decision-Making Environments",
+  "abstract": "Large language model (LLM)-based agents are increasingly applied to complex strategic environments that demand long-horizon reasoning, multi-agent interaction, and decision-making under uncertainty. However, common existing benchmarks either assess isolated skills, lack environmental diversity, or rely on broad overall metrics. To address these issues, we introduce DSGBench, a more rigorous evaluation platform for strategic decision-making tasks. Firstly, it incorporates six complex strategic games which serve as ideal testbeds due to their long-term and multi-dimensional decision-making demands and flexibility in customizing tasks with various difficulty levels and targets. Secondly, DSGBench employs a fine-grained evaluation scoring system which examines the decision-making capabilities by looking into the performance in five specific dimensions, offering a comprehensive assessment in a better-designed fashion. Furthermore, DSGBench also incorporates an automated decision-tracking mechanism which enables in-depth analysis of agent behaviour patterns and the turning points in their strategies. We evaluate six popular LLM agents, including open-source and closed-source models, and observe distinct strengths and limitations among various tasks. Through decision trajectory analysis, we further identify systemic limitations in different LLMs. These findings offer valuable insights for model selection and future LLM-based agent development.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:33:44.029377"
+}

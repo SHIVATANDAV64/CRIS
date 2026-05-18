@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2410.18103",
+  "title": "A Hybrid Graph Neural Network for Enhanced EEG-Based Depression Detection",
+  "abstract": "Graph neural networks (GNNs) are becoming increasingly popular for EEG-based depression detection. However, previous GNN-based methods fail to sufficiently consider the characteristics of depression, thus limiting their performance. Firstly, studies in neuroscience indicate that depression patients exhibit both common and individualized brain abnormal patterns. Previous GNN-based approaches typically focus either on fixed graph connections to capture common abnormal brain patterns or on adaptive connections to capture individualized patterns, which is inadequate for depression detection. Secondly, brain network exhibits a hierarchical structure, which includes the arrangement from channel-level graph to region-level graph. This hierarchical structure varies among individuals and contains significant information relevant to detecting depression. Nonetheless, previous GNN-based methods overlook these individualized hierarchical information. To address these issues, we propose a Hybrid GNN (HGNN) that merges a Common Graph Neural Network (CGNN) branch utilizing fixed connection and an Individualized Graph Neural Network (IGNN) branch employing adaptive connections. The two branches capture common and individualized depression patterns respectively, complementing each other. Furthermore, we enhance the IGNN branch with a Graph Pooling and Unpooling Module (GPUM) to extract individualized hierarchical information. Extensive experiments on two public datasets show that our model achieves state-of-the-art performance.",
+  "authors": [
+    null
+  ],
+  "categories": "eess.SP cs.AI cs.LG",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:30:57.131018"
+}

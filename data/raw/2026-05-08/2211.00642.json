@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2211.00642",
+  "title": "Farm-wide virtual load monitoring for offshore wind structures via Bayesian neural networks",
+  "abstract": "Offshore wind structures are subject to deterioration mechanisms throughout their operational lifetime. Even if the deterioration evolution of structural elements can be estimated through physics-based deterioration models, the uncertainties involved in the process hurdle the selection of lifecycle management decisions. In this scenario, the collection of relevant information through an efficient monitoring system enables the reduction of uncertainties, ultimately driving more optimal lifecycle decisions. However, a full monitoring instrumentation implemented on all wind turbines in a farm might become unfeasible due to practical and economical constraints. Besides, certain load monitoring systems often become defective after a few years of marine environment exposure. Addressing the aforementioned concerns, a farm-wide virtual load monitoring scheme directed by a fleet-leader wind turbine offers an attractive solution. Fetched with data retrieved from a fully-instrumented wind turbine, a model can be trained and then deployed, thus yielding load predictions of non-fully monitored wind turbines, from which only standard data remains available. In this paper, we propose a virtual load monitoring framework formulated via Bayesian neural networks (BNNs) and we provide relevant implementation details needed for the construction, training, and deployment of BNN data-based virtual monitoring models. As opposed to their deterministic counterparts, BNNs intrinsically announce the uncertainties associated with generated load predictions and allow to detect inaccurate load estimations generated for non-fully monitored wind turbines. The proposed virtual load monitoring is thoroughly tested through an experimental campaign in an operational offshore wind farm and the results demonstrate the effectiveness of BNN models for fleet-leader-based farm-wide virtual monitoring.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.SY eess.SY stat.CO",
+  "created": "2023-08-24",
+  "fetched_at": "2026-05-13T23:22:48.615980"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.10443",
+  "title": "Are Large Language Models Robust in Understanding Code Against Semantics-Preserving Mutations?",
+  "abstract": "With the widespread adoption of vibe coding, understanding the reasoning and robustness of Large Language Models (LLMs) is critical for their reliable use in programming tasks. While recent studies assess LLMs' ability to predict program outputs, most focus on accuracy alone, without evaluating the underlying reasoning. Moreover, it has been observed on mathematical reasoning tasks that LLMs can arrive at correct answers through flawed logic, raising concerns about similar issues in code understanding. In this paper we assess whether state-of-the-art LLMs can reason about Python programs or are simply guessing. We apply five semantics-preserving code mutations: renaming variables, mirroring comparison expressions, swapping if-else branches, converting for loops to while, and loop unrolling. These mutations maintain program semantics while altering its syntax. We evaluated nine LLMs, including both open-source and closed-access models, and performed a human expert analysis using LiveCodeBench to assess whether correct predictions are based on sound reasoning. We also evaluated prediction stability across different code mutations on LiveCodeBench and CruxEval. While proprietary models achieve the strongest predictive accuracy and reasoning quality in the expert evaluation, our robustness analysis reveals substantial fragility under semantics-preserving transformations. Our findings show that LLMs trained for code produce correct predictions based on flawed reasoning in between 10% and 50% of cases. Furthermore, LLMs often change predictions in response to our code mutations, with performance drops reaching up to 70%, indicating that they do not yet exhibit stable, semantically grounded reasoning, even when initial accuracy is high.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.SE cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:36.633856"
+}

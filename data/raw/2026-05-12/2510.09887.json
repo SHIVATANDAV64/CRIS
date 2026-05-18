@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.09887",
+  "title": "Overconfident and Blind to Details: Fixing Prompt Insensitivity with Abductive Preference Learning",
+  "abstract": "Vision and language models frequently ignore semantically critical input edits, defaulting to pretraining priors. For example, models will confidently assert a five-legged dog has four legs; consequently, on the VLMBias benchmark, GPT 5.2 and Claude Sonnet 4.6 achieve only $4.6\\%$ and $0\\%$ accuracy, respectively. Existing methods address this problem through building up datasets that covers the underrepresented inputs to tune the policy function $π(y \\mid x)$, where $x$ and $y$ refer to input prompts and responses, respectively. However, prompting baselines yield gains of under $3\\%$ on VLMBias due to the low probability density of rare prompts. To bypass this bottleneck, we propose \\emph{abductive preference learning} to optimize the abductive policy $π(x \\mid y)$. We prove this amplifies forward policy improvements by a factor of $q(y)/p(x)$, where $p(\\cdot)$ and $q(\\cdot)$ denote the marginal probabilities of the prompt and response, yielding the largest gains on the rarest prompts. Furthermore, we demonstrate that for translation invariant pairwise preference learning methods, such as DPO, estimating $π(x \\mid y)$ reduces to a structural data swap that compares prompts for a fixed response, requiring no architectural changes. Empirically, abductive preference learning delivers large gains on counterfactual sensitivity: on VLMBias, A-DPO raises accuracy from $3\\%$ to $44\\%$ ($14\\times$), outperforming GPT-5.2 ($4.6\\%$) and all closed-source VLMs except Gemini~3~Flash; on Inverse-IFEval, Multi-DPOP reaches $65$--$84\\%$, surpassing GPT-5 ($73.7\\%$) at the 9B scale while preserving IFBench, unlike DPO which degrades it by $8$--$12\\%$.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:35:12.693122"
+}

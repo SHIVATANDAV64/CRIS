@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.01666",
+  "title": "Synthesis of discrete-continuous quantum circuits with multimodal diffusion models",
+  "abstract": "Efficiently compiling quantum operations remains a major bottleneck in scaling quantum computing. Today's state-of-the-art methods achieve low compilation error by combining search algorithms with gradient-based parameter optimization, but they incur long runtimes and require multiple calls to quantum hardware or expensive classical simulations, making their scaling prohibitive. Recently, machine-learning models have emerged as an alternative, though they are currently restricted to discrete gate sets. Here, we introduce a multimodal denoising diffusion model that simultaneously generates a circuit's structure and its continuous parameters for compiling a target unitary. It leverages two independent diffusion processes, one for discrete gate selection and one for parameter prediction. We benchmark the model over different experiments, analyzing the method's accuracy across varying qubit counts and circuit depths, showcasing the ability of the method to outperform existing approaches in gate counts and under noisy conditions. Additionally, we show that a simple post-optimization scheme allows us to significantly improve the generated ansätze. Finally, by exploiting its rapid circuit generation, we create large datasets of circuits for particular operations and use these to extract valuable heuristics that can help us discover new insights into quantum circuit synthesis.",
+  "authors": [
+    null
+  ],
+  "categories": "quant-ph cs.AI cs.LG",
+  "created": "2026-04-07",
+  "fetched_at": "2026-05-13T23:34:20.043396"
+}

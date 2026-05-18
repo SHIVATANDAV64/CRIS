@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2310.07379",
+  "title": "Causal Unsupervised Semantic Segmentation",
+  "abstract": "Unsupervised semantic segmentation aims to achieve high-quality semantic grouping without human-labeled annotations. With the advent of self-supervised pre-training, various frameworks utilize the pre-trained features to train prediction heads for unsupervised dense prediction. However, a significant challenge in this unsupervised setup is determining the appropriate level of clustering required for segmenting concepts. To address it, we propose a novel framework, CAusal Unsupervised Semantic sEgmentation (CAUSE), which leverages insights from causal inference. Specifically, we bridge intervention-oriented approach (i.e., frontdoor adjustment) to define suitable two-step tasks for unsupervised prediction. The first step involves constructing a concept clusterbook as a mediator, which represents possible concept prototypes at different levels of granularity in a discretized form. Then, the mediator establishes an explicit link to the subsequent concept-wise self-supervised learning for pixel-level grouping. Through extensive experiments and analyses on various datasets, we corroborate the effectiveness of CAUSE and achieve state-of-the-art performance in unsupervised semantic segmentation.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI cs.LG",
+  "created": "2023-10-11",
+  "fetched_at": "2026-05-13T23:28:03.014964"
+}

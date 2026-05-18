@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.11512",
+  "title": "From Time Series Analysis to Question Answering: A Survey in the LLM Era",
+  "abstract": "Recently, Large Language Models (LLMs) have introduced a novel paradigm in Time Series Analysis (TSA), leveraging strong language capabilities to support tasks such as forecasting and anomaly detection. However, these analysis tasks cannot adequately cover temporal language tasks, such as interpretation and captioning. A fundamental gap remains between TSA and LLMs: LLMs are pre-trained to optimize natural language relevance for question answering rather than objectives specialized for TSA. To bridge this gap, TSA is evolving toward Time Series Question Answering (TSQA), shifting from expert-driven and task-specific analysis to user-driven and task-unified question answering. TSQA depends on flexible exploration rather than predefined TSA pipelines. In this survey, we first propose a taxonomy that reflects the evolution from TSA to TSQA, driven by a shift from external to internal alignment. We then organize existing literature into three alignment paradigms: Injective Alignment, Bridging Alignment, and Internal Alignment, and provide practical guidance for flexible, economical, and generalizable selection of alignment paradigms. We finally analyze datasets across domains and characteristics, identify challenges, and highlight future research directions.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:31:30.142248"
+}

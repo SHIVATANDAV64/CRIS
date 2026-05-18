@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.03736",
+  "title": "Are LLM Agents Behaviorally Coherent? Latent Profiles for Social Simulation",
+  "abstract": "The impressive capabilities of Large Language Models (LLMs) raise the possibility that synthetic agents can serve as substitutes for real participants in human-subject research. To evaluate this claim, prior research has largely focused on whether LLM-generated survey responses align with those produced by human respondents whom the LLMs are prompted to represent. In contrast, we address a more fundamental question: Do agents maintain empirical consistency; aligning to human behavioral models when examined under different experimental settings? To this end, we develop a study designed to (a) ask a set of questions which reveals an agent's latent profile and (b) examine agent behavioral consistency in a conversational setting with other agents. This design enables us to explore a set of behavioral hypotheses to assess whether an agent's conversational behavior is consistent with what we would expect from its revealed state. Our findings show significant inconsistencies in LLMs across model families and at differing model sizes. Most importantly, we find that, although agents may generate responses matching those of their human counterparts, they fail to be empirically consistent, representing a critical gap in their capabilities to accurately substitute for real participants in human-subject research.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL cs.LG",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:27:20.084121"
+}

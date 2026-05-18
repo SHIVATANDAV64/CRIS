@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2511.01008",
+  "title": "MARS-SQL: A multi-agent reinforcement learning framework for Text-to-SQL",
+  "abstract": "Large Language Models (LLMs) often struggle with the precise logic and schema alignment required for complex Text-to-SQL tasks. While current methods rely heavily on static prompting, they lack the ability to dynamically adapt and self-correct through environmental interaction. To bridge this gap, we propose MARS-SQL, a trainable multi-agent framework for Text-to-SQL. Rather than introducing a new standalone SQL primitive, MARS-SQL makes an agentic workflow trainable by decomposing the problem into three specialized roles: schema grounding, query generation, and solution validation. Central to our approach is a generation agent trained via a multi-turn RL policy within a ReAct-style loop. The agent learns to iteratively reason, execute intermediate SQL actions on a live database, and refine its strategy based on execution feedback. To improve robustness, we further introduce a validation mechanism that treats solution selection as a generative modeling task, identifying the optimal interaction trajectory through next-token prediction probabilities. Empirical evaluations demonstrate the effectiveness of coupling interactive learning with trajectory ranking. MARS-SQL achieves state-of-the-art performance, recording an execution accuracy of 77.84% on the BIRD development dataset and 89.75% on the Spider test dataset, while also transferring strongly to out-of-domain benchmarks. Code is available at https://github.com/YangHaolin0526/MARS-SQL.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-10",
+  "fetched_at": "2026-05-13T23:35:21.697782"
+}

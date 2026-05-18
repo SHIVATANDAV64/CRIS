@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2501.04046",
+  "title": "Traits of a Leader: User Influence Level Prediction through Sociolinguistic Modeling",
+  "abstract": "Recognition of a user's influence level has attracted much attention as human interactions move online. Influential users have the ability to sway others' opinions to achieve some goals. As a result, predicting users' level of influence can help to understand social networks, forecast trends, prevent misinformation, etc. However, predicting user influence is a challenging problem because the concept of influence is specific to a situation or a domain, and user communications are limited to text. In this work, we define user influence level as a function of community endorsement and develop a model that significantly outperforms the baseline by leveraging demographic and personality data. This approach consistently improves RankDCG scores across eight different domains.",
+  "authors": [
+    null
+  ],
+  "categories": "physics.soc-ph cs.AI cs.CY",
+  "created": "2025-01-05",
+  "fetched_at": "2026-05-13T23:23:27.630515"
+}

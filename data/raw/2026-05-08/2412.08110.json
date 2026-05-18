@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2412.08110",
+  "title": "The ART of Composition: Attention-Regularized Training for Compositional Visual Grounding",
+  "abstract": "Vision-Language Models (VLMs) have achieved strong performance on implicit and explicit visual grounding and related tasks. However, such abilities are generally tested on simple, single-object phrases. We find that grounding performance degrades for complex, multi-object references. These limitations largely arise from training objectives that leverage image-caption alignment, where direct multi-object references are rare, the number of possible such references is theoretically large (exponential in the number of objects), and attribution is difficult. To address this, without requiring any additional annotations, we propose Compositional Attention-Regularized Training (CompART), which decomposes captions into object-centric phrases and constructs composite phrases by pairing them with conjunctions. We then introduce a composition loss that encourages the attention induced by a composite phrase to equal the sum of the attentions of its constituent phrases, promoting balanced multi-object localization. We evaluate CompART across four VLM architectures, spanning both contrastive-based and generative-based models, on four benchmarks for multi-object grounding and two VQA benchmarks for general visual understanding. CompART consistently improves grounding for both single- and multi-object references across diverse VLM architectures and datasets, and further demonstrates enhanced visual understanding, as evidenced by gains on VQA, despite not being explicitly trained for this task.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.CL cs.LG",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:10.968545"
+}

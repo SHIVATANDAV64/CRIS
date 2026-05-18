@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.26619",
+  "title": "Searching the Internet for Challenging Benchmarks at Scale",
+  "abstract": "Many static benchmarks are beginning to saturate: as models rapidly improve, they achieve near-perfect scores on fixed test sets, leaving little headroom to expose genuine model weaknesses -- and even expert-curated challenge sets quickly saturate after hillclimbing. We present a fully automatic framework that searches the Internet at scale to construct challenging benchmarks without human curation. The key insight is to model the Internet as a vast space of topics and formalize the search as a multi-armed bandit problem, where each topic's difficulty is revealed only through expensive sample-and-evaluate queries. Our epsilon-greedy strategy identifies the most challenging topics while exploring only 6% of the search space -- a 100 times cost reduction over exhaustive evaluation. We validate on machine translation and knowledge question answering, confirming that discovered difficulty is robust across independent metrics (GEMBA-SQA and MetricX), languages, and models.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-06",
+  "fetched_at": "2026-05-13T23:24:43.986487"
+}

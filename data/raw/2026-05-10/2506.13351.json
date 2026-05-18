@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.13351",
+  "title": "Direct Reasoning Optimization: Token-Level Reasoning Reflectivity Meets Rubric Gates for Unverifiable Tasks",
+  "abstract": "Reinforcement learning (RL) training of large language models (LLMs) on unverifiable tasks is challenging even when a reasonable-quality reference answer is available. We propose a constrained RL training framework that (i) optimizes a token-level dense Reasoning Reflection Reward (R3) aligned with reasoning quality, and (ii) enforces rubric-gating as feasibility constraints at the rollout group level. R3 measures the model's token-level certainty of a reference answer under its chain-of-thought (CoT) prefix, and selectively emphasizes tokens with high cross-rollout variance, which we call reasoning-reflective tokens, that would otherwise be diluted by the bulk of low-variance tokens. The same variance signal also drives a filter that discards queries with insufficient signal for comparative learning. Rubric-gating complements R3 by operationalizing principled task criteria as hard accept/reject checks on final answers. Empirically, across four datasets spanning scientific writing, medicine, legal contracts, and finance, our framework outperforms strong baselines, achieves faster, more sample-efficient learning, and respects feasibility constraints.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.LG",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:28:57.031726"
+}

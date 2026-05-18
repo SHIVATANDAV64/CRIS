@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2502.06096",
+  "title": "Post-detection inference for sequential changepoint localization",
+  "abstract": "This paper addresses a fundamental but largely unexplored challenge in sequential changepoint analysis: conducting inference following a detected change. We develop a very general framework to construct confidence sets for the unknown changepoint using only the data observed up to a data-dependent stopping time at which an arbitrary sequential detection algorithm declares a change. Our framework is nonparametric, making no assumption on the composite post-change class, the observation space, or the sequential detection procedure used, and is non-asymptotically valid. We also extend it to handle composite pre-change classes under a suitable assumption, and also derive confidence sets for the change magnitude in parametric settings. We provide theoretical guarantees on the width of our confidence intervals. Extensive simulations demonstrate that the produced sets have reasonable size, and slightly conservative coverage. In summary, we present the first general method for sequential changepoint localization, which is theoretically sound and broadly applicable in practice.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ML cs.AI cs.LG stat.ME",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:33:38.025287"
+}

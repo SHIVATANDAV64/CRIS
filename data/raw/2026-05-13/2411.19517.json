@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.19517",
+  "title": "RL-SPH: Learning to Achieve Feasible Solutions for Integer Linear Programs",
+  "abstract": "Primal heuristics play a crucial role in quickly finding feasible solutions for NP-hard integer linear programming (ILP). Although $\\textit{end-to-end learning}$-based primal heuristics (E2EPH) have recently been proposed, they are typically unable to independently generate feasible solutions. To address this challenge, we propose RL-SPH, a novel reinforcement learning-based start primal heuristic capable of independently generating feasible solutions, even for ILP involving non-binary integers. Empirically, RL-SPH rapidly obtains high-quality feasible solutions with a 100% feasibility rate, achieving on average a 28.6$\\times$ lower primal gap and a 2.6$\\times$ lower primal integral compared to existing start primal heuristics.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:36:16.988364"
+}

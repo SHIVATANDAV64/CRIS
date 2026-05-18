@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.16666",
+  "title": "CatNet: Controlling the False Discovery Rate in LSTM with SHAP Feature Importance and Gaussian Mirrors",
+  "abstract": "We introduce CatNet, an algorithm that effectively controls False Discovery Rate (FDR) and selects significant features in LSTM. CatNet employs the derivative of SHAP values to quantify the feature importance, and constructs a vector-formed mirror statistic for FDR control with the Gaussian Mirror algorithm. To avoid instability due to nonlinear or temporal correlations among features, we also propose a new kernel-based independence measure. CatNet performs robustly on different model settings with both simulated and real-world data, which reduces overfitting and improves interpretability of the model. Our framework that introduces SHAP for feature importance in FDR control algorithms and improves Gaussian Mirror can be naturally extended to other time-series or sequential deep learning models.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ML cs.AI cs.LG q-fin.ST",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:12.626140"
+}

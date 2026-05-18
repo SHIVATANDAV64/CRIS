@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.01569",
+  "title": "InvThink: Premortem Reasoning for Safer Language Models",
+  "abstract": "We present InvThink, a training and prompting framework that requires the model to enumerate, analyze, and constrain potential failures before generating its final response. Unlike existing safety alignment methods that optimize only for safe final responses, InvThink structures generation into three steps: (1) enumerate potential harms, (2) analyze their consequences, (3) generate the response under explicit mitigation constraints. We observe three findings: (i) InvThink shows higher safety scores at larger model sizes, compared to existing safety prompting and alignment baselines. (ii) InvThink mitigates the safety tax. Models trained with INVTHINK preserve their reasoning capability on standard benchmarks. (iii) beyond general safety tasks, InvThink also reduces harmful behavior in professional ethics domains (medicine, finance, law) and in agentic misalignment scenarios, achieving up to 32% reduction in harmfulness over zero-shot baselines and 16% over SafetyPrompt. We extend InvThink with supervised fine-tuning, and GRPO-based reinforcement learning across three LLM families.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:30:17.916944"
+}

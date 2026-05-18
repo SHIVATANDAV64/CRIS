@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.20909",
+  "title": "LogitTrace: Detecting Benchmark Contamination via Layerwise Logit Trajectories",
+  "abstract": "Large language models (LLMs) are commonly evaluated on challenging benchmarks such as AIME and Math500, where benchmark contamination can make memorized solutions appear as genuine reasoning. Existing detection methods largely rely on surface overlap, completion behavior, or final-output likelihood, and often degrade when inputs are simply rephrased. In this paper, we propose LogitTrace(Layerwise Logit Trajectories), a framework for analyzing memorization-like decision dynamics through intermediate logit trajectories. Instead of judging memorization only from the final answer, LogitTrace examines how model preferences emerge and stabilize across layers. We find that contaminated examples tend to show earlier commitment, while clean examples exhibit more gradual evidence accumulation. These trajectory signals allow a lightweight classifier to separate contaminated and clean examples across multiple models and input variants. Controlled LoRA injection experiments further show that repeated exposure to target samples induces similar trajectory patterns. Overall, our results suggest that LogitTrace provides evidence beyond surface overlap and final-output confidence, offering a useful lens for studying memorization-like behavior in LLMs.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:35:03.683525"
+}

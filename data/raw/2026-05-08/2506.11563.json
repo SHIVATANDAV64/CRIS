@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.11563",
+  "title": "A Survey of Personalized Federated Foundation Models for Privacy-Preserving Recommendation",
+  "abstract": "Integrating Foundation Models (FMs) into recommendation systems is an emerging and promising research direction. However, centralized paradigms face growing pressure from privacy concerns and strict regulatory requirements. Federated learning offers a viable solution that enables collaborative model refinement while keeping raw user data on local devices or organizational silos. Yet, applying FMs in this setting creates a fundamental tension, where the system must balance the leverage of global knowledge with the necessity of capturing user personality. This survey provides a comprehensive overview of Personalized Federated Foundation Models for privacy-preserving recommendation, and reviews recent progress in this emerging field. We first analyze personalization techniques that function effectively under federated settings. Furthermore, we discuss the adaptation of foundation models to such federated architectures to balance generalization with user-specific needs for achieving privacy-preserving recommendation. In contrast to existing reviews, our work specifically emphasizes the architectural intersection of federation, personalization, and foundation models. \\looseness=-1",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-06",
+  "fetched_at": "2026-05-13T23:23:54.639808"
+}

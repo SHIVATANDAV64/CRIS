@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2407.12173",
+  "title": "Beta Sampling is All You Need: Efficient Image Generation Strategy for Diffusion Models using Stepwise Spectral Analysis",
+  "abstract": "Generative diffusion models have emerged as a powerful tool for high-quality image synthesis, yet their iterative nature demands significant computational resources. This paper proposes an efficient time step sampling method based on an image spectral analysis of the diffusion process, aimed at optimizing the denoising process. Instead of the traditional uniform distribution-based time step sampling, we introduce a Beta distribution-like sampling technique that prioritizes critical steps in the early and late stages of the process. Our hypothesis is that certain steps exhibit significant changes in image content, while others contribute minimally. We validated our approach using Fourier transforms to measure frequency response changes at each step, revealing substantial low-frequency changes early on and high-frequency adjustments later. Experiments with ADM and Stable Diffusion demonstrated that our Beta Sampling method consistently outperforms uniform sampling, achieving better FID and IS scores, and offers competitive efficiency relative to state-of-the-art methods like AutoDiffusion. This work provides a practical framework for enhancing diffusion model efficiency by focusing computational resources on the most impactful steps, with potential for further optimization and broader application.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI",
+  "created": "2026-05-10",
+  "fetched_at": "2026-05-13T23:33:29.019537"
+}

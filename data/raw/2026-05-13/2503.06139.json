@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.06139",
+  "title": "GRP: Goal-Reversed Prompting for Zero-Shot Evaluation with LLMs",
+  "abstract": "Pairwise LLM-as-a-judge evaluation asks the judge to identify the \\emph{better} of two candidate answers. We study a one-line modification that asks for the \\emph{worse} answer instead and recovers the preference by elimination, a procedure we call Goal-Reversed Prompting (GRP). GRP introduces no extra inference rounds, composes with any prompt template (direct, chain-of-thought, or Arena-Hard SOP), and leaves the rest of the evaluation pipeline untouched. Two observations motivate the reversal. Reverse reasoning is a recurring strategy in human problem solving, and modern instruction-tuned judges exhibit a positive-leaning bias that asking for the worse answer can counteract. On JudgeBench under a strict consistency protocol that counts a judgment as correct only when both response orderings agree with the gold preference, GRP improves all three closed-source judges we test across both response-pair sources. With GPT-4o-generated pairs, the Arena-Hard SOP baseline improves from 61.71\\% to 66.23\\% for GPT-4o (+4.52) and from 60.00\\% to 66.00\\% for Claude-3.5-Sonnet (+6.00), with the largest absolute gains on Reasoning and Mathematics. The lift persists when response pairs come from Claude-3.5-Sonnet and when the SOP scaffolding is stripped to a minimal direct-prompting template, suggesting that goal reversal acts on the underlying judging behavior rather than on a particular rubric. Stronger judges benefit more than weaker ones, suggesting that goal reversal exposes additional reasoning capacity rather than compensating for its absence.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:37:45.151380"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2408.13471",
+  "title": "Disentangled Generative Graph Representation Learning",
+  "abstract": "Recently, generative graph models have shown promising results in learning graph representations through self-supervised methods. However, most existing generative graph representation learning (GRL) approaches rely on random masking across the entire graph, which overlooks the entanglement of learned representations. This oversight results in non-robustness and a lack of explainability. Furthermore, disentangling the learned representations remains a significant challenge and has not been sufficiently explored in GRL research. Based on these insights, this paper introduces DiGGR (Disentangled Generative Graph Representation Learning), a self-supervised learning framework. DiGGR aims to learn latent disentangled factors and utilizes them to guide graph mask modeling, thereby enhancing the disentanglement of learned representations and enabling end-to-end joint learning. Extensive experiments on 11 public datasets for two different graph learning tasks demonstrate that DiGGR consistently outperforms many previous self-supervised methods, verifying the effectiveness of the proposed approach.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:00.621385"
+}

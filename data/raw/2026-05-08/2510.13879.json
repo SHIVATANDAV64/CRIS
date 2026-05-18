@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.13879",
+  "title": "Catch Your Breath: Adaptive Computation for Self-Paced Sequence Production",
+  "abstract": "Within the landscape of inference-time scaling methods for foundation models, a width-based approach to scaling -- which involves the insertion of <pause> tokens in the input stream to delay model responses -- offers a unique advantage by increasing model expressivity while remaining highly parallelizable at both training and inference. The existing literature on training models to utilize <pause> tokens relies on the standard cross-entropy objective in which the model output is read out and evaluated only at the final step of a pause sequence. This approach provides no mechanism for the model to regulate its own processing or to signal readiness to respond, treating the additional compute steps as a static barrier rather than a resource to be used adaptively. We propose a supervised loss, Catch Your Breath (CYB), framed as a sequential-decision problem, that trains a model to dynamically and autonomously scale the number of compute steps used for each input token. The model indicates the need for additional compute steps by emitting a special <don't know> output, delaying its response via a pause. The model can abstain multiple times to obtain longer delays. Our experiments demonstrate that CYB significantly outperforms standard cross-entropy when introduced either in pretraining or fine-tuning, reducing perplexity and enhancing downstream accuracy with no additional computational or memory cost.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:25:04.993141"
+}

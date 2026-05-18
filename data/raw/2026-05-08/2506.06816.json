@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.06816",
+  "title": "How do datasets, developers, and models affect biases in a low-resourced language?: The Case of the Bengali Language",
+  "abstract": "Sociotechnical systems, such as language technologies, frequently exhibit identity-based biases. These biases exacerbate the experiences of historically marginalized communities and remain understudied in low-resource contexts. While models and datasets specific to a language or with multilingual support are commonly recommended to address these biases, this paper empirically tests the effectiveness of such approaches in the context of gender, religion, and nationality-based identities in Bengali, a widely spoken but low-resourced language. We conducted an algorithmic audit of sentiment analysis models built on mBERT and BanglaBERT, which were fine-tuned using all Bengali sentiment analysis (BSA) datasets from Google Dataset Search. Our analyses showed that BSA models exhibit biases across different identity categories despite having similar semantic content and structure. We also examined the inconsistencies and uncertainties arising from combining pre-trained models and datasets created by individuals from diverse demographic backgrounds. We connected these findings to the broader discussions on epistemic injustice, AI alignment, and methodological decisions in algorithmic audits.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.CY cs.HC",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:28.977619"
+}

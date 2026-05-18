@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2508.05803",
+  "title": "Human-like fleeting memory improves language learning but impairs reading time prediction in transformer language models",
+  "abstract": "Human memory is fleeting. As words are processed, the exact wordforms that make up incoming sentences are rapidly lost. Cognitive scientists have long believed that this limitation of memory may, paradoxically, help in learning language - an idea supported by classic connectionist modelling work. The rise of Transformers appears to challenge this idea, as these models can learn language effectively, despite lacking memory limitations or other architectural recency biases. Here, we investigate the hypothesized benefit of fleeting memory for language learning in tightly controlled experiments on transformer language models. Training transformers with and without fleeting memory on a developmentally realistic training set, we find that fleeting memory consistently improves language learning (as quantified by both overall language modelling performance and targeted syntactic evaluation) but, unexpectedly, impairs surprisal-based prediction of human reading times. Interestingly, follow up analyses revealed that this discrepancy - better language modeling, yet worse reading time prediction - could not be accounted for by prior explanations of why better language models sometimes fit human reading time worse. Together, these results support a benefit of memory limitations on neural network language learning - but not on predicting behavior.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:32:25.633879"
+}

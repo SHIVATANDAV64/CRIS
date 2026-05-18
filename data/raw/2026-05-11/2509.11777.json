@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.11777",
+  "title": "User eXperience Perception Insights Dataset (UXPID): Synthetic User Feedback from Public Industrial Forums",
+  "abstract": "Customer feedback in industrial forums offers rich but underexplored insights into real-world product experience. Yet systematic analysis remains challenging due to unstructured, domain-specific content and the scarcity of high-quality labeled datasets. This paper presents the User eXperience Perception Insights Dataset (UXPID), a collection of 7130 synthesized and anonymized user feedback branches extracted from a public industrial automation forum. Each JSON record contains multi-post comments enriched with metadata and annotated by a large language model (LLM) for UX insights, user expectations, severity ratings, sentiment, and topic classifications. UXPID is designed to facilitate research in user requirements, user experience (UX) analysis, and AI-driven feedback processing, particularly where privacy and licensing restrictions limit access to real-world data. It supports the training and evaluation of transformer-based models for tasks such as issue detection, sentiment analysis, and requirements extraction in technical forums, providing a valuable resource for advancing NLP methods within industrial product support and software engineering domains.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.LG",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:32:40.638885"
+}

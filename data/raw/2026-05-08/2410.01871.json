@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2410.01871",
+  "title": "Auction-Based Regulation for Artificial Intelligence",
+  "abstract": "In an era of \"moving fast and breaking things\", regulators have moved slowly to pick up the safety, bias, and legal debris left in the wake of broken Artificial Intelligence (AI) deployment. While there is much-warranted discussion about how to address the safety, bias, and legal woes of state-of-the-art AI models, rigorous and realistic mathematical frameworks to regulate AI are lacking. Our paper addresses this challenge, proposing an auction-based regulatory mechanism that provably incentivizes agents (i) to deploy compliant models and (ii) to participate in the regulation process. We formulate AI regulation as an all-pay auction where enterprises submit models for approval. The regulator enforces compliance thresholds and further rewards models exhibiting higher compliance than their peers. We derive Nash Equilibria demonstrating that rational agents will submit models exceeding the prescribed compliance threshold. Empirical results show that our regulatory auction boosts compliance rates by 20% and participation rates by 15% compared to baseline regulatory mechanisms, outperforming simpler frameworks that merely impose minimum compliance standards.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.GT cs.AI cs.CY econ.GN q-fin.EC",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:06.623357"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.13830",
+  "title": "Users as Annotators: LLM Preference Learning from Comparison Mode",
+  "abstract": "Pairwise preference data have played an important role in the alignment of large language models (LLMs). Each sample of such data consists of a prompt, two different responses to the prompt, and a binary label indicating which of the two responses is better. The labels are usually annotated by professional human annotators. In this paper, we consider an alternative approach to collect pairwise preference data -- user annotation from comparison mode. With the increasingly wider adoption of LLMs among the population, users are contributing more and more of their preference labels through their daily interactions with the LLMs. The upside of such labels is that users are the best experts in judging the responses to their own queries/prompts, but the downside is the lack of quality control in these labels. In this paper, we consider a new idea of generating two responses from two different models or two different versions of the same model. The asymmetry allows us to make an inference of the user's data quality through our proposed user behavior model. We develop an expectation-maximization algorithm to estimate a latent quality factor of the user, and filter users' annotation data accordingly. The downstream task shows the effectiveness of our approach in both capturing the user behavior and data filtering for LLM alignment.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:35:15.694270"
+}

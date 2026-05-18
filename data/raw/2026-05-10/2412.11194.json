@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2412.11194",
+  "title": "Direction for Detection: A Survey of Automated Vulnerability Detection and all of its Pain Points",
+  "abstract": "Security vulnerabilities in software can have severe consequences; however, manual vulnerability detection is costly and does not scale, especially as agentic coding frameworks increase the rate of code production. Over the last decade, a large body of research has applied machine learning machine learning to automate vulnerability detection (ML4AVD), yet self-reported performance on the most popular datasets shows no clear upward trend. The ML4AVD research community has identified several flaws in problem formulations, datasets, and metrics, but these are discussed in isolation, leaving the overarching problems that generate and reinforce these flaws unaddressed. We first systematize the field through a survey of 87 influential works based on their problem formulation, input and detection granularity, target programming languages, evaluation metrics, datasets, and detection approach. Drawing on this corpus and prior empirical work, we identify twelve pain points spanning the ML4AVD pipeline and show that they are self-reinforcing and causally inter-meshed: feedback loops between datasets, formulations, baselines, and metrics perpetuate each other and explain the field's persistent concentration on binary classification of C/C++ vulnerabilities at the function level. Thus, the field optimizes for a narrow and artificial problem that omits vulnerability type prediction, broader language support, and separation of input from detection granularity. We pair each pain point with concrete recommendations to break these loops. Finally, we use AIxCC as a case study to assess how well a recent high-profile effort aligns with these recommendations and reflect on the relevance of ML4AVD in the era of agentic AI.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.SE cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:28:21.021230"
+}

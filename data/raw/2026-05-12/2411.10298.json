@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.10298",
+  "title": "Topological Data Analysis Applications in Natural Language Processing: A Survey",
+  "abstract": "The surge of data available on the Internet has driven the adoption of a wide range of computational methods for analyzing and extracting insights from large-scale data. Among these, Machine Learning (ML) has become a central paradigm, offering powerful tools for pattern discovery, prediction, and representation learning across many domains. At the same time, real-world data often exhibit properties such as noise, imbalance, sparsity, limited supervision, and high dimensionality, motivating the use of additional analytical perspectives that can complement standard ML pipelines. One such perspective is Topological Data Analysis (TDA), a statistical framework that focuses on the intrinsic shape and structural organization of data. Rather than replacing ML, TDA offers a complementary lens for characterizing geometric and topological properties that may be difficult to capture with conventional feature-based or purely predictive approaches. This has motivated a growing body of work that integrates TDA into ML workflows, particularly in settings where data structure plays an important role. Despite this promise, TDA has received relatively limited attention in Natural Language Processing (NLP) compared to domains with more overt structural regularities, such as computer vision. Nevertheless, a dedicated community of researchers has explored its use in NLP, leading to 137 papers that we comprehensively survey in this work. We organize these studies into theoretical and nontheoretical approaches. Theoretical approaches use topology to explain linguistic phenomena, whereas non-theoretical approaches incorporate TDA into ML-based pipelines through a variety of numerical representations. We conclude by discussing the key challenges and open questions that continue to shape this emerging area. Resources and a list of papers are available at: https://github.com/AdaUchendu/AwesomeTDA4NLP.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:34:33.656097"
+}

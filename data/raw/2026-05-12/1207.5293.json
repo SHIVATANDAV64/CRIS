@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "1207.5293",
+  "title": "Probability Bracket Notation: Multivariable Systems and Static Bayesian Networks",
+  "abstract": "We extend Probability Bracket Notation (PBN), inspired by the Dirac notation in quantum mechanics, to multivariable probability systems and static Bayesian networks (BNs). By defining probability distributions and conditional expectations in a unified, basis-independent algebraic form, PBN provides a systematic way to represent and manipulate dependencies among random variables. Using the well-known Student BN as an illustrative probabilistic graphical model, we demonstrate prediction, bottom-up and top-down inference, and expectation calculations within the PBN framework. We show that, for a large N-node binary BN, after a one-time preprocessing, inference along a d-separable chain with k intermediate nodes requires O(k2^k) operations, compared to O(N2^N) for direct computation from the full joint distribution. We further extend PBN to networks with continuous variables, including linear Gaussian models, and introduce a hybrid Healthcare BN that combines discrete and continuous variables. In this model, discrete-display nodes serve as proxies for continuous parents, enabling user-specific predictions. Overall, PBN provides an operator-based framework that unifies representation and computation, with potential applications in education, data analytics, and machine learning.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI math.PR",
+  "created": "2026-05-10",
+  "fetched_at": "2026-05-13T23:13:37.228466"
+}

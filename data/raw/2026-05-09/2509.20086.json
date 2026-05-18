@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.20086",
+  "title": "OLaPh: Optimal Language Phonemizer",
+  "abstract": "Phonemization is a critical component in text-to-speech synthesis. Traditional approaches rely on deterministic transformations and lexica, while neural methods offer potential for higher generalization on out-of-vocabulary (OOV) terms. This work introduces OLaPh (Optimal Language Phonemizer), a hybrid framework that integrates extensive multilingual lexica with advanced NLP techniques and a statistical subword segmentation function. Evaluations on the WikiPron benchmark show that the OLaPh framework significantly outperforms established baselines in overall accuracy and maintains robustness on OOV data through advanced fallback mechanisms. To further explore neural generalization, we utilize the framework to synthesize a high-consistency training corpus for an instruction-tuned Large Language Model (LLM). While the deterministic framework remains more accurate overall, the LLM demonstrates strong generalization, matching or partly exceeding the framework's performance. This suggests that the LLM successfully internalized phonetic intuitions from the synthetic data that transcend the framework's capabilities. Together, these tools provide a comprehensive, open-source resource for multilingual G2P research.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:27:29.086906"
+}

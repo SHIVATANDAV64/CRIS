@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2402.02286",
+  "title": "Attention-Mamba: A Mamba-Enhanced Multi-Scale Parallel Inference Network for Medical Image Segmentation",
+  "abstract": "U-shaped architectures have long dominated the field of medical image segmentation, while Transformers are widely employed for modeling long-range dependencies. The former typically handles scale variations implicitly by aggregating multi-level features, whereas the efficiency of the latter is constrained by its quadratic computational and memory complexity. In this work, we propose an effective alternative to traditional U-shaped architectures by constructing parallel branches at different levels to obtain multi-scale features and corresponding predictions. Furthermore, we enhance our network by integrating Mamba, a state space model that captures long-range dependencies with linear complexity. First, a dual-path architecture with lateral connections aggregates high-level semantic information and low-level spatial details at each branch. Then, we introduce a Recursive Alignment Module (RAM) that restores spatial details in low-resolution features through stepwise alignment, optimizing them for subsequent global feature learning and multi-scale fusion. We further build parallel Mamba branches upon aligned features to establish hierarchical global representations. Finally, we propose a Mamba-based attention mechanism for adaptive multi-scale prediction fusion; this mechanism utilizes Mamba to enhance information exchange across scales along both the channel and spatial dimensions. Experiments across three imaging modalities (MRI, CT, and dermoscopy) underscore the superior generalization of the proposed network. Compared to state-of-the-art 2D CNN, Transformer, and Mamba-based networks, our model achieves the highest segmentation performance on the Synapse, ACDC, ISIC-2018, and PH2 datasets while maintaining high efficiency, featuring the second-smallest parameters (14.05 M) and moderate computational complexity (8.94 GFLOPs).",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI cs.LG",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:13:46.232537"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2310.15288",
+  "title": "Active teacher selection for reward learning",
+  "abstract": "Reward learning techniques enable machine learning systems to learn objectives from human feedback. A core limitation of these systems is their assumption that all feedback comes from a single human teacher, despite gathering feedback from large and heterogeneous populations. We propose the Hidden Utility Bandit (HUB) framework to model differences in teacher rationality, expertise, and costliness, formalizing the problem of learning from multiple teachers. We develop a variety of solution algorithms and apply them to two real-world domains: paper recommendation systems and COVID-19 vaccine testing. We find that Active Teacher Selection (ATS) algorithms outperform baselines by actively selecting when and which teacher to query. Our key contributions are 1) the HUB framework: a novel mathematical framework for modeling the teacher selection problem, 2) ATS: an active-learning based algorithmic approach that demonstrates the utility of modeling teacher heterogeneity, and 3) proof-of-concept application of the HUB framework and ATS approaches to model and solve multiple real-world problems with complex trade-offs between reward learning and optimization.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.LG",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:28:06.015570"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.21228",
+  "title": "CachePrune: Teaching LLMs What Not to Follow via KV-Cache Editing",
+  "abstract": "Large Language Models (LLMs) are susceptible to indirect prompt injection attacks, where the model inadvertently responds to instructions injected into the prompt context. This vulnerability stems from LLMs' inability to distinguish between data and instructions within a prompt. We propose CachePrune, which defends against this attack by identifying and pruning neurons associated with instruction-following during KV cache encoding of the prompt context. The pruning steers the LLM toward interpreting the context purely as data rather than as instructions to follow. To identify these neurons, we introduce a neural attribution mechanism guided by a preferential attribution loss, and theoretically connect this loss to an upper bound of the Direct Preference Optimization (DPO) objective. Further, we improve the fidelity of neural attribution by leveraging an observed triggering effect in instruction-following. Our approach does not interfere with prompt formatting or incur test-time overhead during response generation. Experiments show that CachePrune significantly reduces the attack success rate while preserving the LLM's ability to follow user instructions.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CR cs.AI",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:33:53.031927"
+}

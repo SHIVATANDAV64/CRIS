@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2512.02010",
+  "title": "Four Over Six: More Accurate NVFP4 Quantization with Adaptive Block Scaling",
+  "abstract": "As large language models have grown larger, interest has grown in low-precision numerical formats such as NVFP4 as a way to improve speed and reduce memory usage. However, quantizing models to NVFP4 remains challenging as the lack of precision generally degrades model performance. In this work, we address this issue with Four Over Six (4/6), a modification to the block-scaled NVFP4 quantization algorithm that yields reduced quantization error. Unlike integer formats, floating point formats have non-uniform step sizes which create larger quantization error on larger values. 4/6 takes advantage of this by adaptively scaling some blocks to smaller FP4 values, making the distribution of representable values more uniform and reducing quantization error for near-maximal values. We show that 4/6 can be implemented efficiently on modern hardware accelerators, resulting in performance gains during both pre-training and inference with minimal computational overhead. In pre-training experiments with the Nemotron 3 Nano 30B-A3B model architecture, we find that 4/6 brings training loss closer to BF16 compared to models trained with current state-of-the-art NVFP4 training recipes. Our code is available at https://github.com/mit-han-lab/fouroversix.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.LG",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:35:33.702611"
+}

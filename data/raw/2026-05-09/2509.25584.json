@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.25584",
+  "title": "Skip-It? Theoretical Conditions for Layer Skipping in Vision-Language Models",
+  "abstract": "Vision-language models achieve incredible performance across a wide range of tasks, but their large size makes inference costly. Recent work has shown that multimodal processing contains significant redundancies, making it possible to skip certain layers with minimal performance loss. Yet current pruning techniques remain ad-hoc, relying on heuristics or hyperparameter sweeps rather than principled criteria for determining when layer skipping is beneficial. In this paper, we propose a unified framework that characterizes the redundancy conditions under which pruning can enhance efficiency without sacrificing performance. Central to our approach are experimentally verifiable and interpretable notions of redundancy that can be evaluated without requiring downstream task performance as a metric. Applying this framework, we corroborate prior findings that both early and late vision tokens are redundant across models, and we validate our conditions by showing they align with actual performance degradation. Beyond these empirical results, our framework provides a theoretically grounded understanding of redundancy in VLMs and unifies many of the ideas behind modern layer-skipping techniques.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL cs.CV cs.IT cs.LG math.IT",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:27:32.088748"
+}

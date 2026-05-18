@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2112.11447",
+  "title": "Multi-Modality Distillation via Learning the teacher's modality-level Gram Matrix",
+  "abstract": "In the context of multi-modality knowledge distillation research, the existing methods was mainly focus on the problem of only learning teacher final output. Thus, there are still deep differences between the teacher network and the student network. It is necessary to force the student network to learn the modality relationship information of the teacher network. To effectively exploit transfering knowledge from teachers to students, a novel modality relation distillation paradigm by modeling the relationship information among different modality are adopted, that is learning the teacher modality-level Gram Matrix.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CV",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:22:45.615223"
+}

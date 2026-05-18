@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2412.18798",
+  "title": "Ister: Linear Transformer for Efficient Multivariate Time Series Forecasting",
+  "abstract": "Transformer-based models have achieved remarkable success in multivariate time series forecasting (MTSF) by capturing long-range dependencies. However, their widespread adoption is hindered by the quadratic computational complexity of self-attention, which limits scalability on high-dimensional sequences. To address this challenge, we propose the Inverted Seasonal-Trend Decomposition Transformer (Ister), a novel architecture that enhances both predictive accuracy and computational efficiency. Central to Ister is Dot-attention, a linear-complexity attention mechanism that replaces conventional multi-head self-attention with element-wise dot-product operations to model inter-series dependencies. Furthermore, we introduce an inverted seasonal-trend decomposition strategy that isolates periodic components, enabling the model to focus learning on periodic patterns, thereby improving the performance of channel alignment. Extensive experiments across several real-world benchmarks demonstrate that Ister consistently achieves state-of-the-art performance. Code is available at https://github.com/macovaseas/Ister.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:33:32.023156"
+}

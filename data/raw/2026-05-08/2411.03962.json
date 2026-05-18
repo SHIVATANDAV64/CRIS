@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.03962",
+  "title": "How Does A Text Preprocessing Pipeline Affect Ontology Matching?",
+  "abstract": "The classical text preprocessing pipeline, comprising Tokenisation, Normalisation, Stop Words Removal, and Stemming/Lemmatisation, has been implemented in many systems for ontology matching (OM). However, the lack of standardisation in text preprocessing creates diversity in the mapping results. In this paper, we investigate the effect of the text preprocessing pipeline on 8 Ontology Alignment Evaluation Initiative (OAEI) tracks with 49 distinct alignments. We find that Tokenisation and Normalisation (categorised as Phase 1 text preprocessing) are more effective than Stop Words Removal and Stemming/Lemmatisation (categorised as Phase 2 text preprocessing). We propose two novel approaches to repair unwanted false mappings that occur in Phase 2 text preprocessing. One is a pre hoc logic-based repair approach used before text preprocessing, employing an ontology-specific check to find common words that cause false mappings. The other repair approach is the post hoc large language model (LLM)-based approach, used after text preprocessing, which utilises the strong background knowledge provided by LLMs to repair non-existent and counter-intuitive false mappings. The experimental results indicate that these two approaches can significantly improve the matching correctness and the overall matching performance.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.IR",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:07.966778"
+}

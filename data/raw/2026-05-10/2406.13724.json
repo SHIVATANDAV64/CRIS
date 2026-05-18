@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2406.13724",
+  "title": "Heterogeneous Graph Neural Networks with Post-hoc Explanations for Multi-modal and Explainable Land Use Inference",
+  "abstract": "Urban land use inference is a critically important task that aids in city planning and policy-making. Recently, the increased use of sensor and location technologies has facilitated the collection of multi-modal mobility data, offering valuable insights into daily activity patterns. Many studies have adopted advanced data-driven techniques to explore the potential of these multi-modal mobility data in land use inference. However, existing studies often process samples independently, ignoring the spatial correlations among neighbouring objects and heterogeneity among different services. Furthermore, the inherently low interpretability of complex deep learning methods poses a significant barrier in urban planning, where transparency and extrapolability are crucial for making long-term policy decisions. To overcome these challenges, we introduce an explainable framework for inferring land use that synergises heterogeneous graph neural networks (HGNs) with Explainable AI techniques, enhancing both accuracy and explainability. The empirical experiments demonstrate that the proposed HGNs significantly outperform baseline graph neural networks for all six land-use indicators, especially in terms of 'office' and 'sustenance'. As explanations, we consider feature attribution and counterfactual explanations. The analysis of feature attribution explanations shows that the symmetrical nature of the `residence' and 'work' categories predicted by the framework aligns well with the commuter's 'work' and 'recreation' activities in London. The analysis of the counterfactual explanations reveals that variations in node features and types are primarily responsible for the differences observed between the predicted land use distribution and the ideal mixed state. These analyses demonstrate that the proposed HGNs can suitably support urban stakeholders in their urban planning and policy-making.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI",
+  "created": "2024-06-19",
+  "fetched_at": "2026-05-13T23:28:09.016861"
+}

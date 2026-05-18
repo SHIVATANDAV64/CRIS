@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2501.03717",
+  "title": "Materialist: Physically Based Editing Using Single-Image Inverse Rendering",
+  "abstract": "Achieving physically consistent image editing remains a significant challenge in computer vision. Existing image editing methods typically rely on neural networks, which struggle to accurately handle shadows and refractions. Conversely, physics-based inverse rendering often requires multi-view optimization, limiting its practicality in single-image scenarios. In this paper, we propose Materialist, a neural-initialized physically based rendering pipeline for single-image inverse rendering. Unlike previous hybrid methods that use physics to guide neural generation, our method leverages neural networks to predict initial material properties, which are then rigorously optimized via progressive differentiable rendering. Our approach enables a range of applications, including material editing, object insertion, and relighting, while also introducing an effective method for editing material transparency via ray-traced refraction without requiring full scene geometry. Furthermore, our envmap estimation method also achieves competitive performance, further enhancing the accuracy of image editing task. Experiments demonstrate strong performance across synthetic and real-world datasets, excelling even on challenging out-of-domain images.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI cs.GR",
+  "created": "2026-05-06",
+  "fetched_at": "2026-05-13T23:36:25.990734"
+}

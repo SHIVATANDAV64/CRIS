@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2508.03829",
+  "title": "Majority Bit-Aware Watermarking For Large Language Models",
+  "abstract": "The growing deployment of Large Language Models (LLMs) has raised concerns about their misuse in generating harmful or deceptive content. To address this issue, watermarking methods have been proposed to embed identifiable multi-bit messages into generated text for misuse tracing. However, existing methods often suffer from a fundamental trade-off between text quality and decoding accuracy. In particular, they have to restrict the size of the preferred token set (i.e., green list) during encoding to maintain a detectable watermark signal for decoding, which inevitably degrades generation quality. To improve this trade-off, we propose a novel message encoding paradigm called \\textit{majority bit-aware encoding}, which relaxes the watermark signal strength from the green list size. This strategy allows for a strong watermark signal to be preserved in generated texts even when using a large green list. We introduce two instantiations of this paradigm: MajorMark and MajorMark$^{+}$, where the latter is specifically optimized for long messages. Extensive experiments on state-of-the-art LLMs demonstrate that our methods achieve higher decoding accuracy and superior text quality compared to prior baselines.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.CR",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:34:54.676926"
+}

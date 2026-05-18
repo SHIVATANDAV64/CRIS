@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2304.10891",
+  "title": "Transformer-Based Autonomous Driving Models and Deployment-Oriented Compression: A Survey",
+  "abstract": "Transformer-based models are becoming a central paradigm in autonomous driving because they can capture long-range spatial dependencies, multi-agent interactions, and multimodal context across perception, prediction, and planning. At the same time, their deployment in real vehicles remains difficult because high-capacity attention-based architectures impose substantial latency, memory, and energy overhead. This survey reviews representative Transformer-based autonomous driving models and organizes them by task role, sensing configuration, and architectural design. More importantly, it examines these models from a deployment-oriented perspective and analyzes how efficiency constraints reshape model design choices in practice. We further review compression and acceleration strategies relevant to Transformer-based driving systems, including quantization, pruning, knowledge distillation, low-rank approximation, and efficient attention, and discuss their benefits, limitations, and task-dependent applicability. Rather than treating compression as an isolated post-processing step, we highlight it as a system-level design consideration that directly affects deployability, robustness, and safety. Finally, we identify open challenges and future research directions toward standardized, safety-aware, and hardware-conscious evaluation of efficient autonomous driving systems.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.CV cs.RO cs.SY eess.SY",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:35:58.981021"
+}

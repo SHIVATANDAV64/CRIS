@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2407.10853",
+  "title": "Bring Your Own Prompts: Use-Case-Specific Bias and Fairness Evaluation for LLMs",
+  "abstract": "Bias and fairness risks in Large Language Models (LLMs) vary substantially across deployment contexts, yet existing approaches lack systematic guidance for selecting appropriate evaluation metrics. We present a decision framework that maps LLM use cases, characterized by a model and population of prompts, to relevant bias and fairness metrics based on task type, whether prompts contain protected attribute mentions, and stakeholder priorities. Our framework addresses toxicity, stereotyping, counterfactual unfairness, and allocational harms, and introduces novel metrics based on stereotype classifiers and counterfactual adaptations of text similarity measures. We release an open-source Python library, \\texttt{langfair}, for practical adoption. Extensive experiments on use cases across five LLMs and five prompt populations demonstrate that fairness risks cannot be reliably assessed from benchmark performance alone: results on one prompt dataset likely overstate or understate risks for another, underscoring that fairness evaluation must be grounded in the specific deployment context.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:13:49.234641"
+}

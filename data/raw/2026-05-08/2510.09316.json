@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.09316",
+  "title": "Large Language Model Prompt Datasets: An In-depth Analysis and Insights",
+  "abstract": "We compile 129 heterogeneous LLM prompt datasets (>1.22 TB, >673M instances) into a structured taxonomy and conduct a multi-level linguistic analysis (lexical, syntactic, and semantic) on seven representative corpora, surfacing systematic patterns that distinguish prompts from general text. Three downstream experiments validate practical utility: prompt filtering (F1 = 0.90), domain classification (Macro-F1 = 0.975), and prompt quality prediction (AUC = 0.792), all without invoking any additional model. A central finding is that 62-d syntactic features (POS + dependency distributions) serve as a uniquely efficient routing primitive, recovering >93% of GPU-embedding accuracy at 1.9 $\\times$ lower single-request latency (3.0 ms vs. 5.7 ms) with no GPU and no corpus vocabulary. A complementary discriminative--predictive divergence shows that features most useful for routing are precisely those most negatively correlated with response quality, while lexical diversity (Cohen's $d$ = 0.71) dominates the quality signal but carries minimal routing weight, directly motivating two-stage pipeline design. Our datasets and code are available.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:58.991183"
+}

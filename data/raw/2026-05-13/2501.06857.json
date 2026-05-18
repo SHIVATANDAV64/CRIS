@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2501.06857",
+  "title": "A Counterfactual Cause in Situation Calculus",
+  "abstract": "Recently, Batusov and Soutchanski proposed a notion of actual achievement cause in the situation calculus, amongst others, they can determine the cause of quantified effects in a given action history. While intuitively appealing, this notion of cause is not defined in a counterfactual perspective. In this paper, we propose a notion of cause based on counterfactual analysis. In the context of action history, we show that our notion of cause generalizes naturally to a notion of achievement cause. We analyze the relationship between our notion of the achievement cause and the achievement cause by Batusov and Soutchanski. Finally, we relate our account of cause to Halpern and Pearl's account of actual causality. Particularly, we note some nuances in applying a counterfactual viewpoint to disjunctive goals, a common thorn in definitions of actual causes.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:36:28.991626"
+}

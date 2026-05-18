@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.18954",
+  "title": "ReMAP: Neural Reparameterization for Scalable MAP Inference in Arbitrary-Order Markov Random Fields",
+  "abstract": "Scalable high-quality MAP inference in arbitrary-order Markov Random Fields (MRFs) remains challenging. Approximate message-passing methods are often efficient but can degrade on dense or high-order instances, while exact solvers such as Toulbar2 become increasingly expensive at scale. We present ReMAP, an instance-wise neural reparameterization framework that directly optimizes a differentiable relaxation of the original MRF energy. Instead of relying on supervised labels or amortized training, ReMAP treats each MRF as an independent optimization problem: a Graph Neural Network produces node-wise label distributions, and gradient-based optimization searches for a low-energy discrete solution in an over-parameterized continuous space. The method supports pairwise and arbitrary-order factors, heterogeneous label cardinalities, and efficient GPU execution, without requiring labeled solutions. We show that the relaxed objective is consistent with the discrete MAP problem and analyze how neural over-parameterization can expose low-energy optimization paths unavailable in the original discrete space. Empirically, on synthetic pairwise and high-order MRFs, UAI 2022 inference benchmarks, and real-world Physical Cell Identity (PCI) problems, ReMAP consistently outperforms approximate baselines and often finds lower-energy solutions than Toulbar2 on hard large-scale instances within practical time budgets.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:15.626893"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.02072",
+  "title": "Express Your Doubts -- Probabilistic World Modeling Should not be Based on Token logprobs",
+  "abstract": "Language modeling has shifted in recent years from a distribution over strings to prediction models with textual inputs and outputs for general-purpose tasks. This position paper highlights the often overlooked implications of this shift for the use of large language models (LLMs) as probability estimators, especially for world probabilities. In light of the theoretical distinction between distribution estimation and response prediction, we examine LLM training phases and common use cases for LLM output probabilities. We show that the different settings lead to distinct, potentially conflicting, desired output distributions. This lack of clarity leads to pitfalls when using output probabilities as event probabilities. Our position advocates for second-order prediction -- incorporating probabilities explicitly as part of the output -- as a theoretically sound method, in contrast to using token logprobs. We conclude with suggestions for potential directions to improve the probabilistic soundness of this method.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:36:49.997555"
+}

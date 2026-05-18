@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2502.17500",
+  "title": "Generalized Euler Logarithm and its Applications in Machine Learning: Natural Gradient, Backpropagation, Generalized EG, Mirror Descent and OLPS",
+  "abstract": "This paper investigates in depth the fundamental properties of the two-parameter generalized Euler logarithm and its inverse, the associated deformed $(a,b)$-exponential function. We systematically clarify the parameter domains that guarantee monotonicity, concavity, and invertibility, derive series and integral representations, and provide explicit links to a broad class of one- and two-parameter deformations, including Tsallis, Kaniadakis, Schwämmle--Tsallis, Kaniadakis--Scarfone, and Tempesta-type logarithms and their inverse exponentials. In this way, the Euler $(a,b)$-logarithm is established as a unifying kernel for a wide family of generalized entropies and divergence measures. On the algorithmic side, we extend applications of the Euler logarithm to modern machine learning and optimization. We introduce generalized Exponentiated Gradient (GEG) and Mirror Descent (MD) schemes in which the Euler $(a,b)$-logarithm acts as a flexible link function in the underlying Bregman divergence. In addition, we propose an Euler-based Generalized Cross-Entropy (GCE) loss for deep neural networks, derive its exact backpropagation formulas, and detail its seamless integration with Fisher-Rao Natural Gradient (NG) descent. By isolating the Fisher Information Matrix (FIM) and developing a diagonal NG approximation, we demonstrate how the two deformation parameters successfully decouple tail robustness from local gradient shaping.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:31:03.133259"
+}

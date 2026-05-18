@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.01665",
+  "title": "Leveraging Analytic Gradients in Provably Safe Reinforcement Learning",
+  "abstract": "The deployment of autonomous robots in safety-critical applications requires safety guarantees. Provably safe reinforcement learning is an active field of research that aims to provide such guarantees using safeguards. These safeguards should be integrated during training to reduce the sim-to-real gap. While there are several approaches for safeguarding sampling-based reinforcement learning, analytic gradient-based reinforcement learning often achieves superior performance from fewer environment interactions. However, there is no safeguarding approach for this learning paradigm yet. Our work addresses this gap by developing the first effective safeguard for analytic gradient-based reinforcement learning. We analyse existing, differentiable safeguards, adapt them through modified mappings and gradient formulations, and integrate them into a state-of-the-art learning algorithm and a differentiable simulation. Using numerical experiments on three control tasks, we evaluate how different safeguards affect learning. The results demonstrate safeguarded training without compromising performance. Additional visuals are provided at timwalter.github.io/safe-agb-rl.github.io.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.RO",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:48.637536"
+}

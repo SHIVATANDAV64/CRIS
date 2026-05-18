@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.18760",
+  "title": "Synthetic Function Demonstrations Improve Generation in Low-Resource Programming Languages",
+  "abstract": "A key consideration when training an LLM is whether the target language is more or less resourced, for example English compared to Welsh, or Python compared to Excel. Typical training data for programming languages consists of real program demonstrations coupled with explanatory human-written comments. In this work we present a novel approach to the creation of such data for low resource programming languages, which lack naturally occurring data. Our process generates synthetic, textbook-quality demonstrations of how to use library functions, which we show makes for good model finetuning data. We demonstrate in an example domain of Excel Formulas. First, we collate language documentation, then we use this to augment a powerful teacher model which generates synthetic training data, and finally finetune student models on the demonstrations. Our technique improves student performance on 2 question-answering datasets: WikiTQ and TAT-QA. We also show advantages of finetuning over standard RAG approaches, which can offer only modest improvement due to the unfamiliarity of the target domain to student models.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:37:51.153074"
+}

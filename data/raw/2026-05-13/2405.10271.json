@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2405.10271",
+  "title": "Pruning Federated Models through Loss Landscape Analysis and Client Agreement Scoring",
+  "abstract": "The practical deployment of Federated Learning (FL) on resource-constrained devices is fundamentally limited by the high cost of training large models and the instability caused by heterogeneous (non-IID) client data. Conventional pruning methods often treat data heterogeneity as a problem to be mitigated. In this work, we introduce a paradigm shift: we reframe client diversity as a feature to be harnessed. We propose AutoFLIP, a framework that begins not with training, but with a one-time federated loss exploration. During this phase, clients collaboratively build a map of the collective loss landscape, using their diverse data to reveal the problem's essential structure. This shared intelligence then guides an adaptive pruning strategy that is dynamically refined by client agreement throughout training. This approach allows AutoFLIP to identify robust and efficient sub-networks from the outset. Our extensive experiments show that AutoFLIP reduces computational overhead by an average of 52% and communication costs by over 65% while simultaneously achieving state-of-the-art accuracy in challenging non-IID settings.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.DC cs.ET",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:36:04.983499"
+}

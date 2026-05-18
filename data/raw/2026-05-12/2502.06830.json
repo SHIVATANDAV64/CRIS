@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2502.06830",
+  "title": "OrderFusion: Encoding Orderbook for End-to-End Probabilistic Intraday Electricity Price Forecasting",
+  "abstract": "Probabilistic intraday electricity price forecasting is becoming increasingly important for short-term power-system operation. With increasing renewable generation, demand-side flexibility, and storage assets, market participants need to adjust their positions under uncertainty closer to delivery. Continuous intraday (CID) markets support this process by providing updated price signals, helping participants manage imbalance exposure and operational risk. Unlike auction markets, CID trading in many jurisdictions is characterized by the continuous posting of buy and sell orders. This dynamic orderbook microstructure of price formation presents special challenges for price forecasting. Conventional methods represent the orderbook via domain features aggregated from buy and sell trades, or by treating it as a multivariate time series, but such representations neglect the full buy-sell interaction structure of the orderbook. This research therefore develops a new order fusion methodology, which is an end-to-end and parameter-efficient probabilistic forecasting model that learns a interaction-aware representation of the buy-sell dynamics. Furthermore, as quantile crossing is often a problem in probabilistic forecasting, this approach hierarchically estimates the quantiles with non-crossing constraints. Extensive experiments on CID price indices across high- and low-liquidity European markets demonstrate consistent improvements over conventional baselines, and ablation studies highlight the contributions of the main components.The methodology is available at: https://runyao-yu.github.io/OrderFusion/.",
+  "authors": [
+    null
+  ],
+  "categories": "q-fin.CP cs.AI cs.LG",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:33:41.026818"
+}

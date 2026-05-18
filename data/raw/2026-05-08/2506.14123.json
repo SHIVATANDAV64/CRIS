@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.14123",
+  "title": "Sampling from Your Language Model One Byte at a Time",
+  "abstract": "Tokenization is used almost universally by modern language models, enabling efficient text representation using multi-byte or multi-character tokens. However, prior work has shown that tokenization can introduce distortion into the model's generations, an issue known as the Prompt Boundary Problem (PBP). For example, users are often advised not to end their prompts with a space because it prevents the model from including the space as part of the next token. While this heuristic is effective in English, the underlying PBP continues to affect code generation and languages such as Chinese, where tokens often do not line up with word and syntactic boundaries. In this work, we present an inference-time method to convert any autoregressive LM with a BPE tokenizer into a character-level or byte-level LM. Our method efficiently solves the PBP and is also able to unify the vocabularies of language models with different tokenizers, allowing one to ensemble LMs with different tokenizers at inference time or transfer the post-training from one model to another using proxy-tuning. Code is available at https://github.com/SewoongLab/byte-sampler .",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.FL cs.LG",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:34.979478"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2407.00805",
+  "title": "Towards Shutdownable Agents via Stochastic Choice",
+  "abstract": "The POST-Agents Proposal (PAP) is an idea for ensuring that advanced artificial agents never resist shutdown. A key part of the PAP is using a novel `Discounted Reward for Same-Length Trajectories (DReST)' reward function to train agents to (1) pursue goals effectively conditional on each trajectory-length (be `USEFUL'), and (2) choose stochastically between different trajectory-lengths (be `NEUTRAL' about trajectory-lengths). In this paper, we propose evaluation metrics for USEFULNESS and NEUTRALITY. We use a DReST reward function to train simple agents to navigate gridworlds, and we find that these agents learn to be USEFUL and NEUTRAL. Our results thus provide some initial evidence that DReST reward functions could train advanced agents to be USEFUL and NEUTRAL. Our theoretical work suggests that these agents would be useful and shutdownable.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:36:07.984924"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2412.05225",
+  "title": "BEExformer: A Fast Inferencing Binarized Transformer with Early Exits",
+  "abstract": "Large Language Models (LLMs) based on transformers achieve cutting-edge results on a variety of applications. However, their enormous size and processing requirements hinder deployment on constrained resources. To enhance efficiency, binarization and Early Exit (EE) have proved to be effective solutions. However, binarization may lead to performance loss as reduced precision affects gradient estimation and parameter updates. Besides, research on EE mechanisms is still in its early stages. To address these challenges, we introduce Binarized Early Exit Transformer (BEExformer), a first-of-its-kind selective learning-based transformer integrating Binarization-Aware Training (BAT) with EE for efficient and fast textual inference. Each transformer block has an integrated Selective-Learn Forget Network (SLFN) to enhance contextual retention while eliminating irrelevant information. The BAT employs a differentiable second-order approximation to the sign function, enabling gradient computation that captures both the sign and magnitude of the weights. This aids in 21.30 times reduction in model size. The EE mechanism hinges on fractional reduction in entropy among intermediate transformer blocks with soft-routing loss estimation. This accelerates inference by reducing FLOPs by 52.27% and even improves accuracy by 3.22% by resolving the \"overthinking\" problem inherent in deep networks. Extensive evaluation through comparison with the SOTA methods and various ablations across nine datasets covering multiple NLP tasks demonstrates its Pareto-optimal performance-efficiency trade-off.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.NE",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:36:19.989028"
+}

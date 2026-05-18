@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.21938",
+  "title": "Practical Adversarial Attacks on Stochastic Bandits via Fake Data Injection",
+  "abstract": "Adversarial attacks on stochastic bandits have traditionally relied on some unrealistic assumptions, such as per-round reward manipulation and unbounded perturbations, limiting their relevance to real-world systems. We propose a more practical threat model, Fake Data Injection, which reflects realistic adversarial constraints: the attacker can inject only a limited number of bounded fake feedback samples into the learner's history, simulating legitimate interactions. We design effective attack strategies under this model, explicitly addressing both magnitude constraints (on reward values) and temporal constraints (on when and how often data can be injected). Our theoretical analysis shows that these attacks can mislead a class of bandit algorithms into selecting a target arm in nearly all rounds while incurring only sublinear attack cost. Experiments on synthetic and real-world datasets validate the effectiveness of our strategies, revealing vulnerabilities in stochastic bandit algorithms under practical adversarial scenarios.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.CR",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:45.636740"
+}

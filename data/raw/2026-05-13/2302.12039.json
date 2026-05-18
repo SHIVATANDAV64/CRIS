@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2302.12039",
+  "title": "Natural Language Processing in the Legal Domain",
+  "abstract": "We summarize the current state of the field of NLP & Law with a specific focus on recent technical and substantive developments. To support our analysis, we construct and analyze a nearly complete corpus of nearly one thousand NLP & Law related papers published between 2013-2024. Our analysis highlights several major trends. Namely, we document an increasing number of papers written, tasks undertaken, and languages covered over the course of the past decade. We observe an increase in the sophistication of the methods which researchers deployed in this applied context. Legal NLP is beginning to match not only the methodological sophistication of general NLP but also the professional standards of data availability and code reproducibility observed within the broader scientific community. We believe all of these trends bode well for the future of the field and point to an exciting next phase for the Legal NLP community.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:35:52.979168"
+}

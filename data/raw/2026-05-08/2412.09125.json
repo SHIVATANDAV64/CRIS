@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2412.09125",
+  "title": "Goal-Driven Query Answering over First- and Second-Order Dependencies with Equality",
+  "abstract": "In this paper we present the first goal-driven query answering technique for first- and second-order dependencies with equality. Our technique transforms the input dependencies so that applying the chase to the output avoids many inferences that are irrelevant to the query. The transformation proceeds in several steps, which comprise the following three novel techniques. First, we present a variant of the singularisation technique by Marnette [59] that can handle function variables and that corrects an incompleteness of a related formulation by ten Cate et al. [73]. Second, we present a relevance analysis technique that can eliminate dependencies that provably do not contribute to query answers. Third, we present a variant of the magic sets algorithm [19] that can handle second-order dependencies with equality. We also present the results of an extensive empirical evaluation, which show that goal-driven query answering can be orders of magnitude faster than computing the full universal model.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.DB cs.LO",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:21.628585"
+}

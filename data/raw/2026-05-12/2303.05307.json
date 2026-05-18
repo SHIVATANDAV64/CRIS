@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2303.05307",
+  "title": "Learning Strategic Value and Cooperation in Multi-Player Stochastic Games through Side Payments",
+  "abstract": "We study general-sum, multi-player stochastic games with transferable utility, motivated by settings where agents can use side payments to make cooperation individually rational. Building on the Harsanyi--Shapley (HS) value for normal-form games, we introduce two HS-based value notions for stochastic games: HS-S, defined by aggregating dynamic coalition-versus-complement threat powers, and Coco-S, defined as fixed points of a statewise HS Bellman operator. We extend HS-style axioms to the stochastic setting and show that HS-S is the unique mapping satisfying them. We prove that HS-S and Coco-S coincide in all two-player stochastic games, but can disagree when $n>2$, via an explicit three-player counterexample. We prove existence and uniqueness of Coco-S fixed points for all two-player games and for three-player two-state games via topological degree theory, and provide an axiomatic characterization of Coco-S through a new \\emph{Markov Consistency} axiom that distinguishes it from HS-S. Finally, we give sampling-based estimators with finite-sample guarantees and empirically compare the induced values, policies, and side payments on multi-player grid-game benchmarks.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.GT cs.AI",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:13:40.231153"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.14707",
+  "title": "FLAME: A New Dataset on FLemish Accounts of Momentary Experiences",
+  "abstract": "We introduce FLAME (FLemish Accounts of Momentary Experiences), a new corpus of nearly 25,000 daily personal narratives in Belgian-Dutch (Flemish), designed to support research on underrepresented language varieties in Natural Language Processing (NLP). Personal narratives of this kind hold rich potential for uncovering culturally grounded, everyday themes, yet extracting meaningful topics from such data is non-trivial, given the informal register, cultural specificity, and low-resource nature of the Flemish variety. We therefore ask: which topic modeling approach is best suited to reveal the latent themes in this corpus? To answer this, we benchmark three widely used methods: K-Means Clustering, Latent Dirichlet Allocation (LDA), and BERTopic, evaluating their ability to identify coherent and culturally relevant topics. While LDA achieves strong performance on automated coherence metrics, human evaluation reveals that BERTopic consistently produces the most coherent and culturally resonant topics, exposing the limitations of purely statistical methods on narrative-rich data. The diminished performance of K-Means compared to prior work on similar Dutch corpora further highlights the unique linguistic challenges posed by this dataset. Our findings demonstrate that contextual embeddings are critical for robust topic modeling in low-resource, culturally specific domains, and underscore the importance of human-centered evaluation alongside automated metrics.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:37:57.154898"
+}

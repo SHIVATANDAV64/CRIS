@@ -1,0 +1,402 @@
+{
+  "nodes": [
+    {
+      "id": "1207.5293",
+      "type": "paper",
+      "label": "",
+      "domains": []
+    },
+    {
+      "id": 2112.11447,
+      "type": "paper",
+      "label": "Multi-Modality Distillation vi",
+      "domains": [
+        "Multi-Modal Knowledge Distillation",
+        "Computer Vision"
+      ]
+    },
+    {
+      "id": 2211.00642,
+      "type": "paper",
+      "label": "Farm-wide virtual load monitor",
+      "domains": [
+        "Offshore Wind Energy and Structural Health Monitoring",
+        "Machine Learning and Uncertainty Quantification"
+      ]
+    },
+    {
+      "id": "2404.02534",
+      "type": "paper",
+      "label": "",
+      "domains": []
+    },
+    {
+      "id": 2405.02079,
+      "type": "paper",
+      "label": "Argumentative Large Language M",
+      "domains": [
+        "Natural Language Processing",
+        "Artificial Intelligence"
+      ]
+    },
+    {
+      "id": "2405.10729",
+      "type": "paper",
+      "label": "",
+      "domains": []
+    },
+    {
+      "id": "2501.10002",
+      "type": "paper",
+      "label": "Cross-Domain Transfer Learning",
+      "domains": [
+        "Machine Learning",
+        "Transfer Learning"
+      ]
+    },
+    {
+      "id": 2501.10003,
+      "type": "paper",
+      "label": "Graph Neural Networks for Drug",
+      "domains": [
+        "machine_learning",
+        "drug_discovery",
+        "computational_biology"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "1207.5293",
+      "to": "Probability Bracket Notation"
+    },
+    {
+      "from": "1207.5293",
+      "to": "Bayesian Network"
+    },
+    {
+      "from": "1207.5293",
+      "to": "Dirac Notation"
+    },
+    {
+      "from": "1207.5293",
+      "to": "d-Separation"
+    },
+    {
+      "from": "1207.5293",
+      "to": "Conditional Expectation"
+    },
+    {
+      "from": "1207.5293",
+      "to": "Joint Probability Distribution"
+    },
+    {
+      "from": "1207.5293",
+      "to": "Linear Gaussian Model"
+    },
+    {
+      "from": "1207.5293",
+      "to": "Probabilistic Inference"
+    },
+    {
+      "from": 2112.11447,
+      "to": "Knowledge Distillation"
+    },
+    {
+      "from": 2112.11447,
+      "to": "Multi-Modal Learning"
+    },
+    {
+      "from": 2112.11447,
+      "to": "Gram Matrix"
+    },
+    {
+      "from": 2112.11447,
+      "to": "Feature Correlation"
+    },
+    {
+      "from": 2112.11447,
+      "to": "Model Compression"
+    },
+    {
+      "from": 2112.11447,
+      "to": "Teacher-Student Framework"
+    },
+    {
+      "from": 2112.11447,
+      "to": "Modality Fusion"
+    },
+    {
+      "from": 2112.11447,
+      "to": "Representation Transfer"
+    },
+    {
+      "from": 2211.00642,
+      "to": "Bayesian Neural Networks"
+    },
+    {
+      "from": 2211.00642,
+      "to": "Structural Health Monitoring"
+    },
+    {
+      "from": 2211.00642,
+      "to": "Uncertainty Quantification"
+    },
+    {
+      "from": 2211.00642,
+      "to": "Fleet-Leader Virtual Monitoring"
+    },
+    {
+      "from": 2211.00642,
+      "to": "Covariate Shift"
+    },
+    {
+      "from": 2211.00642,
+      "to": "Predictive Posterior Distribution"
+    },
+    {
+      "from": 2211.00642,
+      "to": "Offshore Wind Turbine"
+    },
+    {
+      "from": 2211.00642,
+      "to": "Epistemic and Aleatoric Uncertainty"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Endangered Language Documentation"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Biomedical NLP for Rare Conditions"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Low-Resource Acoustic Modeling"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Niche Programming Language Tooling"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Multilingual Adaptive Fine-tuning (MAFT)"
+    },
+    {
+      "from": "2404.02534",
+      "to": "OFA (Ordered Factorized Attention)"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Embedding Initialization"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Synthetic Data Generation"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Very-Low-Resource Languages"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Pre-Trained Language Model (PLM)"
+    },
+    {
+      "from": "2404.02534",
+      "to": "Cross-Lingual Transfer Learning"
+    },
+    {
+      "from": "2404.02534",
+      "to": "AfroXLMR"
+    },
+    {
+      "from": 2405.02079,
+      "to": "argumentative LLMs"
+    },
+    {
+      "from": 2405.02079,
+      "to": "argumentation frameworks"
+    },
+    {
+      "from": 2405.02079,
+      "to": "claim verification"
+    },
+    {
+      "from": 2405.02079,
+      "to": "explainable AI"
+    },
+    {
+      "from": 2405.02079,
+      "to": "contestability"
+    },
+    {
+      "from": 2405.02079,
+      "to": "formal argumentation semantics"
+    },
+    {
+      "from": 2405.02079,
+      "to": "zero-shot reasoning"
+    },
+    {
+      "from": 2405.02079,
+      "to": "decision-making"
+    },
+    {
+      "from": "2405.10729",
+      "to": "Legal AI"
+    },
+    {
+      "from": "2405.10729",
+      "to": "Medical Decision Support"
+    },
+    {
+      "from": "2405.10729",
+      "to": "Policy Analysis and Governance"
+    },
+    {
+      "from": "2405.10729",
+      "to": "Scientific Peer Review"
+    },
+    {
+      "from": "2405.10729",
+      "to": "computational argumentation"
+    },
+    {
+      "from": "2405.10729",
+      "to": "contestable AI"
+    },
+    {
+      "from": "2405.10729",
+      "to": "explainability"
+    },
+    {
+      "from": "2405.10729",
+      "to": "argumentation frameworks"
+    },
+    {
+      "from": "2405.10729",
+      "to": "human-machine interaction"
+    },
+    {
+      "from": "2405.10729",
+      "to": "dynamic decision-making"
+    },
+    {
+      "from": "2405.10729",
+      "to": "AI regulation"
+    },
+    {
+      "from": "2405.10729",
+      "to": "GDPR"
+    },
+    {
+      "from": "2501.10002",
+      "to": "domain adaptation"
+    },
+    {
+      "from": "2501.10002",
+      "to": "representation learning"
+    },
+    {
+      "from": "2501.10002",
+      "to": "feature space"
+    },
+    {
+      "from": "2501.10002",
+      "to": "bioinformatics"
+    },
+    {
+      "from": "2501.10002",
+      "to": "natural_language_processing"
+    },
+    {
+      "from": "2501.10002",
+      "to": "computer_vision"
+    },
+    {
+      "from": "2501.10002",
+      "to": "robotics"
+    },
+    {
+      "from": "2501.10002",
+      "to": "transfer learning"
+    },
+    {
+      "from": "2501.10002",
+      "to": "domain adaptation"
+    },
+    {
+      "from": "2501.10002",
+      "to": "representation learning"
+    },
+    {
+      "from": "2501.10002",
+      "to": "machine learning"
+    },
+    {
+      "from": "2501.10002",
+      "to": "feature space"
+    },
+    {
+      "from": "2501.10002",
+      "to": "neural networks"
+    },
+    {
+      "from": "2501.10002",
+      "to": "deep learning"
+    },
+    {
+      "from": "2501.10002",
+      "to": "machine learning"
+    },
+    {
+      "from": "2501.10002",
+      "to": "transfer learning"
+    },
+    {
+      "from": "2501.10002",
+      "to": "domain adaptation"
+    },
+    {
+      "from": 2501.10003,
+      "to": "graph neural networks"
+    },
+    {
+      "from": 2501.10003,
+      "to": "molecular property prediction"
+    },
+    {
+      "from": 2501.10003,
+      "to": "drug discovery"
+    },
+    {
+      "from": 2501.10003,
+      "to": "molecular graphs"
+    },
+    {
+      "from": 2501.10003,
+      "to": "message passing"
+    },
+    {
+      "from": 2501.10003,
+      "to": "computational chemistry"
+    },
+    {
+      "from": 2501.10003,
+      "to": "deep learning"
+    },
+    {
+      "from": 2501.10003,
+      "to": "neural networks"
+    },
+    {
+      "from": 2501.10003,
+      "to": "graph learning"
+    },
+    {
+      "from": 2501.10003,
+      "to": "transfer learning"
+    }
+  ]
+}

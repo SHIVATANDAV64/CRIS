@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.07683",
+  "title": "Multimodal Cancer Modeling in the Age of Foundation Model Embeddings",
+  "abstract": "The Cancer Genome Atlas (TCGA) has enabled novel discoveries and served as a large-scale reference dataset in cancer through its harmonized genomics, clinical, and imaging data. Numerous prior studies have developed bespoke deep learning models over TCGA for tasks such as cancer survival prediction. A modern paradigm in biomedical deep learning is the development of foundation models (FMs) to derive feature embeddings agnostic to a specific modeling task. Biomedical text especially has seen growing development of FMs. While TCGA contains free-text data as pathology reports, these have been historically underutilized. Here, we investigate the ability to train classical machine learning models over multimodal, zero-shot FM embeddings of cancer data. We demonstrate the ease and additive effect of multimodal fusion, outperforming unimodal models. Further, we show the benefit of including pathology report text and rigorously evaluate the effect of model-based text summarization and hallucination. Overall, we propose an embedding-centric approach to multimodal cancer modeling.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-01-24",
+  "fetched_at": "2026-05-13T23:31:21.138794"
+}

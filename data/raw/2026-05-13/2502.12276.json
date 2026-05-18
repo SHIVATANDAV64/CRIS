@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2502.12276",
+  "title": "Modeling Narrative Structure in Latin Epic Poetry with Automatically Generated Story Grammars",
+  "abstract": "Computational methods for analyzing prose and poetry utilize word embeddings and other abstract representations that sometimes obscure context-rich literary text. Inspired by the psychology of reading, we utilize story structure and elements to simulate human narrative comprehension to produce a more comprehensive representation of literary text. We present a method for automatically generating story grammar labels for input texts as a means of analysis that is interpretable and accessible by humanists and technologists alike. Using a large language model (LLM) pipeline and few-shot learning, we label Latin epic poetry with story element labels and use this output directly to aid an analysis of the story structure and style. Our method guides literary scholars to discover new areas of interest across texts and provides a new feature set for further study for downstream machine learning tasks.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:37:42.150022"
+}

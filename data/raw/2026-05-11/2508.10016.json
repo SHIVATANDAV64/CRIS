@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2508.10016",
+  "title": "Training-Free Multimodal Large Language Model Orchestration",
+  "abstract": "Building interactive omni-modal assistants often relies on end-to-end multimodal alignment to fuse heterogeneous modalities, which incurs substantial data and compute costs and limits extensibility. We present Training-Free Large Language Model Orchestration (LLM Orchestration), a training-free orchestration framework that integrates off-the-shelf modality experts into a unified multimodal input--output system without additional gradient-based training for integration. LLM Orchestration comprises three components: (1) an LLM controller that infers user intent and emits explicit control tokens for expert selection and sequencing, enabling protocol-constrained and auditable routing; (2) a text-centric cross-modal memory that compresses multimodal evidence into structured records for lightweight retrieval and reuse, reducing redundant expert invocations across turns; and (3) a unified interaction layer that executes routing and memory decisions to support consistent modality transitions, full-duplex streaming, and interruption-aware dialogue. Across diverse multimodal benchmarks, LLM Orchestration achieves strong performance under standard evaluation constraints while maintaining low orchestration overhead and modular upgradeability, providing a practical alternative to costly joint training for omni-modal systems.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:32:28.635034"
+}

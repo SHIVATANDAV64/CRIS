@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.07926",
+  "title": "Comprehensiveness Metrics for Automatic Evaluation of Factual Recall in Text Generation",
+  "abstract": "Despite demonstrating remarkable performance across a wide range of tasks, large language models (LLMs) have also been found to frequently produce outputs that are incomplete or selectively omit key information. In sensitive domains, such omissions can result in significant harm comparable to that posed by factual inaccuracies, including hallucinations. In this study, we address the challenge of evaluating the comprehensiveness of LLM-generated texts, focusing on the detection of missing information or underrepresented viewpoints. We investigate three automated evaluation metrics: (1) an NLI-based method that decomposes texts into atomic statements and uses natural language inference (NLI) to identify missing facts, (2) a Q&A-based metric that extracts question-answer pairs and compares responses across sources, and (3) an end-to-end approach that directly identifies missing content using LLMs. Our experiments demonstrate the surprising effectiveness of the simple end-to-end metric compared to more complex metrics, though at the cost of reduced robustness, interpretability and result granularity. We further assess the comprehensiveness of responses from several popular open-weight LLMs when answering user queries based on multiple sources.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:27:47.093827"
+}

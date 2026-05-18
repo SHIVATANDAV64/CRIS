@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2502.20209",
+  "title": "DIPSER: A Dataset for In-Person Student Engagement Recognition in the Wild",
+  "abstract": "In this paper, a novel dataset is introduced, designed to assess student attention within in-person classroom settings. This dataset encompasses RGB camera data, featuring multiple cameras per student to capture both posture and facial expressions, in addition to smartwatch sensor data for each individual. This dataset allows machine learning algorithms to be trained to predict attention and correlate it with emotion. A comprehensive suite of attention and emotion labels for each student is provided, generated through self-reporting as well as evaluations by four different experts. Our dataset uniquely combines facial and environmental camera data, smartwatch metrics, and includes underrepresented ethnicities in similar datasets, all within in-the-wild, in-person settings, making it the most comprehensive dataset of its kind currently available. The dataset presented offers an extensive and diverse collection of data pertaining to student interactions across different educational contexts, augmented with additional metadata from other tools. This initiative addresses existing deficiencies by offering a valuable resource for the analysis of student attention and emotion in face-to-face lessons.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:36:34.993457"
+}

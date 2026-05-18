@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.13898",
+  "title": "Social Human Robot Embodied Conversation (SHREC) Dataset: Benchmarking Foundational Models' Social Reasoning",
+  "abstract": "Our work focuses on the social reasoning capabilities of foundation models for real-world human-robot interactions. We introduce the Social Human Robot Embodied Conversation (SHREC) Dataset, a benchmark of $\\sim$400 real-world human-robot interaction videos and over 10K annotations, capturing robot social errors, competencies, underlying rationales, and corrections. Unlike prior datasets focused on human-human interactions, the SHREC Dataset uniquely highlights the social challenges faced by real-world social robots such as emotion understanding, intention tracking, and conversational mechanics. Moreover, current foundation models struggle to recognize these deficits, which manifest as subtle, socially situated failures. To evaluate AI models' capacity for social reasoning, we define eight benchmark tasks targeting critical areas such as (1) detection of social errors and competencies, (2) identification of underlying social attributes, (3) comprehension of interaction flow, and (4) providing rationale and alternative correct actions. Experiments with state-of-the-art foundation models, alongside human evaluations, reveal substantial performance gaps -- underscoring the difficulty and providing directions in developing socially intelligent AI.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.HC cs.AI",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:36:46.997057"
+}

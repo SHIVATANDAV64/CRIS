@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.16093",
+  "title": "Efficient Portfolio Selection through Preference Aggregation with Quicksort and the Bradley--Terry Model",
+  "abstract": "How to allocate limited resources to projects that will yield the greatest long-term benefits is a problem that often arises in decision-making under uncertainty. For example, organizations may need to evaluate and select innovation projects with risky returns. Similarly, when allocating resources to research projects, funding agencies are tasked with identifying the most promising proposals based on idiosyncratic criteria. Finally, in participatory budgeting, a local community may need to select a subset of public projects to fund. Regardless of context, agents must estimate the uncertain values of a potentially large number of projects. Developing parsimonious methods to compare these projects, and aggregating agent evaluations so that the overall benefit is maximized, are critical in assembling the best project portfolio. Unlike in standard sorting algorithms, evaluating projects on the basis of uncertain long-term benefits introduces additional complexities. We propose comparison rules based on Quicksort and the Bradley--Terry model, which connects rankings to pairwise \"win\" probabilities. In our model, each agent determines win probabilities of a pair of projects based on his or her specific evaluation of the projects' long-term benefit. The win probabilities are then appropriately aggregated and used to rank projects. Several of the methods we propose perform better than the two most effective aggregation methods currently available. Additionally, our methods can be combined with sampling techniques to significantly reduce the number of pairwise comparisons. We also discuss how the Bradley--Terry portfolio selection approach can be implemented in practice.",
+  "authors": [
+    null
+  ],
+  "categories": "q-fin.PM cs.AI math.PR",
+  "created": "2025-04-06",
+  "fetched_at": "2026-05-13T23:33:50.031535"
+}

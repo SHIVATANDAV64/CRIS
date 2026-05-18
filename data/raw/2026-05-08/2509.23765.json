@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.23765",
+  "title": "Knowledge-Level Consistency Reinforcement Learning: Dual-Fact Alignment for Long-Form Factuality",
+  "abstract": "Hallucination in large language models (LLMs) during long-form generation remains difficult to address under existing reinforcement learning from human feedback (RLHF) frameworks, as their preference rewards often overlook the model's own knowledge boundaries. In this paper, we propose the $\\textbf{K}$nowledge-$\\textbf{L}$evel $\\textbf{C}$onsistency Reinforcement Learning $\\textbf{F}$ramework ($\\textbf{KLCF}$), which re-examines this problem from a distribution alignment perspective. KLCF formalizes long-form factuality as a bidirectional distribution matching objective between the policy model's expressed knowledge distribution and the base model's parametric knowledge distribution: under the constraint that generation must not exceed the support set of the base knowledge, the objective maximizes coverage of high-probability facts, thereby jointly optimizing precision and recall. To achieve this, we design a Dual-Fact Alignment mechanism that approximates the recall term using a factual checklist constructed by sampling from the base model, and constrains hallucinations with a lightweight truthfulness reward model. Both components are jointly optimized and require no external retrieval throughout training. Experimental results demonstrate that KLCF consistently improves factuality metrics across multiple long-form benchmarks and model scales, effectively alleviating hallucination and over-conservatism while maintaining efficiency and scalability.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.LG",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:40.985200"
+}

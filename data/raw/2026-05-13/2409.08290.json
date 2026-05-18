@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2409.08290",
+  "title": "Reconsidering the energy efficiency of spiking neural networks",
+  "abstract": "Spiking Neural Networks (SNNs) promise higher energy efficiency over conventional Quantized Artificial Neural Networks (QNNs) due to their event-driven, spike-based computation. However, prevailing energy evaluations often oversimplify, focusing on computational aspects while neglecting critical overheads like comprehensive data movement and memory access. Such simplifications can lead to misleading conclusions regarding the true energy benefits of SNNs. This paper presents a rigorous re-evaluation. We establish a fair baseline by mapping rate-encoded SNNs with $T$ timesteps to functionally equivalent QNNs with $\\lceil \\log_2(T+1) \\rceil$ bits. This ensures both models have comparable representational capacities, as well has similar hardware requirement, enabling meaningful energy comparisons. We introduce a detailed analytical energy model encompassing core computation and data movement. Using this model, we systematically explore a wide parameter space, including intrinsic network characteristics ($T$, spike rate $s_r$, QNN sparsity $γ$, model size $N$, weight bit-level) and hardware characteristics (memory system and network-on-chip). Our analysis identifies specific operational regimes where SNNs genuinely offer superior energy efficiency. For example, under typical neuromorphic hardware conditions, SNNs with moderate time windows ($T \\in [5,10]$) require an average spike rate ($s_r$) below 6.4\\% to outperform equivalent QNNs. Furthermore, to illustrate the real-world implications of our findings, we analyze the operational lifetime of a typical smartwatch, showing that an optimized SNN can nearly double its battery life compared to a QNN. These insights guide the design of turely energy-efficient neural network solutions.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.NE cs.AI cs.LG",
+  "created": "2026-05-12",
+  "fetched_at": "2026-05-13T23:36:10.985946"
+}

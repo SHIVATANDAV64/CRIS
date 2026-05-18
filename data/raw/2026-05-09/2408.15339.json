@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2408.15339",
+  "title": "UNA: A Unified Supervised Framework for Efficient LLM Alignment Across Feedback Types",
+  "abstract": "RL alignment methods, including RLHF and DPO, are primarily based on pairwise preference data. Although scalar or score-based feedback has been collected in some settings, it is rarely used directly, and preference magnitude information is typically ignored. Furthermore, current alignment frameworks offer limited capability for unifying heterogeneous supervision signals, making it difficult to jointly leverage diverse data types within a single training paradigm. This limitation constrains the richness and scalability of the alignment process. To address this gap, we propose a \\textbf{UN}ified \\textbf{A}lignment (UNA) framework capable of training across different types of feedback, including binary, pairwise, and score-based, through a generalized implicit reward function. The reward function is theoretically proved to be the optimal policy by the log sum inequality. Extensive experiments on classical benchmarks consistently demonstrate the advantage of the proposed unified framework with typical LLM base models.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:26:44.066925"
+}

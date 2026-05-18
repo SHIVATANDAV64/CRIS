@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2405.10729",
+  "title": "Contestable AI needs Computational Argumentation",
+  "abstract": "AI has become pervasive in recent years, but state-of-the-art approaches predominantly neglect the need for AI systems to be contestable. Instead, contestability is advocated by AI guidelines (e.g. by the OECD) and regulation of automated decision-making (e.g. GDPR). In this position paper we explore how contestability can be achieved computationally in and for AI. We argue that contestable AI requires dynamic (human-machine and/or machine-machine) explainability and decision-making processes, whereby machines can (i) interact with humans and/or other machines to progressively explain their outputs and/or their reasoning as well as assess grounds for contestation provided by these humans and/or other machines, and (ii) revise their decision-making processes to redress any issues successfully raised during contestation. Given that much of the current AI landscape is tailored to static AIs, the need to accommodate contestability will require a radical rethinking, that, we argue, computational argumentation is ideally suited to support.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI",
+  "created": "2024-08-03",
+  "fetched_at": "2026-05-13T23:22:57.620281"
+}

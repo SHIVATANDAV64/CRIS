@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.18842",
+  "title": "v1: Learning to Point Visual Tokens for Multimodal Grounded Reasoning",
+  "abstract": "When thinking with images, humans rarely rely on a single glance: they revisit visual evidence while reasoning. In contrast, most Multimodal Language Models encode an image once to key-value cache and then reason purely in text, making it hard to re-ground intermediate steps. We empirically confirm this: as reasoning chains lengthen, models progressively lose focus on relevant regions. We introduce v1, a lightweight extension for active visual referencing via point-and-copy: the model selects relevant image patches and copies their embeddings back into the reasoning stream. Crucially, our point-and-copy mechanism retrieves patches using their semantic representations as keys, ensuring perceptual evidence remains aligned with the reasoning space. To train this behavior, we build v1g, a dataset of 300K multimodal reasoning traces with interleaved grounding annotations. Across multimodal mathematical reasoning benchmarks, v1 consistently outperforms comparable baselines.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.CV",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:19.974033"
+}

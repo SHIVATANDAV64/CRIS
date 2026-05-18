@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2507.21183",
+  "title": "MaPPO: Maximum a Posteriori Preference Optimization with Prior Knowledge",
+  "abstract": "As the era of large language models (LLMs) unfolds, Preference Optimization (PO) methods have become a central approach to aligning LLMs with human preferences and improving performance. We propose Maximum a Posteriori Preference Optimization (MaPPO), a methodology for learning from preferences that explicitly incorporates prior reward knowledge into the optimization objective. Building on the paradigm employed by Direct Preference Optimization (DPO) and its variants of treating preference learning as a Maximum Likelihood Estimation (MLE) problem, MaPPO integrates prior reward estimates into a principled Maximum a Posteriori (MaP) objective. This not only generalizes DPO and its variants, but also enhances alignment by mitigating the oversimplified binary classification of responses. Additionally, MaPPO introduces no additional hyperparameters, and supports preference optimization in both offline and online settings. In addition, MaPPO can be used as a plugin for DPO variants, including widely used SimPO, IPO and CPO, and produce consistent improvements. Extensive empirical evaluations of different model sizes and model series on three standard benchmarks (MT-Bench, AlpacaEval 2.0, and Arena-Hard) demonstrate consistent improvements in alignment performance without sacrificing computational efficiency.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:31:51.147193"
+}

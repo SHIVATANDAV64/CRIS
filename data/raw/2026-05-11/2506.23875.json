@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.23875",
+  "title": "Discovering Learning-Friendly Generation Orders for Sequential Computation",
+  "abstract": "Sequential computation via autoregressive generation can make difficult tasks learnable, but the generation order of intermediate states strongly affects whether training succeeds. We address the problem of discovering a learning-friendly target order automatically, rather than relying on task-specific design. Our key observation is that learning-friendly orders cause a faster loss drop in the early stage of training. We exploit this by \\emph{loss profiling}, which ranks candidate orders by the early-stage loss of a single short run. To handle the factorial candidate space, we wrap loss profiling in a hierarchical global -- local search over block- and within-block-level orderings. On six order-sensitive tasks, the method discovers effective orders up to $L=13$ from random initialization and up to $L=40$ from structured initialization, lifting success rates from about 10\\% to near 100\\%. On integer multiplication, it rediscovers the reverse-digit order that was reported to be efficient in prior studies. On delay dynamical systems, as a case study of multi-variate recurrences, learnability varies sharply even among valid topological sorts of the dependency graph: loss profiling identifies a learning-friendly one, and the global search even discovers orders surpassing hand-designed candidates.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:31:48.146531"
+}

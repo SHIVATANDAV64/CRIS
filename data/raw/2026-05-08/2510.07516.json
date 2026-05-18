@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.07516",
+  "title": "CompassLLM: A Multi-Agent Approach toward Geo-Spatial Reasoning for Popular Path Query",
+  "abstract": "The popular path query - identifying the most frequented routes between locations from historical trajectory data - has important applications in urban planning, navigation optimization, and travel recommendations. While traditional algorithms and machine learning approaches have achieved success in this domain, they typically require model training, parameter tuning, and retraining when accommodating data updates. As Large Language Models (LLMs) demonstrate increasing capabilities in spatial and graph-based reasoning, there is growing interest in exploring how these models can be applied to geo-spatial problems. We introduce CompassLLM, a novel multi-agent framework that intelligently leverages the reasoning capabilities of LLMs into the geo-spatial domain to solve the popular path query. CompassLLM employs its agents in a two-stage pipeline: the SEARCH stage that identifies popular paths, and a GENERATE stage that synthesizes novel paths in the absence of an existing one in the historical trajectory data. Experiments on real and synthetic datasets show that CompassLLM demonstrates superior accuracy in SEARCH and competitive performance in GENERATE while being cost-effective.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:52.989669"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2404.02534",
+  "title": "ANGOFA: Leveraging OFA Embedding Initialization and Synthetic Data for Angolan Language Model",
+  "abstract": "In recent years, the development of pre-trained language models (PLMs) has gained momentum, showcasing their capacity to transcend linguistic barriers and facilitate knowledge transfer across diverse languages. However, this progress has predominantly bypassed the inclusion of very-low resource languages, creating a notable void in the multilingual landscape. This paper addresses this gap by introducing four tailored PLMs specifically finetuned for Angolan languages, employing a Multilingual Adaptive Fine-tuning (MAFT) approach. In this paper, we survey the role of informed embedding initialization and synthetic data in enhancing the performance of MAFT models in downstream tasks. We improve baseline over SOTA AfroXLMR-base (developed through MAFT) and OFA (an effective embedding initialization) by 12.3 and 3.8 points respectively.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:22:51.618091"
+}

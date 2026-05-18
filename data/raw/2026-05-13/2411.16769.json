@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.16769",
+  "title": "Red-Teaming Text-to-Image Models via In-Context Experience Replay and Semantic-Preserving Prompt Rewriting",
+  "abstract": "Understanding the capabilities of text-to-image (T2I) models in harmful content generation is essential to safety and compliance. However, human red-teaming is costly and inconsistent, driving the need for automatic tools that simulate realistic misuse attempts. Existing methods either require white-box access, fail to generalize across defenses, or produce uninterpretable adversarial tokens, while generating fluent prompts that preserve the original harmful intent remains underexplored despite its practical relevance. We propose ICER, a black-box framework that addresses this gap through two components: an LLM-based rewriter that produces fluent, natural-language adversarial prompts, and in-context experience replay that accumulates successful jailbreaking patterns into a reusable prior. These components are integrated via bandit optimization, enabling ICER to efficiently balance exploiting proven attack strategies with exploring new ones. Experiments across six safety mechanisms show that ICER outperforms seven baselines under both standard and semantics-preserving evaluation, with over 30% of generated prompts transferring to commercial systems like DALL-E 3 and Midjourney.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CL cs.CR cs.CV",
+  "created": "2026-05-11",
+  "fetched_at": "2026-05-13T23:37:27.145126"
+}

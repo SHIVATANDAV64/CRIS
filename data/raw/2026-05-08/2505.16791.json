@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.16791",
+  "title": "Cohort-Based Active Modality Acquisition",
+  "abstract": "Real-world multimodal machine learning often faces missing, costly-to-acquire modalities, raising the problem of which samples to prioritize for additional acquisition under a budget. Prior work mainly studies per-sample or training-time acquisition while test-time, cohort-level acquisition is less explored. We propose Cohort-based Active Modality Acquisition (CAMA), a novel test-time cohort-level modality acquisition setting, and introduce imputation-based acquisition strategies that estimate the expected utility of acquiring a missing modality, along with upper-bound heuristics for benchmarking. Experiments on datasets with up to 15 modalities demonstrate that our proposed imputation-based strategies can more effectively guide the acquisition of an additional modality for selected samples compared with methods relying solely on pre-acquisition information, entropy-based guidance, or random selection. We showcase the real-world relevance and scalability of our method by demonstrating its ability to guide the acquisition of proteomics data for disease prediction in a large prospective cohort, the UK Biobank (UKB). Our work provides an effective approach for optimizing modality acquisition at the cohort level, enabling more effective use of resources in constrained settings.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:42.635262"
+}

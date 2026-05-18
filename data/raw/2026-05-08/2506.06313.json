@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.06313",
+  "title": "Beyond Chunking: Discourse-Aware Hierarchical Retrieval for Long Document Question Answering",
+  "abstract": "Existing long-document question answering systems typically process texts as flat sequences or use heuristic chunking, which overlook the discourse structures that naturally guide human comprehension. We present a discourse-aware hierarchical framework that leverages rhetorical structure theory (RST) for long document question answering. Our approach converts discourse trees into sentence-level representations and employs LLM-enhanced node representations to bridge structural and semantic information. The framework involves three key innovations: language-universal discourse parsing for lengthy documents, LLM-based enhancement of discourse relation nodes, and structure-guided hierarchical retrieval. Extensive experiments on four datasets demonstrate consistent improvements over existing approaches through the incorporation of discourse structure, across multiple genres and languages. Moreover, the proposed framework exhibits strong robustness across diverse document types and linguistic settings.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.IR cs.AI cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:23:51.638256"
+}

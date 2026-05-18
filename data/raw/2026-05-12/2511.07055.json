@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2511.07055",
+  "title": "Complete Evidence Extraction with Model Ensembles: A Case Study on Medical Coding",
+  "abstract": "High-stakes decisions informed by decision support systems require explicit evidence. While prior work focuses on short sufficient evidence, regulatory compliance and medical billing call for complete evidence: all relevant input tokens that support a decision. We formulate complete evidence extraction as a task and study it in a medical coding setting. Motivated by the Rashomon effect, we aggregate token-level evidence from multiple language models to increase evidence completeness. We perform a case study using existing equally-performing models, feature attributions, and a dataset with human-annotated evidence. Our results show that Rashomon ensembles significantly increase evidence recall while incurring only a small token overhead over individual models. Ensembles of only three models already outperform the best single model and recover information that individual models miss.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.IR cs.LG",
+  "created": "2026-05-08",
+  "fetched_at": "2026-05-13T23:35:24.698883"
+}

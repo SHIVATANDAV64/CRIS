@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2601.03511",
+  "title": "IntroLM: Introspective Language Models via Prefilling-Time Self-Evaluation",
+  "abstract": "A major challenge for the operation of large language models (LLMs) is how to predict whether a specific LLM will produce sufficiently high-quality output for a given query. Existing approaches rely on external classifiers, most commonly BERT based models, which suffer from limited context windows, constrained representational capacity, and additional computational overhead. We propose IntroLM, a method that enables causal language models to predict their own output quality during the prefilling phase without affecting generation using introspective tokens. By introducing token conditional LoRA that activates only for the introspective token, the model learns to predict the output quality for a given query while preserving the original backbone behavior and avoiding external evaluators. On question answering benchmarks, IntroLM applied to Qwen3 8B achieves a ROC AUC of 90 precent for success prediction, outperforming a DeBERTa classifier by 14 precent. When integrated into multi model routing systems, IntroLM achieves superior cost performance tradeoffs, reducing latency by up to 33 precent and large model usage by up to 50 precent at matched reliability.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.LG",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:35:39.710573"
+}

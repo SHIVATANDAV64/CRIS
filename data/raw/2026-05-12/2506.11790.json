@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.11790",
+  "title": "Why Do Class-Dependent Evaluation Effects Occur with Time Series Feature Attributions? A Synthetic Data Investigation",
+  "abstract": "Evaluating feature attribution methods represents a critical challenge in explainable AI (XAI), as researchers typically rely on perturbation-based metrics when ground truth is unavailable. However, recent work reveals that these evaluation metrics can show different performance across predicted classes within the same dataset. These \"class-dependent evaluation effects\" raise questions about whether perturbation analysis reliably measures attribution quality, with direct implications for XAI method development and evaluation trustworthiness. We investigate under which conditions these class-dependent effects arise by conducting controlled experiments with synthetic time series data where ground truth feature locations are known. We systematically vary feature types and class contrasts across binary classification tasks, then compare perturbation-based degradation scores with ground truth-based precision-recall metrics using multiple attribution methods. Our experiments demonstrate that class-dependent effects emerge with both evaluation approaches, even in simple scenarios with temporally localized features, triggered by basic variations in feature amplitude or temporal extent between classes. Most critically, we find that perturbation-based and ground truth metrics frequently yield contradictory assessments of attribution quality across classes, with weak correlations between evaluation approaches. These findings suggest that researchers should interpret perturbation-based metrics with care, as they may not always align with whether attributions correctly identify discriminating features. By showing this disconnect, our work points toward reconsidering what attribution evaluation actually measures and developing more rigorous evaluation methods that capture multiple dimensions of attribution quality.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2025-07-24",
+  "fetched_at": "2026-05-13T23:34:26.045179"
+}

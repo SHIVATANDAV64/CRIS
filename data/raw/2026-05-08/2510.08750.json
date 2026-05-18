@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.08750",
+  "title": "Exploring Cross-Client Memorization of Training Data in Large Language Models for Federated Learning",
+  "abstract": "Federated learning (FL) enables collaborative training without raw data sharing, but still risks training data memorization. Existing FL memorization detection techniques focus on one sample at a time, underestimating more subtle risks of cross-sample memorization. In contrast, recent work on centralized learning (CL) has introduced fine-grained methods to assess memorization across all samples in training data, but these assume centralized access to data and cannot be applied directly to FL. We bridge this gap by proposing a framework that quantifies both intra- and inter-client memorization in FL using fine-grained cross-sample memorization measurement across all clients. Based on this framework, we conduct two studies: (1) measuring subtle memorization across clients and (2) examining key factors that influence memorization, including decoding strategies, prefix length, and FL algorithms. Our findings reveal that FL models do memorize client data, particularly intra-client data, more than inter-client data, with memorization influenced by training and inferencing factors.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CL",
+  "created": "2026-05-07",
+  "fetched_at": "2026-05-13T23:24:55.990544"
+}

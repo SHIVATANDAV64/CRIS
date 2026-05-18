@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.02184",
+  "title": "Leveraging LLMs to Automate Energy-Aware Refactoring of Parallel Scientific Codes",
+  "abstract": "Large language models (LLMs) are increasingly used for generating parallel scientific codes, with a primary focus on generating functionally correct code. Recent work has focused on generating performant code, with an emphasis on its execution time. However, energy efficiency is now recognized as a critical objective, given the significant power demands of large-scale compute systems. This paper addresses the research question of whether LLMs can generate energy-efficient parallel scientific codes when guided by empirical execution feedback. To answer this question, we propose LASSI-EE, an automated LLM-based refactoring framework that generates energy-efficient parallel codes through a multi-stage, iterative approach integrating runtime power profiling, energy-aware prompting, self-correcting feedback loops, and an LLM-as-a-Judge agent for screening generated code. We evaluate LASSI-EE using twenty-two representative scientific benchmarks and applications on NVIDIA A100 and AMD MI100 GPUs. The results indicate an average energy reduction of 36% for MI100 and 34% for A100, across trials that produced passing energy-reducing refactorings.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.DC cs.PL cs.SE",
+  "created": "2026-05-09",
+  "fetched_at": "2026-05-13T23:33:59.033924"
+}

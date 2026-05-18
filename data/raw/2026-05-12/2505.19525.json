@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.19525",
+  "title": "Rethinking Gating Mechanism in Sparse MoE: Handling Arbitrary Modality Inputs with Confidence-Guided Gate",
+  "abstract": "Effectively managing missing modalities is a fundamental challenge in real-world multimodal learning scenarios, where data incompleteness often results from systematic collection errors or sensor failures. Sparse Mixture-of-Experts (SMoE) architectures have the potential to naturally handle multimodal data, with individual experts specializing in different modalities. However, existing SMoE approach often lacks proper ability to handle missing modality, leading to performance degradation and poor generalization in real-world applications. We propose ConfSMoE to introduce a two-stage imputation module to handle the missing modality problem for the SMoE architecture by taking the opinion of experts and reveal the insight of expert collapse from theoretical analysis with strong empirical evidence. Inspired by our theoretical analysis, ConfSMoE propose a novel expert gating mechanism by detaching the softmax routing score to task confidence score w.r.t ground truth signal. This naturally relieves expert collapse without introducing additional load balance loss function. We show that the insights of expert collapse aligns with other gating mechanism such as Gaussian and Laplacian gate. The proposed method is evaluated on four different real world dataset with three distinct experiment settings to conduct comprehensive analysis of ConfSMoE on resistance to missing modality and the impacts of proposed gating mechanism.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-10",
+  "fetched_at": "2026-05-13T23:34:11.039729"
+}
