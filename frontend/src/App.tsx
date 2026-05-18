@@ -17,6 +17,7 @@ function App() {
     return (localStorage.getItem('cris_theme') as 'dark' | 'light') || 'dark'
   })
   const [droppedPapers, setDroppedPapers] = useState<Map<string, { id: string; title: string }>>(new Map())
+  const [searchStatus, setSearchStatus] = useState<string>('')
 
   // Theme
   useEffect(() => {
@@ -144,6 +145,7 @@ function App() {
       sources: [],
       timestamp: Date.now(),
     }])
+    setSearchStatus('')
 
     streamChat(
       message,
@@ -175,6 +177,15 @@ function App() {
         setMessages(prev => prev.map(m =>
           m.id === assistantId ? { ...m, content: m.content || `**Error**: ${error}` } : m
         ))
+        setSearchStatus('')
+      },
+      (status, statusMessage) => {
+        if (status === 'searching_web') {
+          setSearchStatus(statusMessage || 'Searching the web...')
+        } else if (status === 'web_results') {
+          setSearchStatus(statusMessage || 'Web results found')
+          setTimeout(() => setSearchStatus(''), 2000)
+        }
       },
     )
   }
@@ -252,6 +263,7 @@ function App() {
         onPaperDrop={handlePaperDrop}
         onPaperRemove={handlePaperRemove}
         onToggleSidebar={() => setSidebarVisible(v => !v)}
+        searchStatus={searchStatus}
       />
     </div>
   )

@@ -21,7 +21,7 @@ async def chat(
     if not req.message.strip():
         return ChatResponse(response="Please ask a research question.")
 
-    result = chat_service.process_chat(
+    result = await chat_service.process_chat(
         query=req.message,
         session_id=req.session_id,
         use_reasoning=req.use_reasoning,

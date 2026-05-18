@@ -10,9 +10,10 @@ interface ChatPanelProps {
   onPaperDrop: (id: string, title: string) => void
   onPaperRemove: (id: string) => void
   onToggleSidebar: () => void
+  searchStatus?: string
 }
 
-export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPaperRemove, onToggleSidebar }: ChatPanelProps) {
+export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPaperRemove, onToggleSidebar, searchStatus }: ChatPanelProps) {
   const [input, setInput] = useState('')
   const [webSearchVisible, setWebSearchVisible] = useState(false)
   const [webSearchQuery, setWebSearchQuery] = useState('')
@@ -219,18 +220,53 @@ export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPape
 
               {msg.sources && msg.sources.length > 0 && (
                 <div className="sources-section">
-                  <div className="sources-title">Sources ({msg.sources.length} papers)</div>
+                  <div className="sources-title">
+                    Sources ({msg.sources.filter(s => s.contribution_type !== 'Web' && s.contribution_type !== 'News').length} papers
+                    {msg.sources.filter(s => s.contribution_type === 'Web' || s.contribution_type === 'News').length > 0 &&
+                      `, ${msg.sources.filter(s => s.contribution_type === 'Web' || s.contribution_type === 'News').length} web`})
+                  </div>
                   {msg.sources.map((s, i) => (
-                    <span key={i} className="source-chip">
-                      {s.contribution_type && <span className={`source-type ${s.contribution_type}`}>{s.contribution_type}</span>}
-                      {s.arxiv_id}
-                    </span>
+                    s.contribution_type === 'Web' || s.contribution_type === 'News' ? (
+                      <a
+                        key={i}
+                        className={`source-chip source-web ${s.contribution_type === 'News' ? 'source-news' : ''}`}
+                        href={s.url || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={s.title || s.arxiv_id}
+                        style={{
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                          borderColor: s.contribution_type === 'News' ? 'rgba(248,172,89,0.4)' : 'rgba(124,172,248,0.4)',
+                        }}
+                      >
+                        <span className={`source-type ${s.contribution_type}`}>{s.contribution_type}</span>
+                        {s.arxiv_id}
+                      </a>
+                    ) : (
+                      <span key={i} className="source-chip">
+                        {s.contribution_type && <span className={`source-type ${s.contribution_type}`}>{s.contribution_type}</span>}
+                        {s.arxiv_id}
+                      </span>
+                    )
                   ))}
                 </div>
               )}
             </div>
           </div>
         ))}
+        {searchStatus && (
+          <div className="search-status-indicator" style={{
+            display: 'flex', alignItems: 'center', gap: '8px',
+            padding: '8px 16px', margin: '0 auto 12px', maxWidth: '720px',
+            background: 'rgba(124,172,248,0.08)', border: '1px solid rgba(124,172,248,0.2)',
+            borderRadius: '8px', fontSize: '0.82rem', color: '#7cacf8',
+            animation: 'fadeIn 0.2s ease-out',
+          }}>
+            <span style={{ fontSize: '1rem', animation: 'thinkingPulse 1.5s ease-in-out infinite' }}>🌐</span>
+            {searchStatus}
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 

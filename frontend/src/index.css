@@ -1133,6 +1133,13 @@ html, body {
 .source-type.new_proposal { background: rgba(0,200,83,0.1); color: var(--accent-emerald); }
 .source-type.hybrid { background: rgba(24,99,220,0.1); color: var(--accent-blue); }
 .source-type.improvisation { background: rgba(255,119,89,0.1); color: var(--accent-coral); }
+.source-type.Web { background: rgba(124,172,248,0.15); color: #7cacf8; }
+.source-type.News { background: rgba(248,172,89,0.15); color: #f8ac59; }
+
+.source-chip.source-web { border-color: rgba(124,172,248,0.3); }
+.source-chip.source-web:hover { border-color: rgba(124,172,248,0.6); color: #7cacf8; }
+.source-chip.source-news { border-color: rgba(248,172,89,0.3); }
+.source-chip.source-news:hover { border-color: rgba(248,172,89,0.6); color: #f8ac59; }
 
 /* Welcome card */
 .welcome-card {

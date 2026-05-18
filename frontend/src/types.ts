@@ -12,6 +12,7 @@ export interface Source {
   title: string;
   contribution_type?: string;
   domains?: string;
+  url?: string;
 }
 
 export interface Session {

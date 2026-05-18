@@ -85,6 +85,7 @@ export function streamChat(
   onContent: (content: string) => void,
   onDone: (sid: string) => void,
   onError: (error: string) => void,
+  onStatus?: (status: string, message: string) => void,
 ): AbortController {
   const controller = new AbortController()
 
@@ -131,6 +132,8 @@ export function streamChat(
             onDone(data.session_id || '')
           } else if (data.type === 'error') {
             onError(data.content || 'Unknown error')
+          } else if (data.type === 'status' && onStatus) {
+            onStatus(data.status || '', data.message || '')
           }
         } catch {
           // skip malformed SSE data

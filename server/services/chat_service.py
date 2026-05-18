@@ -2,8 +2,10 @@ import re
 import uuid
 import json
 from typing import Optional, List, Dict, Any, AsyncGenerator
+from urllib.parse import urlparse
 
-from config.settings import CONTEXT_ENTRIES_LIMIT, WIKI_DIR
+from config.settings import CONTEXT_ENTRIES_LIMIT, WIKI_DIR, SEARXNG_MODAL_URL
+from config.prompts import SEARCH_INTENT_ROUTER
 from core.search_engine import search
 from core.domain_manager import get_paper_by_id
 from core.chat_store import (
@@ -14,6 +16,7 @@ from core.chat_store import (
 )
 from core.chat_memory import extract_and_store_memory
 from core.model_client import ModelClient
+from core.web_tools import get_search
 
 
 class ChatService:
@@ -38,6 +41,13 @@ class ChatService:
             'technique', 'approach', 'framework', 'system', 'architecture',
         ]
         self._model_clients: dict[str, ModelClient] = {}
+        self._REALTIME_INDICATORS = [
+            'latest', 'recent', 'today', 'yesterday', 'this week', 'this month',
+            'this year', 'current', 'new', 'news', 'trending', 'update',
+            '2024', '2025', '2026', 'now', 'right now', 'just', 'breaking',
+            'search the web', 'look up online', 'find online', 'google',
+            'what is happening', 'what happened',
+        ]
 
     def get_model_client(self, model_id: Optional[str] = None) -> ModelClient:
         key = model_id or "darwin-opus"
@@ -60,6 +70,62 @@ class ChatService:
                 return True
         return len(q_lower.split()) >= 5
 
+    def needs_realtime_data(self, query: str) -> bool:
+        """Keyword heuristic fallback: check if query needs real-time web data."""
+        q_lower = query.lower().strip()
+        for indicator in self._REALTIME_INDICATORS:
+            if indicator in q_lower:
+                return True
+        return False
+
+    def llm_route_search(self, query: str, model_id: Optional[str] = None, conversation_history: str = "") -> Dict[str, Any]:
+        """
+        Ask the LLM whether this query needs a web search (like ChatGPT/Perplexity).
+
+        Returns:
+            {"needs_search": bool, "queries": [str, ...], "reason": str}
+        """
+        try:
+            client = self.get_model_client(model_id)
+            if not client:
+                return {"needs_search": False}
+
+            context_section = ""
+            if conversation_history:
+                context_section = f"\nConversation context (last few messages):\n{conversation_history[-500:]}"
+
+            prompt = SEARCH_INTENT_ROUTER.format(
+                user_message=query,
+                context_section=context_section,
+            )
+
+            result = client.generate(
+                user_message=prompt,
+                system_prompt="You are a search intent classifier. Return ONLY valid JSON.",
+            )
+
+            response_text = result.get("response", "").strip()
+            # Extract JSON from the response (handle markdown code blocks)
+            if "```" in response_text:
+                json_match = re.search(r'```(?:json)?\s*(.+?)\s*```', response_text, re.DOTALL)
+                if json_match:
+                    response_text = json_match.group(1)
+            # Also handle bare JSON
+            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+            if json_match:
+                response_text = json_match.group(0)
+
+            intent = json.loads(response_text)
+            print(f"[search_router] LLM decision: needs_search={intent.get('needs_search')}, reason={intent.get('reason', 'N/A')}")
+            return intent
+
+        except Exception as e:
+            print(f"[search_router] LLM routing failed ({e}), falling back to heuristic")
+            # Fallback to keyword heuristic
+            if self.needs_realtime_data(query):
+                return {"needs_search": True, "queries": [query], "reason": "heuristic fallback"}
+            return {"needs_search": False}
+
     def ensure_session(self, session_id: Optional[str], query: str) -> str:
         session_id = session_id or str(uuid.uuid4())
         if not get_session(session_id):
@@ -67,7 +133,7 @@ class ChatService:
             create_session(session_id, title)
         return session_id
 
-    def fetch_sources(self, query: str, source_papers: Optional[List[str]], is_research: bool) -> List[Dict[str, Any]]:
+    async def fetch_sources(self, query: str, source_papers: Optional[List[str]], is_research: bool, model_id: Optional[str] = None) -> List[Dict[str, Any]]:
         results = []
         if source_papers:
             for arxiv_id in source_papers:
@@ -99,26 +165,67 @@ class ChatService:
             results = unique_results
         elif is_research:
             results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
-            
+
+        # --- LLM-driven web search routing (like ChatGPT/Perplexity) ---
+        if SEARXNG_MODAL_URL:
+            # First: try keyword heuristic (instant, no LLM call needed)
+            search_queries = []
+            if self.needs_realtime_data(query):
+                search_queries = [query]
+                print(f"[chat_service] Heuristic triggered web search for: {query}")
+
+            # If heuristic didn't trigger and we have a model, ask the LLM
+            if not search_queries:
+                intent = self.llm_route_search(query, model_id)
+                if intent.get("needs_search"):
+                    search_queries = intent.get("queries", [query])
+                    print(f"[chat_service] LLM triggered web search: {intent.get('reason', '')} -> {search_queries}")
+
+            # Execute web searches if needed
+            if search_queries:
+                try:
+                    web_search = get_search(SEARXNG_MODAL_URL)
+                    for sq in search_queries[:3]:  # Max 3 search queries
+                        web_results = await web_search.search(sq, num_results=5)
+                        for wr in web_results:
+                            domain = urlparse(wr.get("url", "")).netloc.replace("www.", "")
+                            results.append({
+                                "arxiv_id": domain,
+                                "title": wr.get("title", ""),
+                                "contribution_type": "Web" if wr.get("category") != "news" else "News",
+                                "domains": wr.get("category", "web"),
+                                "categories": wr.get("engine", "web"),
+                                "date_published": wr.get("published_date", "")[:10] if wr.get("published_date") else "",
+                                "wiki_content": f"# {wr.get('title', '')}\n\n**Source**: [{domain}]({wr.get('url', '')})\n\n{wr.get('snippet', '')}",
+                                "cross_domain_tags": "",
+                                "relevance": wr.get("combined_score", 0),
+                                "url": wr.get("url", ""),
+                            })
+                except Exception as e:
+                    print(f"[chat_service] Web search failed: {e}")
+
         return results
 
     def format_sources_for_response(self, results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        return [
-            {
+        sources = []
+        for r in results:
+            source = {
                 "arxiv_id": r["arxiv_id"],
                 "title": r["title"],
                 "contribution_type": r.get("contribution_type", ""),
                 "domains": r.get("domains", ""),
             }
-            for r in results
-        ]
+            if r.get("url"):
+                source["url"] = r["url"]
+            sources.append(source)
+        return sources
 
-    def process_chat(self, query: str, session_id: Optional[str], use_reasoning: bool, source_papers: Optional[List[str]], model_id: Optional[str]) -> Dict[str, Any]:
+    async def process_chat(self, query: str, session_id: Optional[str], use_reasoning: bool, source_papers: Optional[List[str]], model_id: Optional[str]) -> Dict[str, Any]:
         session_id = self.ensure_session(session_id, query)
         add_message(session_id, "user", query)
 
         is_research = self.is_research_query(query)
-        results = self.fetch_sources(query, source_papers, is_research)
+        results = await self.fetch_sources(query, source_papers, is_research, model_id=model_id)
         sources = self.format_sources_for_response(results)
 
         if use_reasoning:
@@ -127,7 +234,7 @@ class ChatService:
                 history_context = format_history_for_prompt(session_id)
                 result = client.generate(
                     user_message=query,
-                    wiki_context=results if is_research else None,
+                    wiki_context=results if (is_research or any(r.get('contribution_type') in ('Web', 'News') for r in results)) else None,
                     conversation_history=history_context,
                 )
 
@@ -181,8 +288,22 @@ class ChatService:
         add_message(session_id, "user", query)
 
         is_research = self.is_research_query(query)
-        results = self.fetch_sources(query, source_papers, is_research)
+
+        # Emit "searching" event if we'll likely search the web
+        will_search = self.needs_realtime_data(query)
+        if will_search and SEARXNG_MODAL_URL:
+            yield f"data: {json.dumps({'type': 'status', 'status': 'searching_web', 'message': 'Searching the web...'})}\n\n"
+
+        results = await self.fetch_sources(query, source_papers, is_research, model_id=model_id)
         sources = self.format_sources_for_response(results)
+
+        # Check if web results were found (for non-heuristic LLM-routed searches)
+        web_types = ("Web", "News")
+        has_web = any(r.get("contribution_type") in web_types for r in results)
+        if has_web and not will_search:
+            # LLM decided to search — notify the UI retroactively
+            web_count = sum(1 for r in results if r.get("contribution_type") in web_types)
+            yield f"data: {json.dumps({'type': 'status', 'status': 'web_results', 'message': f'Found {web_count} web results'})}\n\n"
 
         if sources:
             yield f"data: {json.dumps({'type': 'sources', 'sources': sources, 'session_id': session_id})}\n\n"
@@ -197,7 +318,7 @@ class ChatService:
                 try:
                     for chunk in client.generate_stream(
                         user_message=query,
-                        wiki_context=results if is_research else None,
+                        wiki_context=results if (is_research or any(r.get('contribution_type') in ('Web', 'News') for r in results)) else None,
                         conversation_history=history_context,
                     ):
                         full_response += chunk

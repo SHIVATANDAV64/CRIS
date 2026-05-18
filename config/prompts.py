@@ -115,3 +115,37 @@ SEARCH_EXPANSION = """Given this research question, generate 3-5 search queries 
 Question: {question}
 
 Return ONLY the search queries, one per line. No numbering, no explanation."""
+
+
+# ── LLM Search Intent Router ────────────────────────────────────────────
+# Lightweight classifier: the LLM decides if a web search is needed and
+# returns structured JSON. Used before the main generation pass.
+
+SEARCH_INTENT_ROUTER = """You are a search intent classifier. Given a user message and conversation context, decide whether a web search would help provide a better answer.
+
+Return ONLY a JSON object (no markdown, no explanation):
+
+If web search IS needed:
+{{"needs_search": true, "reason": "brief reason", "queries": ["search query 1", "search query 2"]}}
+
+If web search is NOT needed:
+{{"needs_search": false}}
+
+Guidelines for when web search IS needed:
+- Questions about current events, recent developments, or time-sensitive information
+- Questions about specific people, companies, products, or technologies that require up-to-date facts
+- Questions the model might not have reliable training data for
+- Requests that explicitly ask to search, look up, or find something online
+- Questions about recent research papers, releases, or announcements
+- Questions comparing current state-of-the-art methods
+
+Guidelines for when web search is NOT needed:
+- General knowledge questions the model can answer reliably
+- Mathematical, logical, or coding problems
+- Creative writing or brainstorming
+- Questions about concepts that are well-established and unlikely to change
+- Follow-up clarifications on previous responses
+- Casual conversation or greetings
+
+User message: {user_message}
+{context_section}"""
