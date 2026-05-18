@@ -1,9 +1,13 @@
 """
 Web Search & Scraper — Server-side web search and page scraping tools.
 
-Inspired by OpenHuman's approach:
-- Web search uses server-side proxy (not direct API calls from client)
-- Web scraper uses raw HTTP GET with truncation (1MB cap, 20s timeout)
+Uses SearXNG (Modal-hosted) for multi-engine web search:
+- DuckDuckGo (general web)
+- Wikipedia (knowledge)
+- arXiv (academic papers)
+- Hacker News (tech community)
+
+Plus quality filtering, credibility scoring, and freshness ranking.
 """
 import re
 import time
@@ -72,7 +76,6 @@ class WebScraper:
 
     def _parse_html(self, html: str, url: str) -> dict:
         """Parse HTML and extract text content."""
-        # Simple HTML parsing (no external dependencies)
         # Remove script and style elements
         html = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL)
         html = re.sub(r'<style[^>]*>.*?</style>', '', html, flags=re.DOTALL)
@@ -134,34 +137,66 @@ class WebScraper:
 
 
 class WebSearch:
-    """Web search using server-side proxy."""
+    """Web search via SearXNG (Modal-hosted) with quality filtering."""
 
-    def __init__(self, scraper: Optional[WebScraper] = None):
+    def __init__(self, scraper: Optional[WebScraper] = None, searxng_url: Optional[str] = None):
         self.scraper = scraper or WebScraper()
+        self._proxy = None
+        self._searxng_url = searxng_url
 
-    async def search(self, query: str, num_results: int = 5) -> list[dict]:
+    def _get_proxy(self):
+        """Lazy-init the search proxy."""
+        if self._proxy is None:
+            from core.search_proxy import SearchProxy
+            self._proxy = SearchProxy(self._searxng_url)
+        return self._proxy
+
+    async def search(self, query: str, num_results: int = 5, options: Optional[dict] = None) -> list[dict]:
         """
-        Search the web for a query.
-
-        Note: This uses a simple approach. In production, you would use
-        a proper search API (Google, Bing, DuckDuckGo, etc.)
+        Search the web via SearXNG with quality filtering.
 
         Args:
             query: Search query
             num_results: Number of results to return
+            options: Optional dict with:
+                - time_range: "day", "week", "month", "year"
+                - categories: list of categories (general, academic, community, news)
+                - engines: list of engine names
+                - min_credibility: float (0-1)
 
         Returns:
-            List of search results with title, url, snippet
+            List of search results with title, url, snippet, engine, credibility_score, freshness_score, combined_score
         """
-        # For now, return empty list (would need API key for real search)
-        # In production, integrate with:
-        # - Google Custom Search API
-        # - Bing Web Search API
-        # - DuckDuckGo Instant Answer API
-        # - SearxNG (self-hosted)
+        try:
+            proxy = self._get_proxy()
+            search_options = options or {}
+            search_options["max_results"] = num_results
 
-        console.print(f"[yellow]Web search not configured: {query}[/yellow]")
-        return []
+            results = await proxy.search(query, options=search_options)
+
+            # Format for backward compatibility
+            formatted = []
+            for r in results[:num_results]:
+                formatted.append({
+                    "title": r.get("title", ""),
+                    "url": r.get("url", ""),
+                    "snippet": r.get("snippet", ""),
+                    "engine": r.get("engine", ""),
+                    "category": r.get("category", ""),
+                    "published_date": r.get("published_date"),
+                    "credibility_score": r.get("credibility_score", 0.5),
+                    "freshness_score": r.get("freshness_score", 0.3),
+                    "combined_score": r.get("combined_score", 0.0),
+                    "source": r.get("source", "web"),
+                })
+
+            if not formatted:
+                console.print(f"[yellow]No web results for: {query}[/yellow]")
+
+            return formatted
+        except Exception as e:
+            console.print(f"[red]Web search error: {e}[/red]")
+            return []
 
     async def search_and_scrape(self, query: str, num_results: int = 3) -> list[dict]:
         """
@@ -184,6 +219,14 @@ class WebSearch:
 
         return scraped
 
+    async def health_check(self) -> bool:
+        """Check if search service is available."""
+        try:
+            proxy = self._get_proxy()
+            return await proxy.health_check()
+        except Exception:
+            return False
+
 
 # Singleton instances
 _scraper = None
@@ -198,9 +241,9 @@ def get_scraper() -> WebScraper:
     return _scraper
 
 
-def get_search() -> WebSearch:
+def get_search(searxng_url: Optional[str] = None) -> WebSearch:
     """Get or create the web search singleton."""
     global _search
     if _search is None:
-        _search = WebSearch()
+        _search = WebSearch(searxng_url=searxng_url)
     return _search

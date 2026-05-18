@@ -55,6 +55,7 @@ _DEFAULTS = {
     "search": {
         "results_limit": 20,
         "context_entries_limit": 15,
+        "searxng_url": os.getenv("SEARXNG_MODAL_URL", ""),
     },
     "server": {
         "host": "0.0.0.0",
@@ -147,6 +148,7 @@ REASONING_TOP_P = _config["model"]["top_p"]
 
 SEARCH_RESULTS_LIMIT = _config["search"]["results_limit"]
 CONTEXT_ENTRIES_LIMIT = _config["search"]["context_entries_limit"]
+SEARXNG_MODAL_URL = _config["search"]["searxng_url"]
 
 SERVER_HOST = _config["server"]["host"]
 SERVER_PORT = _config["server"]["port"]
