@@ -53,6 +53,7 @@ class SearXNGClient:
         params: dict = {
             "q": query,
             "language": language,
+            "format": "json",
             "max_results": max_results,
         }
         if categories:

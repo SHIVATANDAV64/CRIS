@@ -129,10 +129,29 @@ export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPape
           {!webLoading && webResults.length > 0 && (
             <div className="web-search-results">
               {webResults.map((r, i) => (
-                <div key={i} className="web-search-result" onClick={() => handleScrape(r.url)}>
-                  <div className="web-search-result-title">{escapeHtml(r.title)}</div>
+                <div key={i} className="web-search-result">
+                  <a
+                    href={r.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="web-search-result-title"
+                    style={{ color: '#7cacf8', textDecoration: 'none', cursor: 'pointer' }}
+                  >
+                    {escapeHtml(r.title)}
+                  </a>
                   <div className="web-search-result-url">{escapeHtml(r.url)}</div>
                   <div className="web-search-result-snippet">{escapeHtml(r.snippet).substring(0, 150)}...</div>
+                  <button
+                    className="web-result-use-btn"
+                    style={{
+                      marginTop: '4px', padding: '2px 10px', fontSize: '11px',
+                      background: 'rgba(124,172,248,0.15)', border: '1px solid rgba(124,172,248,0.3)',
+                      borderRadius: '4px', color: '#7cacf8', cursor: 'pointer',
+                    }}
+                    onClick={() => setInput(prev => prev + (prev ? '\n' : '') + `[${r.title}](${r.url}): ${r.snippet.substring(0, 200)}`)}
+                  >
+                    Use in chat
+                  </button>
                 </div>
               ))}
             </div>

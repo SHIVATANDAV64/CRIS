@@ -1,187 +1,230 @@
 """
-Modal.com Deployment — SearXNG Web Search Service
+Modal.com Deployment — Lightweight Web Search Service
 
-Installs SearXNG from source on Debian and runs it via @modal.web_server().
-This avoids Docker ENTRYPOINT conflicts with Modal's runtime.
+Uses DuckDuckGo, arXiv, and Wikipedia APIs directly instead of SearXNG.
+Far more reliable on serverless platforms.
 
-Aggregates 70+ search engines: Google, Bing, DuckDuckGo, arXiv, PubMed,
-Wikipedia, Wikidata, Reddit, Hacker News, Stack Overflow, GitHub, and more.
-
-No GPU needed — runs on CPU. Scales to zero when idle.
+Response format matches what core/searxng_client.py expects:
+    {"results": [{"title": ..., "url": ..., "content": ..., "engine": ..., "category": ...}]}
 
 Deploy with:
     modal deploy modal_deploy/searxng_server.py
 
 Test with:
-    curl "https://<workspace>--cris-searxng-search.modal.run/search?q=quantum+computing&format=json"
+    curl "https://<workspace>--cris-searxng-searxng-server.modal.run/search?q=latest+AI+news&format=json"
 """
+import re
+import concurrent.futures
 import modal
 
 app = modal.App("cris-searxng")
-
-# ── SearXNG Settings ─────────────────────────────────────────────────────
-
-SEARXNG_SETTINGS = """\
-use_default_settings: true
-
-server:
-  port: 8080
-  bind_address: "0.0.0.0"
-  limiter: false
-  image_proxy: false
-
-search:
-  safe_search: 0
-  autocomplete: "google"
-  default_lang: "en"
-  formats:
-    - json
-    - html
-
-engines:
-  - name: arxiv
-    engine: arxiv
-    categories: general
-    disabled: false
-
-  - name: pubmed
-    engine: pubmed
-    categories: general
-    disabled: false
-
-  - name: google
-    engine: google
-    disabled: false
-
-  - name: bing
-    engine: bing
-    disabled: false
-
-  - name: duckduckgo
-    engine: duckduckgo
-    disabled: false
-
-  - name: wikipedia
-    engine: wikipedia
-    disabled: false
-
-  - name: wikidata
-    engine: wikidata
-    disabled: false
-
-  - name: reddit
-    engine: reddit
-    disabled: false
-
-  - name: hacker news
-    engine: hackernews
-    disabled: false
-
-  - name: stackoverflow
-    engine: stackoverflow
-    disabled: false
-
-  - name: github
-    engine: github
-    disabled: false
-
-  - name: google news
-    engine: google_news
-    disabled: false
-"""
-
-
-def _install_searxng():
-    """Install SearXNG from source and write settings."""
-    import os
-    import secrets
-    import subprocess
-
-    # Install SearXNG from git
-    subprocess.run(
-        ["pip", "install", "git+https://github.com/searxng/searxng.git"],
-        check=True,
-    )
-
-    # Write settings
-    secret = secrets.token_hex(32)
-    settings = SEARXNG_SETTINGS.strip() + f'\n  secret_key: "{secret}"\n'
-
-    os.makedirs("/etc/searxng", exist_ok=True)
-    with open("/etc/searxng/settings.yml", "w") as f:
-        f.write(settings)
-
-    print("SearXNG installed and configured")
-
 
 # ── Image ────────────────────────────────────────────────────────────────
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
-    .apt_install("git", "build-essential")
-    .pip_install("msgspec", "PyYAML", "granian")
-    .run_function(_install_searxng)
-    .env({
-        "SEARXNG_SETTINGS_PATH": "/etc/searxng/settings.yml",
-    })
+    .pip_install(
+        "fastapi",
+        "ddgs",
+        "arxiv",
+        "httpx",
+    )
 )
 
+
+# ── Search Functions ─────────────────────────────────────────────────────
+
+def _search_duckduckgo(query: str, max_results: int = 10) -> list:
+    """Search via DuckDuckGo (general web)."""
+    try:
+        try:
+            from ddgs import DDGS
+        except ImportError:
+            from duckduckgo_search import DDGS
+        results = []
+        with DDGS() as ddgs:
+            for r in ddgs.text(query, max_results=max_results):
+                results.append({
+                    "title": r.get("title", ""),
+                    "url": r.get("href", ""),
+                    "content": r.get("body", ""),
+                    "engine": "duckduckgo",
+                    "category": "general",
+                })
+        return results
+    except Exception as e:
+        print(f"[DDG] Error: {e}")
+        return []
+
+
+def _search_ddg_news(query: str, max_results: int = 5) -> list:
+    """Search via DuckDuckGo News."""
+    try:
+        try:
+            from ddgs import DDGS
+        except ImportError:
+            from duckduckgo_search import DDGS
+        results = []
+        with DDGS() as ddgs:
+            for r in ddgs.news(query, max_results=max_results):
+                results.append({
+                    "title": r.get("title", ""),
+                    "url": r.get("url", ""),
+                    "content": r.get("body", ""),
+                    "engine": "duckduckgo_news",
+                    "category": "news",
+                    "publishedDate": r.get("date", ""),
+                })
+        return results
+    except Exception as e:
+        print(f"[DDG News] Error: {e}")
+        return []
+
+
+def _search_arxiv_api(query: str, max_results: int = 5) -> list:
+    """Search academic papers via arXiv API."""
+    try:
+        import arxiv
+        client = arxiv.Client()
+        search = arxiv.Search(
+            query=query,
+            max_results=max_results,
+            sort_by=arxiv.SortCriterion.Relevance,
+        )
+        results = []
+        for paper in client.results(search):
+            results.append({
+                "title": paper.title,
+                "url": paper.entry_id,
+                "content": paper.summary[:500] if paper.summary else "",
+                "engine": "arxiv",
+                "category": "science",
+                "publishedDate": paper.published.isoformat() if paper.published else "",
+            })
+        return results
+    except Exception as e:
+        print(f"[arXiv] Error: {e}")
+        return []
+
+
+def _search_wikipedia(query: str, max_results: int = 3) -> list:
+    """Search Wikipedia via its REST API."""
+    try:
+        import httpx
+        resp = httpx.get(
+            "https://en.wikipedia.org/w/api.php",
+            params={
+                "action": "query",
+                "list": "search",
+                "srsearch": query,
+                "srlimit": max_results,
+                "format": "json",
+            },
+            headers={"User-Agent": "CRIS-Research-Bot/2.0 (research assistant; contact: papireddy199@gmail.com)"},
+            timeout=10.0,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        results = []
+        for r in data.get("query", {}).get("search", []):
+            snippet = re.sub(r"<[^>]+>", "", r.get("snippet", ""))
+            results.append({
+                "title": r.get("title", ""),
+                "url": f"https://en.wikipedia.org/wiki/{r['title'].replace(' ', '_')}",
+                "content": snippet,
+                "engine": "wikipedia",
+                "category": "general",
+            })
+        return results
+    except Exception as e:
+        print(f"[Wikipedia] Error: {e}")
+        return []
+
+
+# ── FastAPI App (served via @modal.asgi_app) ─────────────────────────────
+
+from fastapi import FastAPI, Query
+from fastapi.responses import JSONResponse
+
+web_app = FastAPI(title="CRIS Web Search", version="2.0")
+
+
+@web_app.get("/search")
+async def search(
+    q: str = Query(..., description="Search query"),
+    format: str = Query("json", description="Response format"),
+    max_results: int = Query(10, description="Max results per engine"),
+    engines: str = Query(None, description="Comma-separated engine list"),
+    categories: str = Query(None, description="Comma-separated categories"),
+    time_range: str = Query(None, description="Time range filter"),
+):
+    """Multi-engine search endpoint (SearXNG-compatible response format)."""
+    if engines:
+        engine_list = [e.strip().lower() for e in engines.split(",")]
+    else:
+        engine_list = ["duckduckgo", "arxiv", "wikipedia", "duckduckgo_news"]
+
+    cat_list = [c.strip() for c in categories.split(",")] if categories else []
+    all_results = []
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        futures = {}
+
+        if "duckduckgo" in engine_list or "general" in cat_list:
+            futures["ddg"] = executor.submit(_search_duckduckgo, q, max_results)
+
+        if "duckduckgo_news" in engine_list or "news" in cat_list:
+            futures["news"] = executor.submit(_search_ddg_news, q, min(max_results, 5))
+
+        if "arxiv" in engine_list or "science" in cat_list or "academic" in cat_list:
+            futures["arxiv"] = executor.submit(_search_arxiv_api, q, min(max_results, 5))
+
+        if "wikipedia" in engine_list:
+            futures["wiki"] = executor.submit(_search_wikipedia, q, min(max_results, 3))
+
+        for key, future in futures.items():
+            try:
+                results = future.result(timeout=15)
+                all_results.extend(results)
+            except Exception as e:
+                print(f"[{key}] Timeout/error: {e}")
+
+    return JSONResponse(content={
+        "query": q,
+        "number_of_results": len(all_results),
+        "results": all_results,
+    })
+
+
+@web_app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+
+@web_app.get("/")
+async def root():
+    return {"service": "CRIS Web Search", "version": "2.0", "status": "running"}
+
+
+# ── Modal ASGI Entrypoint ────────────────────────────────────────────────
 
 @app.function(
     image=image,
     cpu=1.0,
-    memory=1024,
+    memory=512,
     scaledown_window=300,
     timeout=120,
     max_containers=10,
 )
-@modal.web_server(port=8080, startup_timeout=60)
+@modal.asgi_app()
 def searxng_server():
-    """
-    SearXNG Web Server — runs SearXNG on port 8080.
-
-    Modal's web_server decorator proxies traffic to port 8080.
-    """
-    import subprocess
-    import sys
-    import time
-    import httpx
-
-    # Start SearXNG via granian (what the official image uses)
-    proc = subprocess.Popen(
-        [
-            sys.executable, "-m", "granian",
-            "--host", "0.0.0.0",
-            "--port", "8080",
-            "--log-level", "error",
-            "searx.webapp:app",
-        ],
-        env={
-            **__import__("os").environ,
-            "SEARXNG_SETTINGS_PATH": "/etc/searxng/settings.yml",
-        },
-    )
-
-    # Wait for server to be ready
-    for _ in range(30):
-        try:
-            resp = httpx.get("http://localhost:8080/", timeout=3.0)
-            if resp.status_code < 500:
-                print("SearXNG is ready on port 8080")
-                break
-        except Exception:
-            pass
-        time.sleep(1)
-
-    # Keep alive — web_server handles HTTP proxying
-    import signal
-    signal.pause()
+    """Serve the FastAPI app directly via Modal's ASGI integration."""
+    return web_app
 
 
 @app.local_entrypoint()
 def test():
     """Test the search endpoint."""
-    print("Deploy first with: modal deploy modal_deploy/searxng_server.py")
-    print("\nThen test with:")
-    print('  curl "https://<workspace>--cris-searxng-search.modal.run/search?q=quantum+computing&format=json"')
-    print('  curl "https://<workspace>--cris-searxng-search.modal.run/search?q=transformer+models&engines=arxiv,pubmed"')
+    print("Deploy with: modal deploy modal_deploy/searxng_server.py")
+    print("\nTest with:")
+    print('  curl "https://<workspace>--cris-searxng-searxng-server.modal.run/search?q=latest+AI+news&format=json"')
