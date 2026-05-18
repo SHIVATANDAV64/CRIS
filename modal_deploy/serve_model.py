@@ -1,11 +1,12 @@
 """
-Modal.com Deployment — Serve zira-researcher via OpenAI-compatible API with streaming.
+Modal.com Deployment — Serve FINAL-Bench/Darwin-36B-Opus via transformers + OpenAI-compatible API with streaming.
+
+Base model: Qwen/Qwen3.6-35B-A3B
+Fine-tuned model: FINAL-Bench/Darwin-36B-Opus
+GPU: NVIDIA RTX PRO 6000 — 96 GB GDDR7
 
 Deploy with:
     modal deploy modal_deploy/serve_model.py
-
-After deploy, the endpoint is available at:
-    https://cris-zira-researcher--chat-completions.modal.run
 """
 import modal
 import json
@@ -14,26 +15,28 @@ from pydantic import BaseModel
 from typing import Optional, AsyncGenerator
 from fastapi.responses import StreamingResponse
 
-app = modal.App("cris-zira-researcher")
+app = modal.App("cris-darwin-opus")
 
-# Use a lightweight image - just transformers + torch + fastapi
 image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install(
-        "torch>=2.4.0",
-        "transformers>=4.45.0",
-        "accelerate>=0.30.0",
+        "torch>=2.5.0",
+        "transformers>=4.51.0",
+        "accelerate>=1.0.0",
         "fastapi>=0.115.0",
+        "pydantic>=2.0",
     )
 )
 
-MODEL_ID = "0xvoid0000/zira-researcher"
+MODEL_ID = "FINAL-Bench/Darwin-36B-Opus"
+BASE_MODEL_ID = "Qwen/Qwen3.6-35B-A3B"
 
 
 class ChatRequest(BaseModel):
     messages: list[dict]
-    max_tokens: int = 4096
+    max_tokens: int = 8192
     temperature: float = 0.7
+    top_p: float = 0.95
     stream: bool = False
 
 
@@ -46,7 +49,7 @@ class ChatResponse(BaseModel):
 
 
 @app.cls(
-    gpu="T4",
+    gpu="RTX-PRO-6000",
     image=image,
     scaledown_window=300,
     timeout=600,
@@ -54,15 +57,14 @@ class ChatResponse(BaseModel):
         "/model-cache": modal.Volume.from_name("cris-model-cache", create_if_missing=True),
     },
 )
-class ZiraResearcher:
+class DarwinOpus:
     @modal.enter()
     def load_model(self):
-        """Load the model when the container starts."""
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         self.tokenizer = AutoTokenizer.from_pretrained(
-            MODEL_ID,
+            BASE_MODEL_ID,
             trust_remote_code=True,
             cache_dir="/model-cache",
         )
@@ -70,16 +72,15 @@ class ZiraResearcher:
         self.model = AutoModelForCausalLM.from_pretrained(
             MODEL_ID,
             trust_remote_code=True,
-            torch_dtype=torch.float16,
+            torch_dtype=torch.bfloat16,
             device_map="auto",
             cache_dir="/model-cache",
         )
+        self.model.eval()
 
     @modal.method()
-    def generate(self, messages: list[dict], max_tokens: int = 4096, temperature: float = 0.7) -> dict:
-        """Generate a response from zira-researcher."""
+    def generate(self, messages: list[dict], max_tokens: int = 8192, temperature: float = 0.7, top_p: float = 0.95) -> dict:
         import torch
-
         prompt = self.tokenizer.apply_chat_template(
             messages,
             tokenize=False,
@@ -87,19 +88,19 @@ class ZiraResearcher:
         )
 
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+        input_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs,
                 max_new_tokens=max_tokens,
                 temperature=temperature,
-                top_p=0.95,
+                top_p=top_p,
                 do_sample=True,
                 pad_token_id=self.tokenizer.eos_token_id,
             )
 
-        # Decode only the generated part
-        generated_tokens = outputs[0][inputs["input_ids"].shape[1]:]
+        generated_tokens = outputs[0][input_len:]
         text = self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
 
         return {
@@ -108,10 +109,9 @@ class ZiraResearcher:
         }
 
     @modal.method()
-    def generate_stream(self, messages: list[dict], max_tokens: int = 4096, temperature: float = 0.7):
+    def generate_stream(self, messages: list[dict], max_tokens: int = 8192, temperature: float = 0.7, top_p: float = 0.95):
         """Generate response token-by-token for streaming."""
         import torch
-
         prompt = self.tokenizer.apply_chat_template(
             messages,
             tokenize=False,
@@ -119,20 +119,20 @@ class ZiraResearcher:
         )
 
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+        input_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs,
                 max_new_tokens=max_tokens,
                 temperature=temperature,
-                top_p=0.95,
+                top_p=top_p,
                 do_sample=True,
                 pad_token_id=self.tokenizer.eos_token_id,
             )
 
-        # Yield tokens progressively
         full_text = ""
-        for i in range(inputs["input_ids"].shape[1], len(outputs[0])):
+        for i in range(input_len, len(outputs[0])):
             token = self.tokenizer.decode(outputs[0][i], skip_special_tokens=True)
             full_text += token
             yield full_text
@@ -141,7 +141,6 @@ class ZiraResearcher:
     def chat_completions(self, request: ChatRequest):
         """OpenAI-compatible /v1/chat/completions endpoint with streaming support."""
         if request.stream:
-            # Streaming response
             async def event_generator() -> AsyncGenerator[str, None]:
                 chunk_id = f"cris-{int(time.time())}"
                 try:
@@ -149,6 +148,7 @@ class ZiraResearcher:
                         request.messages,
                         request.max_tokens,
                         request.temperature,
+                        request.top_p,
                     ):
                         chunk = {
                             "id": chunk_id,
@@ -162,7 +162,6 @@ class ZiraResearcher:
                         }
                         yield f"data: {json.dumps(chunk)}\n\n"
 
-                    # Final chunk
                     final_chunk = {
                         "id": chunk_id,
                         "object": "chat.completion.chunk",
@@ -181,11 +180,11 @@ class ZiraResearcher:
 
             return StreamingResponse(event_generator(), media_type="text/event-stream")
         else:
-            # Non-streaming response (original behavior)
             result = self.generate.remote(
                 request.messages,
                 request.max_tokens,
                 request.temperature,
+                request.top_p,
             )
 
             return ChatResponse(
@@ -208,8 +207,7 @@ class ZiraResearcher:
 
 @app.local_entrypoint()
 def test():
-    """Quick test of the deployed model."""
-    model = ZiraResearcher()
+    model = DarwinOpus()
     result = model.generate.remote(
         messages=[
             {"role": "user", "content": "What are the key principles of cross-domain research synthesis?"}

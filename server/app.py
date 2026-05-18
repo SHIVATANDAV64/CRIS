@@ -7,6 +7,7 @@ Run with:
 import sys
 import uuid
 import json
+import re
 from pathlib import Path
 from datetime import datetime
 
@@ -133,6 +134,48 @@ async def index(request: Request):
     return templates.TemplateResponse(request, "index.html")
 
 
+# ── Intent Detection ─────────────────────────────────────────────────────
+
+_NON_RESEARCH_PATTERNS = [
+    r'^\s*(hi|hello|hey|howdy|greetings|good\s*(morning|afternoon|evening|night))[\s!.,]*$',
+    r'^\s*how\s+(are\s+you|is\s+(it|the\s+day|things|life)|do\s+(you|u)\s+(do|feel))[\s?!.]*$',
+    r"^\s*(what'?s?\s+up|sup|yo|hey\s+there|hi\s+there)[\s!.,?]*$",
+    r'^\s*(thanks?|thank\s+you|thx|ty)[\s!.,]*$',
+    r'^\s*(bye|goodbye|see\s+you|later|cya)[\s!.,]*$',
+    r'^\s*(help|what\s+can\s+you\s+do|what\s+do\s+you\s+do)[\s?!.]*$',
+    r'^\s*(who\s+are\s+you|what\s+are\s+you|tell\s+me\s+about\s+yourself)[\s?!.]*$',
+    r'^\s*(tell\s+me\s+a\s+(joke|story)|make\s+me\s+laugh)[\s?!.]*$',
+    r'^\s*(what\s+(time|day|date)\s+is\s+(it|now|today))[\s?!.]*$',
+]
+
+_RESEARCH_INDICATORS = [
+    'paper', 'research', 'study', 'method', 'algorithm', 'model', 'neural',
+    'network', 'learning', 'domain', 'cross-domain', 'transfer', 'mechanism',
+    'compare', 'difference', 'similar', 'connection', 'relation', 'analysis',
+    'explain', 'how does', 'what is', 'why', 'summarize', 'review',
+    'arxiv', 'citation', 'experiment', 'dataset', 'performance', 'accuracy',
+    'technique', 'approach', 'framework', 'system', 'architecture',
+]
+
+
+def _is_research_query(query: str) -> bool:
+    """Check if a query is research-oriented vs casual conversation."""
+    q_lower = query.lower().strip()
+
+    for pattern in _NON_RESEARCH_PATTERNS:
+        if re.match(pattern, q_lower):
+            return False
+
+    if len(q_lower.split()) <= 3:
+        return False
+
+    for indicator in _RESEARCH_INDICATORS:
+        if indicator in q_lower:
+            return True
+
+    return len(q_lower.split()) >= 5
+
+
 # ── Chat Endpoints ───────────────────────────────────────────────────────
 
 @app.post("/api/chat", response_model=ChatResponse)
@@ -150,16 +193,15 @@ async def chat(req: ChatRequest):
 
     add_message(session_id, "user", query)
 
-    # If source papers are explicitly provided, use only those
+    is_research = _is_research_query(query)
+
     if req.source_papers:
         results = []
         for arxiv_id in req.source_papers:
-            # First try wiki DB
             paper_results = search(arxiv_id, limit=5)
             if paper_results:
                 results.extend(paper_results)
             else:
-                # Fallback: load raw paper JSON and create a temporary wiki-like entry
                 raw_paper = get_paper_by_id(arxiv_id)
                 if raw_paper:
                     authors = [a for a in raw_paper.get('authors', []) if a]
@@ -175,7 +217,6 @@ async def chat(req: ChatRequest):
                         "cross_domain_tags": "",
                         "relevance": 0,
                     })
-        # Deduplicate
         seen = set()
         unique_results = []
         for r in results:
@@ -183,18 +224,10 @@ async def chat(req: ChatRequest):
                 seen.add(r["arxiv_id"])
                 unique_results.append(r)
         results = unique_results
-    else:
-        # No explicit sources — search wiki for relevant entries
+    elif is_research:
         results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
-
-    if not results:
-        response_text = "No relevant papers found in the knowledge base. Try a different query, or ingest more papers."
-        add_message(session_id, "assistant", response_text)
-        return ChatResponse(
-            response=response_text,
-            sources=[],
-            session_id=session_id,
-        )
+    else:
+        results = []
 
     sources = [
         {
@@ -213,7 +246,7 @@ async def chat(req: ChatRequest):
         if client:
             result = client.generate(
                 user_message=query,
-                wiki_context=results,
+                wiki_context=results if is_research else None,
                 conversation_history=history_context,
             )
 
@@ -225,7 +258,6 @@ async def chat(req: ChatRequest):
                 sources=sources,
             )
 
-            # Extract memory from conversation
             try:
                 extract_and_store_memory(
                     user_message=query,
@@ -280,7 +312,8 @@ async def chat_stream(req: ChatRequest):
 
     add_message(session_id, "user", query)
 
-    # If source papers are explicitly provided, use only those
+    is_research = _is_research_query(query)
+
     if req.source_papers:
         results = []
         for arxiv_id in req.source_papers:
@@ -310,16 +343,10 @@ async def chat_stream(req: ChatRequest):
                 seen.add(r["arxiv_id"])
                 unique_results.append(r)
         results = unique_results
-    else:
+    elif is_research:
         results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
-
-    if not results:
-        async def no_results_stream():
-            yield f"data: {json.dumps({'type': 'sources', 'sources': []})}\n\n"
-            yield f"data: {json.dumps({'type': 'content', 'content': 'No relevant papers found in the knowledge base. Try a different query, or ingest more papers.'})}\n\n"
-            yield f"data: {json.dumps({'type': 'done', 'session_id': session_id})}\n\n"
-            yield "data: [DONE]\n\n"
-        return StreamingResponse(no_results_stream(), media_type="text/event-stream")
+    else:
+        results = []
 
     sources = [
         {
@@ -334,95 +361,30 @@ async def chat_stream(req: ChatRequest):
     history_context = format_history_for_prompt(session_id)
 
     async def generate_stream():
-        yield f"data: {json.dumps({'type': 'sources', 'sources': sources, 'session_id': session_id})}\n\n"
+        if sources:
+            yield f"data: {json.dumps({'type': 'sources', 'sources': sources, 'session_id': session_id})}\n\n"
 
         if req.use_reasoning:
             client = get_model_client()
             if client:
                 full_response = ""
-                thinking_content = ""
-                answer_content = ""
-                phase = "thinking"
-                thinking_length = 0
-                max_thinking_length = MAX_THINKING_LENGTH
 
                 for chunk in client.generate_stream(
                     user_message=query,
-                    wiki_context=results,
+                    wiki_context=results if is_research else None,
                     conversation_history=history_context,
                 ):
                     full_response += chunk
-
-                    if phase == "thinking":
-                        thinking_content = chunk
-                        thinking_length = len(thinking_content)
-
-                        transition_patterns = [
-                            "\n\nFinal Answer:",
-                            "\n\nAnswer:",
-                            "\n\nResponse:",
-                            "\n\nBased on the",
-                            "\n\nIn summary",
-                            "\n\nTo conclude",
-                            "\n\nThe main",
-                            "\n\nFrom this",
-                            "\n\nGiven the",
-                            "\n\nTherefore",
-                            "\n\nThus",
-                            "\n\nHence",
-                            "\n\nIn conclusion",
-                            "\n\nTo summarize",
-                            "\n\nThe key findings",
-                            "\n\nBased on my analysis",
-                        ]
-
-                        transitioned = False
-                        for pattern in transition_patterns:
-                            if pattern in chunk:
-                                split_idx = chunk.find(pattern)
-                                thinking_content = chunk[:split_idx]
-                                answer_content = chunk[split_idx:]
-                                phase = "answer"
-                                transitioned = True
-
-                                if thinking_content.strip():
-                                    yield f"data: {json.dumps({'type': 'thinking', 'content': thinking_content})}\n\n"
-                                if answer_content.strip():
-                                    yield f"data: {json.dumps({'type': 'content', 'content': answer_content})}\n\n"
-                                break
-
-                        if not transitioned:
-                            if thinking_length > max_thinking_length:
-                                phase = "answer"
-                                answer_content = "\n\nBased on my analysis of the provided research papers, here are the key cross-domain applications and insights:\n\n"
-                                yield f"data: {json.dumps({'type': 'thinking', 'content': thinking_content})}\n\n"
-                                yield f"data: {json.dumps({'type': 'content', 'content': answer_content})}\n\n"
-                            else:
-                                if thinking_content.strip():
-                                    yield f"data: {json.dumps({'type': 'thinking', 'content': thinking_content})}\n\n"
-
-                    elif phase == "answer":
-                        answer_content = chunk
-                        if answer_content.strip():
-                            yield f"data: {json.dumps({'type': 'content', 'content': answer_content})}\n\n"
-
-                if phase == "thinking" and thinking_content.strip():
-                    conclusion = "\n\nBased on my analysis, the provided research papers demonstrate several cross-domain applications and mechanisms that can be mapped across different scientific fields."
-                    yield f"data: {json.dumps({'type': 'thinking', 'content': thinking_content})}\n\n"
-                    yield f"data: {json.dumps({'type': 'content', 'content': conclusion})}\n\n"
-                    full_response += conclusion
-                elif phase == "answer" and answer_content.strip():
-                    yield f"data: {json.dumps({'type': 'content', 'content': answer_content})}\n\n"
+                    if chunk:
+                        yield f"data: {json.dumps({'type': 'content', 'content': chunk})}\n\n"
 
                 add_message(
                     session_id,
                     "assistant",
                     full_response,
-                    thinking=thinking_content,
                     sources=sources,
                 )
 
-                # Extract memory from conversation
                 try:
                     extract_and_store_memory(
                         user_message=query,
