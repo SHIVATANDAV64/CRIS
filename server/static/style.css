@@ -241,6 +241,10 @@ html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--
 .loading-dots span:nth-child(3){animation-delay:.3s}
 @keyframes loadBounce{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1.2)}}
 
+.thinking-indicator{display:flex;align-items:center;gap:8px;padding:8px 0;color:var(--text-secondary);font-size:.85rem}
+.thinking-icon{display:inline-block;animation:thinkingPulse 1.5s ease-in-out infinite;color:var(--accent-amber);font-size:1rem}
+@keyframes thinkingPulse{0%,100%{opacity:.4;transform:rotate(0deg)}50%{opacity:1;transform:rotate(180deg)}}
+
 .system-message .message-content{background:transparent;border:none}
 
 /* ── Input Area ──────────────────────────────────────────────────────── */

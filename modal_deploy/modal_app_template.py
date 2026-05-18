@@ -1,5 +1,9 @@
 """
-Modal App — OpenAI-compatible LLM endpoint with streaming support.
+Modal App — FINAL-Bench/Darwin-36B-Opus via vLLM with OpenAI-compatible endpoint and streaming.
+
+Base model: Qwen/Qwen3.6-35B-A3B (vLLM config inherited)
+Fine-tuned model: FINAL-Bench/Darwin-36B-Opus
+GPU: NVIDIA RTX PRO 6000 — 96 GB GDDR7
 
 Deploy with: modal deploy modal_deploy/modal_app_template.py
 """
@@ -13,14 +17,27 @@ from typing import List, Optional, AsyncGenerator
 
 # ─ Modal App Setup ────────────────────────────────────────────────────────
 
-app = modal.App("cris-zira-researcher")
+app = modal.App("cris-darwin-opus")
 
-image = modal.Image.debian_slim().pip_install(
+image = modal.Image.debian_slim(python_version="3.11").pip_install(
+    "vllm>=0.7.0",
     "fastapi[standard]",
-    "torch",
-    "transformers",
-    "accelerate",
+    "transformers>=4.45.0",
+    "pydantic>=2.0",
 )
+
+# Model config
+MODEL_ID = "FINAL-Bench/Darwin-36B-Opus"
+BASE_MODEL_ID = "Qwen/Qwen3.6-35B-A3B"
+
+VLLM_ENGINE_ARGS = {
+    "tensor_parallel_size": 1,
+    "max_model_len": 32768,
+    "gpu_memory_utilization": 0.95,
+    "enforce_eager": False,
+    "trust_remote_code": True,
+    "limit_mm_per_prompt": {"image": 0, "video": 0, "audio": 0},
+}
 
 # ── Request/Response Models (OpenAI-compatible) ────────────────────────────
 
@@ -30,101 +47,98 @@ class ChatMessage(BaseModel):
 
 class ChatCompletionRequest(BaseModel):
     messages: List[ChatMessage]
-    model: Optional[str] = "0xvoid0000/zira-researcher"
-    max_tokens: Optional[int] = 4096
+    model: Optional[str] = MODEL_ID
+    max_tokens: Optional[int] = 8192
     temperature: Optional[float] = 0.7
+    top_p: Optional[float] = 0.95
     stream: Optional[bool] = False
 
 # ─ Model Server Class ─────────────────────────────────────────────────────
 
 @app.cls(
-    gpu="T4",
+    gpu="RTX-PRO-6000",
     image=image,
-    timeout=300,
+    timeout=600,
+    volumes={
+        "/model-cache": modal.Volume.from_name("cris-model-cache", create_if_missing=True),
+    },
 )
 class ModelServer:
     @modal.enter()
     def load_model(self):
-        import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
+        from vllm import LLM, SamplingParams
+        from transformers import AutoTokenizer
 
-        model_name = "0xvoid0000/zira-researcher"
-        print(f"Loading model: {model_name}")
-
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype=torch.float16,
-            device_map="auto",
+        print(f"Loading tokenizer from base model: {BASE_MODEL_ID}")
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            BASE_MODEL_ID,
             trust_remote_code=True,
+            cache_dir="/model-cache",
+        )
+
+        print(f"Loading fine-tuned model with vLLM: {MODEL_ID}")
+        self.llm = LLM(
+            model=MODEL_ID,
+            download_dir="/model-cache",
+            **VLLM_ENGINE_ARGS,
         )
         print("Model loaded successfully!")
 
     @modal.method()
-    def generate(self, prompt: str, max_tokens: int, temperature: float) -> str:
-        import torch
+    def generate(self, prompt: str, max_tokens: int, temperature: float, top_p: float) -> str:
+        from vllm import SamplingParams
 
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+        sampling_params = SamplingParams(
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            stop_token_ids=[self.tokenizer.eos_token_id],
+        )
 
-        with torch.no_grad():
-            outputs = self.model.generate(
-                **inputs,
-                max_new_tokens=max_tokens,
-                temperature=temperature,
-                do_sample=True,
-                pad_token_id=self.tokenizer.eos_token_id,
-            )
-
-        return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        outputs = self.llm.generate(prompt, sampling_params=sampling_params)
+        return outputs[0].outputs[0].text
 
     @modal.method()
-    def generate_stream(self, prompt: str, max_tokens: int, temperature: float):
-        import torch
+    def generate_stream(self, prompt: str, max_tokens: int, temperature: float, top_p: float):
+        from vllm import SamplingParams
 
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-
-        with torch.no_grad():
-            outputs = self.model.generate(
-                **inputs,
-                max_new_tokens=max_tokens,
-                temperature=temperature,
-                do_sample=True,
-                pad_token_id=self.tokenizer.eos_token_id,
-            )
+        sampling_params = SamplingParams(
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            stop_token_ids=[self.tokenizer.eos_token_id],
+        )
 
         full_text = ""
-        for i in range(1, len(outputs[0])):
-            token = self.tokenizer.decode(outputs[0][i], skip_special_tokens=True)
-            full_text += token
-            yield full_text
+        for request_output in self.llm.generate(prompt, sampling_params=sampling_params, stream=True):
+            for output in request_output.outputs:
+                full_text = output.text
+                yield full_text
 
 # ── FastAPI Web Endpoint ───────────────────────────────────────────────────
 
 @app.function(
-    gpu="T4",
+    gpu="RTX-PRO-6000",
     image=image,
-    timeout=300,
+    timeout=600,
 )
 @modal.fastapi_endpoint()
 def serve():
-    api = FastAPI(title="CRIS Zira Researcher API")
+    api = FastAPI(title="CRIS Darwin-36B-Opus API")
     model = ModelServer()
 
     @api.get("/health")
     async def health():
-        return {"status": "ok"}
+        return {"status": "ok", "model": MODEL_ID}
 
     @api.post("/v1/chat/completions")
     async def chat_completions(req: ChatCompletionRequest):
-        prompt = ""
-        for msg in req.messages:
-            if msg.role == "system":
-                prompt += f"<|system|>\n{msg.content}\n"
-            elif msg.role == "user":
-                prompt += f"<|user|>\n{msg.content}\n"
-            elif msg.role == "assistant":
-                prompt += f"<|assistant|>\n{msg.content}\n"
-        prompt += "<|assistant|>\n"
+        messages = [{"role": m.role, "content": m.content} for m in req.messages]
+        prompt = model.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+        )
 
         if req.stream:
             async def event_generator():
@@ -134,6 +148,7 @@ def serve():
                         prompt=prompt,
                         max_tokens=req.max_tokens,
                         temperature=req.temperature,
+                        top_p=req.top_p,
                     ):
                         chunk = {
                             "id": chunk_id,
@@ -169,6 +184,7 @@ def serve():
                 prompt=prompt,
                 max_tokens=req.max_tokens,
                 temperature=req.temperature,
+                top_p=req.top_p,
             )
             return {
                 "id": f"chatcmpl-{int(time.time())}",

@@ -39,10 +39,11 @@ _DEFAULTS = {
         "model": "minimax.minimax-m2.5",
     },
     "model": {
-        "modal_api_url": os.getenv("MODAL_API_URL", "https://naveenreddy11011--cris-zira-researcher-ziraresearcher-ch-1a7567.modal.run"),
-        "modal_model": "0xvoid0000/zira-researcher",
-        "max_tokens": 8192,
-        "temperature": 1.0,
+        "modal_api_url": os.getenv("MODAL_API_URL", "https://naveen95190--cris-darwin-opus-darwinopus-chat-completions.modal.run"),
+        "modal_model": "FINAL-Bench/Darwin-36B-Opus",
+        "base_model": "Qwen/Qwen3.6-35B-A3B",
+        "max_tokens": 32768,
+        "temperature": 0.7,
         "top_p": 0.95,
     },
     "chat": {
@@ -133,6 +134,7 @@ ARXIV_CATEGORIES = _config["arxiv"]["categories"]
 
 MODAL_API_URL = _config["model"]["modal_api_url"]
 MODAL_MODEL = _config["model"]["modal_model"]
+BASE_MODEL = _config["model"].get("base_model", "Qwen/Qwen3.6-35B-A3B")
 
 COMPILER_MODEL = BEDROCK_MODEL
 COMPILER_MAX_TOKENS = _config["wiki"]["compiler_max_tokens"]

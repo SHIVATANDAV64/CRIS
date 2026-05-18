@@ -505,6 +505,7 @@ async function sendSelectedToChat() {
         thinkingDiv.style.display = 'none';
         const textDiv = document.createElement('div');
         textDiv.className = 'message-text';
+        textDiv.innerHTML = '<div class="thinking-indicator"><span class="thinking-icon">✦</span> Thinking...</div>';
         const sourcesDiv = document.createElement('div');
         sourcesDiv.className = 'sources-section';
         sourcesDiv.style.display = 'none';
@@ -516,6 +517,8 @@ async function sendSelectedToChat() {
         assistantDiv.appendChild(messageContent);
         chatMessages.appendChild(assistantDiv);
         scrollToBottom();
+
+        let contentStarted = false;
 
         const reader = resp.body.getReader();
         const decoder = new TextDecoder();
@@ -577,6 +580,10 @@ async function sendSelectedToChat() {
                         }
                         scrollToBottom();
                     } else if (data.type === 'content') {
+                        if (!contentStarted) {
+                            contentStarted = true;
+                            textDiv.innerHTML = '';
+                        }
                         fullContent = data.content;
                         textDiv.innerHTML = formatMarkdown(fullContent);
                         scrollToBottom();
@@ -922,6 +929,7 @@ async function sendMessage() {
         thinkingDiv.style.display = 'none';
         const textDiv = document.createElement('div');
         textDiv.className = 'message-text';
+        textDiv.innerHTML = '<div class="thinking-indicator"><span class="thinking-icon">✦</span> Thinking...</div>';
         const sourcesDiv = document.createElement('div');
         sourcesDiv.className = 'sources-section';
         sourcesDiv.style.display = 'none';
@@ -933,6 +941,8 @@ async function sendMessage() {
         assistantDiv.appendChild(messageContent);
         chatMessages.appendChild(assistantDiv);
         scrollToBottom();
+
+        let contentStarted = false;
 
         const reader = resp.body.getReader();
         const decoder = new TextDecoder();
@@ -994,6 +1004,10 @@ async function sendMessage() {
                         }
                         scrollToBottom();
                     } else if (data.type === 'content') {
+                        if (!contentStarted) {
+                            contentStarted = true;
+                            textDiv.innerHTML = '';
+                        }
                         fullContent = data.content;
                         textDiv.innerHTML = formatMarkdown(fullContent);
                         scrollToBottom();

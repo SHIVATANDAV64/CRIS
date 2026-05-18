@@ -1,6 +1,6 @@
 """
 Model Client — Unified interface for research reasoning inference.
-Uses zira-researcher deployed on Modal.com via OpenAI-compatible endpoint.
+Uses FINAL-Bench/Darwin-36B-Opus (base: Qwen/Qwen3.6-35B-A3B) deployed on Modal.com via vLLM OpenAI-compatible endpoint.
 """
 import re
 import json
@@ -19,7 +19,7 @@ from config.prompts import CHAT_SYSTEM, CHAT_CONTEXT_TEMPLATE
 
 class ModelClient:
     """
-    Client for research reasoning inference via Modal.com (zira-researcher).
+    Client for research reasoning inference via Modal.com (FINAL-Bench/Darwin-36B-Opus).
     """
 
     def __init__(self):
