@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "Bash(npx *)",
+      "Skill(claude-mem:learn-codebase)",
+      "mcp__codegraph__codegraph_files",
+      "Skill(claude-mem:do)",
+      "Bash(claude --print /how-it-works)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "ruflo"
+  ]
+}
