@@ -1,0 +1,18 @@
+---
+  name: Supervised Learning
+  type: concept
+  mentions: 16
+  first_seen: 2026-05-19T18:05:18.011604
+  source: chat_memory
+  session_id: 8d84ec69-bfce-49cd-84ac-8bc9b96339fc
+---
+
+# Supervised Learning
+
+**Type:** concept
+**Mentions:** 16
+**First seen:** 2026-05-19T18:05:18.011604
+
+## Context
+
+Extracted from chat conversation.

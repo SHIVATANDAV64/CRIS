@@ -154,6 +154,7 @@ function App() {
       sourcePaperIds,
       (sources, sid) => {
         if (sid) setSessionId(sid)
+        setSearchStatus('')  // Search is done — clear indicator
         setMessages(prev => prev.map(m =>
           m.id === assistantId ? { ...m, sources: sources as any } : m
         ))
@@ -171,6 +172,7 @@ function App() {
       },
       (sid) => {
         if (sid) setSessionId(sid)
+        setSearchStatus('')  // Stream done — ensure indicator is cleared
         loadSessions()
       },
       (error) => {

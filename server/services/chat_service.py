@@ -135,7 +135,28 @@ class ChatService:
 
     async def fetch_sources(self, query: str, source_papers: Optional[List[str]], is_research: bool, model_id: Optional[str] = None) -> List[Dict[str, Any]]:
         results = []
+        web_search_triggered = False
+        search_queries = []
+
+        # --- Step 1: Determine if web search is needed ---
+        if SEARXNG_MODAL_URL:
+            # Tier 1: keyword heuristic (instant)
+            if self.needs_realtime_data(query):
+                search_queries = [query]
+                web_search_triggered = True
+                print(f"[chat_service] Heuristic triggered web search for: {query}")
+
+            # Tier 2: LLM router (if heuristic didn't trigger)
+            if not search_queries:
+                intent = self.llm_route_search(query, model_id)
+                if intent.get("needs_search"):
+                    search_queries = intent.get("queries", [query])
+                    web_search_triggered = True
+                    print(f"[chat_service] LLM triggered web search: {intent.get('reason', '')} -> {search_queries}")
+
+        # --- Step 2: Fetch local papers (SKIP if web search is primary source) ---
         if source_papers:
+            # User explicitly dropped papers — always include them
             for arxiv_id in source_papers:
                 paper_results = search(arxiv_id, limit=5)
                 if paper_results:
@@ -163,46 +184,62 @@ class ChatService:
                     seen.add(r["arxiv_id"])
                     unique_results.append(r)
             results = unique_results
-        elif is_research:
+        elif is_research and not web_search_triggered:
+            # Only fetch local papers if web search ISN'T the primary source
+            # This prevents 15 random papers drowning out 5 relevant web results
             results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
 
-        # --- LLM-driven web search routing (like ChatGPT/Perplexity) ---
-        if SEARXNG_MODAL_URL:
-            # First: try keyword heuristic (instant, no LLM call needed)
-            search_queries = []
-            if self.needs_realtime_data(query):
-                search_queries = [query]
-                print(f"[chat_service] Heuristic triggered web search for: {query}")
+        # --- Step 3: Execute web searches ---
+        if search_queries:
+            try:
+                web_search = get_search(SEARXNG_MODAL_URL)
 
-            # If heuristic didn't trigger and we have a model, ask the LLM
-            if not search_queries:
-                intent = self.llm_route_search(query, model_id)
-                if intent.get("needs_search"):
-                    search_queries = intent.get("queries", [query])
-                    print(f"[chat_service] LLM triggered web search: {intent.get('reason', '')} -> {search_queries}")
+                # Determine time_range for recency queries
+                q_lower = query.lower()
+                strong_recency = ['latest', 'today', 'this week', 'breaking', 'just', 'right now']
+                mild_recency = ['recent', 'new', 'this month', 'this year', 'current', 'update']
 
-            # Execute web searches if needed
-            if search_queries:
-                try:
-                    web_search = get_search(SEARXNG_MODAL_URL)
-                    for sq in search_queries[:3]:  # Max 3 search queries
-                        web_results = await web_search.search(sq, num_results=5)
-                        for wr in web_results:
-                            domain = urlparse(wr.get("url", "")).netloc.replace("www.", "")
-                            results.append({
-                                "arxiv_id": domain,
-                                "title": wr.get("title", ""),
-                                "contribution_type": "Web" if wr.get("category") != "news" else "News",
-                                "domains": wr.get("category", "web"),
-                                "categories": wr.get("engine", "web"),
-                                "date_published": wr.get("published_date", "")[:10] if wr.get("published_date") else "",
-                                "wiki_content": f"# {wr.get('title', '')}\n\n**Source**: [{domain}]({wr.get('url', '')})\n\n{wr.get('snippet', '')}",
-                                "cross_domain_tags": "",
-                                "relevance": wr.get("combined_score", 0),
-                                "url": wr.get("url", ""),
-                            })
-                except Exception as e:
-                    print(f"[chat_service] Web search failed: {e}")
+                if any(w in q_lower for w in strong_recency):
+                    time_range = "month"  # SearXNG "week" can be too restrictive; month with freshness scoring handles it
+                elif any(w in q_lower for w in mild_recency):
+                    time_range = "year"
+                else:
+                    time_range = None
+
+                search_options = {"min_credibility": 0.40}  # Filter out low-quality sources
+                if time_range:
+                    search_options["time_range"] = time_range
+
+                for sq in search_queries[:3]:  # Max 3 search queries
+                    web_results = await web_search.search(sq, num_results=5, options=search_options if search_options else None)
+                    for wr in web_results:
+                        domain = urlparse(wr.get("url", "")).netloc.replace("www.", "")
+                        # Build richer web content for the model to cite
+                        snippet = wr.get("snippet", "")
+                        web_url = wr.get("url", "")
+                        pub_date = wr.get("published_date", "")
+                        date_str = pub_date[:10] if pub_date else "Unknown date"
+
+                        wiki_content = f"# {wr.get('title', '')}\n\n"
+                        wiki_content += f"**Source**: [{domain}]({web_url})\n"
+                        wiki_content += f"**Published**: {date_str}\n"
+                        wiki_content += f"**Engine**: {wr.get('engine', 'web')}\n\n"
+                        wiki_content += f"{snippet}"
+
+                        results.append({
+                            "arxiv_id": domain,
+                            "title": wr.get("title", ""),
+                            "contribution_type": "Web" if wr.get("category") != "news" else "News",
+                            "domains": wr.get("category", "web"),
+                            "categories": wr.get("engine", "web"),
+                            "date_published": date_str,
+                            "wiki_content": wiki_content,
+                            "cross_domain_tags": "",
+                            "relevance": wr.get("combined_score", 0),
+                            "url": web_url,
+                        })
+            except Exception as e:
+                print(f"[chat_service] Web search failed: {e}")
 
         return results
 

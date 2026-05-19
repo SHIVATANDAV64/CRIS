@@ -82,8 +82,16 @@ class ModelClient:
         if wiki_context:
             entries_text = ""
             for i, entry in enumerate(wiki_context, 1):
-                entries_text += f"\n### Entry {i}: {entry.get('title', 'Unknown')}\n"
-                entries_text += f"**arXiv ID**: {entry.get('arxiv_id', '')}\n"
+                ctype = entry.get("contribution_type", "")
+                if ctype in ("Web", "News"):
+                    # Web source — clearly label as web content
+                    entries_text += f"\n### [WEB SOURCE {i}]: {entry.get('title', 'Unknown')}\n"
+                    entries_text += f"**URL**: {entry.get('url', entry.get('arxiv_id', ''))}\n"
+                    entries_text += f"**Type**: {ctype}\n"
+                else:
+                    # Research paper
+                    entries_text += f"\n### [PAPER {i}]: {entry.get('title', 'Unknown')}\n"
+                    entries_text += f"**arXiv ID**: {entry.get('arxiv_id', '')}\n"
                 entries_text += entry.get("wiki_content", "") + "\n"
                 entries_text += "---\n"
 
@@ -116,8 +124,14 @@ class ModelClient:
         if wiki_context:
             entries_text = ""
             for i, entry in enumerate(wiki_context, 1):
-                entries_text += f"\n### Entry {i}: {entry.get('title', 'Unknown')}\n"
-                entries_text += f"**arXiv ID**: {entry.get('arxiv_id', '')}\n"
+                ctype = entry.get("contribution_type", "")
+                if ctype in ("Web", "News"):
+                    entries_text += f"\n### [WEB SOURCE {i}]: {entry.get('title', 'Unknown')}\n"
+                    entries_text += f"**URL**: {entry.get('url', entry.get('arxiv_id', ''))}\n"
+                    entries_text += f"**Type**: {ctype}\n"
+                else:
+                    entries_text += f"\n### [PAPER {i}]: {entry.get('title', 'Unknown')}\n"
+                    entries_text += f"**arXiv ID**: {entry.get('arxiv_id', '')}\n"
                 entries_text += entry.get("wiki_content", "") + "\n"
                 entries_text += "---\n"
 
@@ -249,10 +263,8 @@ class ModelClient:
                     yield answer
                 return
 
-            # Bedrock: stream with real-time thinking tag filtering
-            in_thinking = False
-            pending = ""
-
+            # Bedrock: collect full response, strip thinking + tool calls, yield clean answer
+            full_content = ""
             for line in response.iter_lines():
                 if not line:
                     continue
@@ -265,34 +277,14 @@ class ModelClient:
                         data = json.loads(data_str)
                         delta = data.get("choices", [{}])[0].get("delta", {})
                         chunk = delta.get("content", "")
-                        if not chunk:
-                            continue
-
-                        pending += chunk
-
-                        while pending:
-                            if not in_thinking:
-                                idx = pending.find("<think>")
-                                if idx != -1:
-                                    before = pending[:idx]
-                                    if before:
-                                        yield before
-                                    pending = pending[idx + 9:]
-                                    in_thinking = True
-                                else:
-                                    yield pending
-                                    pending = ""
-                            else:
-                                idx = pending.find("</think>")
-                                if idx != -1:
-                                    pending = pending[idx + 10:]
-                                    in_thinking = False
-                                else:
-                                    pending = ""
-                                    break
-
+                        if chunk:
+                            full_content += chunk
                     except json.JSONDecodeError:
                         continue
+            _, answer = self._parse_thinking(full_content)
+            if answer:
+                yield answer
+            return
 
         except Exception as e:
             provider = "Bedrock" if self._use_bedrock else "Modal"
@@ -306,9 +298,97 @@ class ModelClient:
         Returns:
             (thinking_text, answer_text) tuple
         """
+        # First strip any tool call XML
+        content = self._strip_tool_calls(content)
+
+        # Case 1: Both <think> and </think> present (standard reasoning model output)
         think_match = re.search(r'<think>(.*?)</think>', content, re.DOTALL)
         if think_match:
             thinking = think_match.group(1).strip()
             answer = content[think_match.end():].strip()
-            return thinking, answer
-        return "", content.strip()
+            return thinking, self._clean_opening(answer)
+
+        # Case 2: Only </think> present (model outputs thinking without opening tag)
+        # e.g., "The user wants...\n</think>\n# Answer..."
+        close_idx = content.find('</think>')
+        if close_idx != -1:
+            thinking = content[:close_idx].strip()
+            answer = content[close_idx + len('</think>'):].strip()
+            print(f"[model_client] Stripped orphan </think> tag ({len(thinking)} chars of thinking)")
+            return thinking, self._clean_opening(answer)
+
+        return "", self._clean_opening(content.strip())
+
+    def _clean_opening(self, text: str) -> str:
+        """
+        Strip 'Based on...' opening sentences that models stubbornly produce.
+
+        Checks the first 5 non-empty lines (models hide it after the heading).
+        """
+        if not text:
+            return text
+
+        prohibited_starts = [
+            'based on ', 'according to the ', 'from the context',
+            'the sources indicate', 'looking at the sources',
+            'reviewing the provided', 'from the provided',
+            'based upon ', 'drawing from ', 'from the research context',
+            'the provided research', 'from the provided research',
+        ]
+
+        lines = text.split('\n')
+        cleaned_lines = []
+        checks_remaining = 5  # Only check first 5 non-empty lines
+
+        for line in lines:
+            stripped = line.strip().lower()
+
+            if not stripped:
+                cleaned_lines.append(line)
+                continue
+
+            if checks_remaining > 0:
+                checks_remaining -= 1
+                if any(stripped.startswith(p) for p in prohibited_starts):
+                    print(f"[model_client] Stripped 'Based on...' line: {line.strip()[:60]}...")
+                    continue  # Skip this line
+
+            cleaned_lines.append(line)
+
+        return '\n'.join(cleaned_lines).strip()
+
+    def _strip_tool_calls(self, content: str) -> str:
+        """
+        Strip tool call XML from model responses.
+
+        Some models (MiniMax M2.5) have native tool calling and may emit
+        <minimax:tool_call>, <tool_call>, or similar XML instead of answering.
+        This strips those blocks and returns clean text.
+        """
+        if not content:
+            return content
+
+        # Strip common tool call patterns
+        patterns = [
+            r'<minimax:tool_call>.*?</minimax:tool_call>',
+            r'<tool_call>.*?</tool_call>',
+            r'<function_call>.*?</function_call>',
+            r'<invoke\s+name="[^"]*">.*?</invoke>',
+        ]
+
+        cleaned = content
+        for pattern in patterns:
+            cleaned = re.sub(pattern, '', cleaned, flags=re.DOTALL)
+
+        # Also strip self-closing / unclosed tool call tags
+        cleaned = re.sub(r'<minimax:tool_call\s*/?\s*>', '', cleaned)
+        cleaned = re.sub(r'</?minimax:[^>]*>', '', cleaned)
+
+        cleaned = cleaned.strip()
+
+        # If stripping left nothing, the model only output a tool call
+        if not cleaned and content.strip():
+            print(f"[model_client] WARNING: Model output was entirely a tool call, returning fallback")
+            return "I have the information from web search results provided in my context. Let me analyze it and provide a response.\n\n*Note: The model attempted to use an external tool instead of using the provided context. Please try again.*"
+
+        return cleaned

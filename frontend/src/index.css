@@ -1243,12 +1243,66 @@ html, body {
   background: var(--bg-primary);
   border-top: 1px solid var(--border-subtle);
   flex-shrink: 0;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.chat-input-area.drag-over {
+  border-top: 2px solid var(--accent-blue);
+  background: rgba(124, 172, 248, 0.06);
+}
+
+[data-theme="dark"] .chat-input-area.drag-over {
+  border-top-color: var(--accent-coral);
+  background: rgba(255, 127, 102, 0.06);
+}
+
+.drop-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  margin: 0 auto 8px;
+  max-width: 720px;
+  border: 2px dashed var(--accent-blue);
+  border-radius: var(--radius-lg, 12px);
+  background: rgba(124, 172, 248, 0.08);
+  color: var(--accent-blue);
+  font-size: 0.8rem;
+  font-weight: 500;
+  animation: fadeIn 0.15s ease-out;
+}
+
+[data-theme="dark"] .drop-overlay {
+  border-color: var(--accent-coral);
+  background: rgba(255, 127, 102, 0.08);
+  color: var(--accent-coral);
+}
+
+.drop-overlay-icon {
+  font-size: 1.2rem;
+}
+
+/* Draggable paper items */
+.paper-item[draggable="true"] {
+  cursor: grab;
+}
+
+.paper-item[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.paper-item.dragging {
+  opacity: 0.5;
+  transform: scale(0.97);
+  border-color: var(--accent-blue);
 }
 
 .dropped-papers {
   max-width: 720px;
   margin: 0 auto 6px;
-  display: none;
+  display: flex;
   flex-wrap: wrap;
   gap: 4px;
 }

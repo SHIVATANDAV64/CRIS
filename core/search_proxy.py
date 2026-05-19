@@ -31,6 +31,55 @@ class SearchProxy:
         "writeraccess.com",
     }
 
+    # Domain-level credibility: authoritative sources for scientific queries
+    HIGH_AUTHORITY_DOMAINS = {
+        # Journals & publishers
+        "nature.com": 0.95, "science.org": 0.95, "cell.com": 0.95,
+        "pnas.org": 0.95, "aps.org": 0.90, "ieeexplore.ieee.org": 0.90,
+        "acm.org": 0.90, "springer.com": 0.85, "wiley.com": 0.85,
+        "sciencedirect.com": 0.90, "arxiv.org": 0.90,
+        # Major news + science reporting
+        "sciencedaily.com": 0.85, "phys.org": 0.80,
+        "technologyreview.com": 0.85, "newscientist.com": 0.80,
+        "quantamagazine.org": 0.90, "arstechnica.com": 0.80,
+        "wired.com": 0.75, "theregister.com": 0.70,
+        # Government / institutional
+        "nist.gov": 0.95, "nih.gov": 0.95, "nasa.gov": 0.95,
+        "energy.gov": 0.90, "nsf.gov": 0.90, "cern.ch": 0.95,
+        # Tech company labs / research blogs
+        "ai.google": 0.85, "research.google": 0.85,
+        "research.ibm.com": 0.85, "research.microsoft.com": 0.85,
+        "openai.com": 0.80, "deepmind.google": 0.85,
+        # Major tech news
+        "techcrunch.com": 0.70, "theverge.com": 0.65,
+        "reuters.com": 0.80, "bbc.com": 0.80, "nytimes.com": 0.80,
+        "washingtonpost.com": 0.75, "theguardian.com": 0.75,
+        "time.com": 0.75, "forbes.com": 0.65,
+        "networkworld.com": 0.60, "zdnet.com": 0.60,
+        "discovermagazine.com": 0.70,
+    }
+
+    LOW_QUALITY_DOMAINS = {
+        # Blog / community platforms (low editorial bar)
+        "dev.to": 0.25, "medium.com": 0.30, "substack.com": 0.35,
+        "linkedin.com": 0.25, "reddit.com": 0.30,
+        "quora.com": 0.25, "stackoverflow.com": 0.40,
+        # AI-generated content farms (high error rate)
+        "programming-helper.com": 0.15, "devflokers.com": 0.20,
+        "ai-supremacy.com": 0.25, "roborhythms.com": 0.25,
+        "buildfastwithai.com": 0.25, "techbloat.com": 0.25,
+        # Aggregators with unclear provenance
+        "msn.com": 0.40,
+        # Unknown / low-credibility
+        "gilkut.net": 0.15, "blogspot.com": 0.15,
+        "wordpress.com": 0.20, "tumblr.com": 0.15,
+        "pinterest.com": 0.10, "facebook.com": 0.10,
+        "twitter.com": 0.20, "x.com": 0.20,
+        "tiktok.com": 0.10, "instagram.com": 0.10,
+        "youtube.com": 0.30,
+    }
+
+    # Category-level fallback scores
     CREDIBILITY_SCORES = {
         "academic": 0.95,
         "reference": 0.85,
@@ -91,16 +140,21 @@ class SearchProxy:
 
         # Step 3-5: Filter, score, rank
         filtered = []
-        min_cred = options.get("min_credibility", 0.0)
+        min_cred = options.get("min_credibility", 0.35)  # Default: filter out low-quality
 
         for idx, r in enumerate(results):
             # Skip AI slop
-            domain = self._extract_domain(r.get("url", ""))
+            url = r.get("url", "")
+            domain = self._extract_domain(url)
             if domain in self.AI_SLOP_DOMAINS:
                 continue
 
-            # Credibility score
-            cred_score = self.CREDIBILITY_SCORES.get(r.get("source", "web"), 0.5)
+            # Skip topic pages, homepages, and aggregator indexes
+            if self._is_index_page(url):
+                continue
+
+            # Domain-level credibility (3-tier: exact domain → TLD → category fallback)
+            cred_score = self._compute_credibility(domain, r.get("source", "web"))
             if cred_score < min_cred:
                 continue
 
@@ -110,11 +164,11 @@ class SearchProxy:
             # RRF-style rank score
             rank_score = 1.0 / (60 + idx)
 
-            # Combined score
+            # Combined score (boosted freshness weight for recency)
             combined = (
-                0.4 * rank_score +
-                0.3 * fresh_score +
-                0.3 * cred_score
+                0.30 * rank_score +
+                0.35 * fresh_score +
+                0.35 * cred_score
             )
 
             r["credibility_score"] = cred_score
@@ -168,6 +222,30 @@ class SearchProxy:
         except Exception:
             return 0.3
 
+    def _compute_credibility(self, domain: str, source_category: str = "web") -> float:
+        """
+        Compute credibility score using 3-tier system:
+        1. Exact domain match (HIGH_AUTHORITY or LOW_QUALITY lists)
+        2. TLD heuristic (.gov, .edu → high; social media → low)
+        3. Category-level fallback
+        """
+        # Tier 1: exact domain match
+        if domain in self.HIGH_AUTHORITY_DOMAINS:
+            return self.HIGH_AUTHORITY_DOMAINS[domain]
+        if domain in self.LOW_QUALITY_DOMAINS:
+            return self.LOW_QUALITY_DOMAINS[domain]
+
+        # Tier 2: TLD-based heuristic
+        if domain.endswith(".gov") or domain.endswith(".mil"):
+            return 0.90
+        if domain.endswith(".edu") or domain.endswith(".ac.uk"):
+            return 0.85
+        if domain.endswith(".org"):
+            return 0.65  # Orgs vary widely; moderate default
+
+        # Tier 3: category-level fallback
+        return self.CREDIBILITY_SCORES.get(source_category, 0.50)
+
     def _extract_domain(self, url: str) -> str:
         """Extract clean domain from URL."""
         try:
@@ -175,6 +253,61 @@ class SearchProxy:
             return parsed.netloc.replace("www.", "").lower()
         except Exception:
             return ""
+
+    def _is_index_page(self, url: str) -> bool:
+        """
+        Detect topic pages, homepages, and aggregator indexes.
+
+        These pages don't contain specific article content and are
+        useless as citations. Examples:
+        - https://news.mit.edu/topic/quantum-computing  (topic index)
+        - https://link.springer.com/subjects/quantum-computing  (subject page)
+        - https://quantumzeitgeist.com/  (homepage)
+        - https://www.sciencedaily.com/news/computers_math/  (category page)
+        """
+        try:
+            parsed = urlparse(url)
+            path = parsed.path.rstrip("/").lower()
+
+            # Homepage: no path or just "/"
+            if not path or path == "":
+                return True
+
+            # Known index path patterns (topic/category pages)
+            index_patterns = [
+                "/topic/", "/topics/", "/subjects/", "/subject/",
+                "/category/", "/categories/", "/tag/", "/tags/",
+                "/search", "/browse/", "/explore/",
+                "/latest", "/trending", "/popular",
+            ]
+
+            # Article indicators — if present, it's likely a real article, not an index
+            has_article_indicators = (
+                any(c.isdigit() for c in path) or  # dates, IDs
+                path.endswith(".html") or path.endswith(".htm") or
+                path.endswith(".pdf") or
+                "/article/" in path or "/articles/" in path or
+                "/releases/" in path or "/paper/" in path or
+                "/post/" in path or "/blog/" in path
+            )
+
+            # If path contains an index pattern and has no article indicators → index page
+            if any(pat in path for pat in index_patterns) and not has_article_indicators:
+                return True
+
+            # Category-style paths: /news/some_category/ or /news/cat/subcat/
+            # These have no article indicators and are just navigation
+            if "/news/" in path and not has_article_indicators:
+                return True
+
+            # Very short paths with no article indicators (likely homepages)
+            path_segments = [s for s in path.split("/") if s]
+            if len(path_segments) <= 1 and not has_article_indicators:
+                return True
+
+            return False
+        except Exception:
+            return False
 
     async def health_check(self) -> bool:
         """Check if search service is available."""

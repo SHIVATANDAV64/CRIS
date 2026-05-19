@@ -88,7 +88,24 @@ export function SourcesBrowser() {
                   </div>
                   <div className="papers-list">
                     {cat.papers.map(p => (
-                      <div key={p.arxiv_id} className="paper-item" onClick={() => openPaper(p.arxiv_id)}>
+                      <div
+                        key={p.arxiv_id}
+                        className="paper-item"
+                        onClick={() => openPaper(p.arxiv_id)}
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData('application/cris-paper', JSON.stringify({
+                            arxiv_id: p.arxiv_id,
+                            title: p.title,
+                          }))
+                          e.dataTransfer.effectAllowed = 'copy'
+                          // Visual feedback: add drag class
+                          ;(e.target as HTMLElement).classList.add('dragging')
+                        }}
+                        onDragEnd={(e) => {
+                          (e.target as HTMLElement).classList.remove('dragging')
+                        }}
+                      >
                         <div className="paper-item-content">
                           <div className="paper-item-title">{escapeHtml(p.title)}</div>
                           <div className="paper-item-meta">

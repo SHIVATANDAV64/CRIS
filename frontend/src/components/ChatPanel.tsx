@@ -15,6 +15,7 @@ interface ChatPanelProps {
 
 export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPaperRemove, onToggleSidebar, searchStatus }: ChatPanelProps) {
   const [input, setInput] = useState('')
+  const [isDragOver, setIsDragOver] = useState(false)
   const [webSearchVisible, setWebSearchVisible] = useState(false)
   const [webSearchQuery, setWebSearchQuery] = useState('')
   const [webResults, setWebResults] = useState<SearchResult[]>([])
@@ -270,7 +271,41 @@ export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPape
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="chat-input-area">
+      <div
+        className={`chat-input-area ${isDragOver ? 'drag-over' : ''}`}
+        onDragOver={(e) => {
+          if (e.dataTransfer.types.includes('application/cris-paper')) {
+            e.preventDefault()
+            e.dataTransfer.dropEffect = 'copy'
+            setIsDragOver(true)
+          }
+        }}
+        onDragLeave={(e) => {
+          // Only hide if leaving the container (not entering a child)
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+            setIsDragOver(false)
+          }
+        }}
+        onDrop={(e) => {
+          e.preventDefault()
+          setIsDragOver(false)
+          const paperData = e.dataTransfer.getData('application/cris-paper')
+          if (paperData) {
+            try {
+              const { arxiv_id, title } = JSON.parse(paperData)
+              onPaperDrop(arxiv_id, title)
+            } catch {
+              // invalid data
+            }
+          }
+        }}
+      >
+        {isDragOver && (
+          <div className="drop-overlay">
+            <span className="drop-overlay-icon">📄</span>
+            <span className="drop-overlay-text">Drop paper to add as reference</span>
+          </div>
+        )}
         {droppedPapers.size > 0 && (
           <div className="dropped-papers" style={{ display: 'flex' }}>
             {Array.from(droppedPapers.entries()).map(([id, paper]) => (
