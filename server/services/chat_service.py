@@ -360,7 +360,8 @@ class ChatService:
                     ):
                         full_response += chunk
                         if chunk:
-                            yield f"data: {json.dumps({'type': 'content', 'content': chunk})}\n\n"
+                            # Send token event for live streaming
+                            yield f"data: {json.dumps({'type': 'token', 'token': chunk})}\n\n"
                 except Exception as e:
                     print(f"[chat_stream] Streaming error: {e}")
                     if not full_response:

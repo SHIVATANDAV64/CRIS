@@ -41,6 +41,10 @@ app.include_router(wiki_router)
 app.include_router(settings_router)
 app.include_router(web_router)
 
+# Research Intelligence Router (Phase 2)
+from server.routers.research import router as research_router
+app.include_router(research_router)
+
 # Static and Templates
 BASE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))

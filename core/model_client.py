@@ -198,9 +198,9 @@ class ModelClient:
             }
 
     def _generate_stream(self, system_prompt: str, user_message: str) -> Generator[str, None, None]:
-        """Generate streaming response via Modal or Bedrock endpoint using SSE.
-        For Modal: collects full response, strips thinking, yields clean answer.
-        For Bedrock: streams with real-time thinking tag filtering.
+        """
+        Generate streaming response via Modal or Bedrock endpoint using SSE.
+        Yields tokens IMMEDIATELY as they arrive for true live streaming.
         """
         try:
             payload = {
@@ -239,52 +239,71 @@ class ModelClient:
                     yield answer
                 return
 
-            if not self._use_bedrock:
-                # Modal: collect full response, strip thinking, yield clean answer
-                full_content = ""
-                for line in response.iter_lines():
-                    if not line:
-                        continue
-                    line = line.decode("utf-8")
-                    if line.startswith("data: "):
-                        data_str = line[6:]
-                        if data_str.strip() == "[DONE]":
-                            break
-                        try:
-                            data = json.loads(data_str)
-                            delta = data.get("choices", [{}])[0].get("delta", {})
-                            chunk = delta.get("content", "")
-                            if chunk:
-                                full_content += chunk
-                        except json.JSONDecodeError:
-                            continue
-                _, answer = self._parse_thinking(full_content)
-                if answer:
-                    yield answer
-                return
+            # Streaming mode: yield tokens IMMEDIATELY as they arrive
+            in_thinking = False
+            saw_answer = False
 
-            # Bedrock: collect full response, strip thinking + tool calls, yield clean answer
-            full_content = ""
             for line in response.iter_lines():
                 if not line:
                     continue
+
                 line = line.decode("utf-8")
+
                 if line.startswith("data: "):
                     data_str = line[6:]
+
                     if data_str.strip() == "[DONE]":
                         break
+
                     try:
                         data = json.loads(data_str)
                         delta = data.get("choices", [{}])[0].get("delta", {})
                         chunk = delta.get("content", "")
-                        if chunk:
-                            full_content += chunk
+
+                        if not chunk:
+                            continue
+
+                        # Handle thinking tags in real-time
+                        if "   <think>  " in chunk:
+                            in_thinking = True
+                            parts = chunk.split("   <think>  ", 1)
+                            if parts[0] and not saw_answer:
+                                clean_token = self._strip_tool_calls(parts[0])
+                                if clean_token:
+                                    saw_answer = True
+                                    yield clean_token
+                            continue
+
+                        if "剱" in chunk:
+                            in_thinking = False
+                            parts = chunk.split("剱", 1)
+                            if len(parts) > 1 and parts[1]:
+                                if not saw_answer:
+                                    clean_token = self._clean_opening(parts[1])
+                                    clean_token = self._strip_tool_calls(clean_token)
+                                else:
+                                    clean_token = self._strip_tool_calls(parts[1])
+                                if clean_token:
+                                    saw_answer = True
+                                    yield clean_token
+                            continue
+
+                        if in_thinking:
+                            continue
+
+                        # Regular token: clean and yield immediately
+                        if not saw_answer:
+                            clean_token = self._clean_opening(chunk)
+                            clean_token = self._strip_tool_calls(clean_token)
+                            saw_answer = True
+                        else:
+                            clean_token = self._strip_tool_calls(chunk)
+
+                        if clean_token:
+                            yield clean_token
+
                     except json.JSONDecodeError:
                         continue
-            _, answer = self._parse_thinking(full_content)
-            if answer:
-                yield answer
-            return
 
         except Exception as e:
             provider = "Bedrock" if self._use_bedrock else "Modal"

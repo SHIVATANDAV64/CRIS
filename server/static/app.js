@@ -1072,7 +1072,23 @@ async function sendMessage() {
                             }
                         }
                         scrollToBottom();
+                    } else if (data.type === 'token') {
+                        // Live token streaming - append directly to DOM
+                        if (!contentStarted) {
+                            contentStarted = true;
+                            textDiv.innerHTML = '';
+                            const liveContent = document.createElement('span');
+                            liveContent.className = 'live-content';
+                            textDiv.appendChild(liveContent);
+                        }
+                        const liveContent = textDiv.querySelector('.live-content');
+                        if (liveContent) {
+                            const textNode = document.createTextNode(data.token);
+                            liveContent.appendChild(textNode);
+                            scrollToBottom();
+                        }
                     } else if (data.type === 'content') {
+                        // Fallback: full content update (for non-streaming responses)
                         if (!contentStarted) {
                             contentStarted = true;
                             textDiv.innerHTML = '';
