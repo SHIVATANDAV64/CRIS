@@ -127,7 +127,25 @@ export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPape
               </svg>
             </button>
           </div>
-          {webLoading && <div className="web-search-results"><div className="loading-placeholder">Searching...</div></div>}
+          {webLoading && (
+            <div className="web-search-results">
+              <div className="skeleton-message">
+                <div className="skeleton-avatar skeleton"></div>
+                <div className="skeleton-content">
+                  <div className="skeleton skeleton-line long"></div>
+                  <div className="skeleton skeleton-line medium"></div>
+                  <div className="skeleton skeleton-line short"></div>
+                </div>
+              </div>
+              <div className="skeleton-message">
+                <div className="skeleton-avatar skeleton"></div>
+                <div className="skeleton-content">
+                  <div className="skeleton skeleton-line long"></div>
+                  <div className="skeleton skeleton-line medium"></div>
+                </div>
+              </div>
+            </div>
+          )}
           {!webLoading && webResults.length > 0 && (
             <div className="web-search-results">
               {webResults.map((r, i) => (
@@ -142,6 +160,20 @@ export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPape
                     {escapeHtml(r.title)}
                   </a>
                   <div className="web-search-result-url">{escapeHtml(r.url)}</div>
+                  {(r as any).combined_score !== undefined && (
+                    <span className="relevance-badge" style={{
+                      display: 'inline-block',
+                      fontSize: '10px',
+                      padding: '2px 6px',
+                      margin: '4px 0',
+                      borderRadius: '4px',
+                      background: ((r as any).combined_score > 0.6 ? 'rgba(0,200,83,0.15)' : (r as any).combined_score > 0.4 ? 'rgba(255,200,0,0.15)' : 'rgba(255,100,100,0.15)'),
+                      color: ((r as any).combined_score > 0.6 ? '#00c853' : (r as any).combined_score > 0.4 ? '#ffc800' : '#ff6464'),
+                      border: `1px solid ${((r as any).combined_score > 0.6 ? 'rgba(0,200,83,0.3)' : (r as any).combined_score > 0.4 ? 'rgba(255,200,0,0.3)' : 'rgba(255,100,100,0.3)')}`
+                    }}>
+                      Relevance: {Math.round(((r as any).combined_score || 0) * 100)}%
+                    </span>
+                  )}
                   <div className="web-search-result-snippet">{escapeHtml(r.snippet).substring(0, 150)}...</div>
                   <button
                     className="web-result-use-btn"
@@ -211,9 +243,13 @@ export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPape
               {msg.role === 'assistant' && msg.content ? (
                 <div className="message-text" dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
               ) : msg.role === 'assistant' && !msg.content ? (
-                <div className="thinking-indicator">
-                  <span className="thinking-indicator-icon">✦</span>
-                  <span>Thinking...</span>
+                <div className="skeleton-message">
+                  <div className="skeleton-avatar skeleton"></div>
+                  <div className="skeleton-content">
+                    <div className="skeleton skeleton-line long"></div>
+                    <div className="skeleton skeleton-line medium"></div>
+                    <div className="skeleton skeleton-line short"></div>
+                  </div>
                 </div>
               ) : (
                 <div className="message-text">{escapeHtml(msg.content)}</div>

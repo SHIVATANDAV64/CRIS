@@ -1,0 +1,24 @@
+{
+  "swarms": {
+    "swarm-1779203828835-ni32sz": {
+      "swarmId": "swarm-1779203828835-ni32sz",
+      "topology": "hierarchical",
+      "maxAgents": 4,
+      "status": "running",
+      "agents": [],
+      "tasks": [],
+      "config": {
+        "topology": "hierarchical",
+        "maxAgents": 4,
+        "strategy": "specialized",
+        "communicationProtocol": "message-bus",
+        "autoScaling": true,
+        "consensusMechanism": "majority"
+      },
+      "createdAt": "2026-05-19T15:17:08.837Z",
+      "updatedAt": "2026-05-19T15:17:08.837Z",
+      "pid": 3016
+    }
+  },
+  "version": "3.0.0"
+}

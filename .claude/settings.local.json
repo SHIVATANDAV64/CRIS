@@ -6,7 +6,20 @@
       "Skill(claude-mem:learn-codebase)",
       "mcp__codegraph__codegraph_files",
       "Skill(claude-mem:do)",
-      "Bash(claude --print /how-it-works)"
+      "Bash(claude --print /how-it-works)",
+      "Skill(claude-mem:mem-search)",
+      "Bash(sqlite3 *)",
+      "Bash(python *)",
+      "Bash(claude mcp *)",
+      "Bash(claude-mem --help)",
+      "Skill(superpowers:brainstorming)",
+      "Bash(scripts/start-server.sh --project-dir \"C:\\\\Users\\\\rudra\\\\Downloads\\\\CRIS-Start\")",
+      "Bash(bash *)",
+      "mcp__ruflo__guidance_recommend",
+      "mcp__ruflo__guidance_capabilities",
+      "mcp__ruflo__guidance_workflow",
+      "mcp__ruflo__swarm_init",
+      "mcp__ruflo__swarm_status"
     ]
   },
   "enableAllProjectMcpServers": true,

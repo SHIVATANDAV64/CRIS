@@ -15,7 +15,6 @@ from server.routers.search import router as search_router
 from server.routers.wiki import router as wiki_router
 from server.routers.settings import router as settings_router
 from server.routers.web import router as web_router
-from server.routers.research import router as research_router
 
 app = FastAPI(
     title="CRIS API",
@@ -41,7 +40,6 @@ app.include_router(search_router)
 app.include_router(wiki_router)
 app.include_router(settings_router)
 app.include_router(web_router)
-app.include_router(research_router)
 
 # Static and Templates
 BASE_DIR = Path(__file__).resolve().parent
