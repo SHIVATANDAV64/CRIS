@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.21196",
+  "title": "Differential-Integral Neural Operator for Long-Term Turbulence Forecasting",
+  "abstract": "Accurately forecasting the long-term evolution of turbulence represents a grand challenge in scientific computing and is crucial for applications ranging from climate modeling to aerospace engineering. Existing deep learning methods, particularly neural operators, often fail in long-term autoregressive predictions, suffering from catastrophic error accumulation and a loss of physical fidelity. This failure stems from their inability to simultaneously capture the distinct mathematical structures that govern turbulent dynamics: local, dissipative effects and global, non-local interactions. In this paper, we propose the {\\textbf{\\underline{D}}}ifferential-{\\textbf{\\underline{I}}}ntegral {\\textbf{\\underline{N}}}eural {\\textbf{\\underline{O}}}perator (\\method{}), a novel framework designed from a first-principles approach of operator decomposition. \\method{} explicitly models the turbulent evolution through parallel branches that learn distinct physical operators: a local differential operator, realized by a constrained convolutional network that provably converges to a derivative, and a global integral operator, captured by a Transformer architecture that learns a data-driven global kernel. This physics-based decomposition endows \\method{} with exceptional stability and robustness. Through extensive experiments on the challenging 2D Kolmogorov flow benchmark, we demonstrate that \\method{} significantly outperforms state-of-the-art models in long-term forecasting. It successfully suppresses error accumulation over hundreds of timesteps, maintains high fidelity in both the vorticity fields and energy spectra, and establishes a new benchmark for physically consistent, long-range turbulence forecast.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CV",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:05:52.035612"
+}

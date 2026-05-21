@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.06095",
+  "title": "Accelerating Sparse Transformer Inference on GPU",
+  "abstract": "Large language models (LLMs) are popular around the world due to their powerful understanding capabilities. As the core component of LLMs, accelerating Transformer through parallelization has gradually become a hot research topic. Mask layers introduce sparsity into Transformer to reduce calculations. However, previous works rarely focus on the performance optimization of sparse Transformer. In addition, current static operator fusion schemes fail to adapt to diverse application scenarios. To address the above problems, we propose STOF, a framework that incorporates optimizations for Sparse Transformer that enables flexible masking and Operator Fusion on GPU. For multi-head attention (MHA) structure, STOF maps the computation to row-wise or blockwise kernels with unique storage formats according to analytical modeling. For downstream operators, STOF maps the fusion scheme to compilation templates and determines the optimal running configuration through two-stage searching. The experimental results show that compared to the stateof-the-art work, STOF achieves maximum speedups of 1.6x in MHA computation and 1.4x in end-to-end inference.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:05:00.997611"
+}

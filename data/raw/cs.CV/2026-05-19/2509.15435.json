@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.15435",
+  "title": "ORCA: An Agentic Reasoning Framework for Hallucination and Adversarial Robustness in Vision-Language Models",
+  "abstract": "Large Vision-Language Models (LVLMs) exhibit strong multimodal capabilities but remain vulnerable to hallucinations from intrinsic errors and adversarial attacks from external exploitations, limiting their reliability in real-world applications. We present ORCA, an agentic reasoning framework that improves the factual accuracy and adversarial robustness of pretrained LVLMs through inference-time structured inference reasoning with a suite of small vision models (less than 3B parameters). ORCA operates via an Observe-Reason-Critique-Act loop, querying multiple visual tools with evidential questions, validating cross-model inconsistencies, and refining predictions iteratively without access to model internals or retraining. ORCA also stores intermediate reasoning traces, which supports auditable decision-making. Though designed primarily to mitigate object-level hallucinations, ORCA also exhibits emergent adversarial robustness without requiring adversarial training or defense mechanisms. We evaluate ORCA across three settings: (1) clean images on hallucination benchmarks, (2) adversarially perturbed images without defense, and (3) adversarially perturbed images with defense applied. On the POPE hallucination benchmark, ORCA improves standalone LVLMs performance by +3.64% to +40.67% across different subsets. Under adversarial perturbations on POPE, ORCA achieves an average accuracy gain of +20.11% across LVLMs. When combined with defense techniques on adversarially perturbed AMBER images, ORCA further improves standalone LVLM performance, with gains ranging from +1.20% to +48.00% across metrics. These results demonstrate that ORCA offers a promising path toward building more reliable and robust multimodal systems.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI cs.MA",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T22:59:37.068858"
+}

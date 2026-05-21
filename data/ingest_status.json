@@ -1,0 +1,16 @@
+{
+  "running": false,
+  "current_date": "2026-05-20",
+  "dates_total": 2,
+  "dates_processed": 0,
+  "papers_fetched": 0,
+  "logs": [
+    "Ingestion task initialized.",
+    "Ingestion queue: 2 dates to process.",
+    "Fetching papers for date: 2026-05-20...",
+    "Cancellation signal received. Halting ingestion...",
+    "Ingestion task stopped by user.",
+    "Ingestion aborted by user."
+  ],
+  "error": null
+}

@@ -8,6 +8,7 @@ class ChatRequest(BaseModel):
     use_reasoning: bool = Field(True, description="Whether to use the reasoning LLM (True) or just perform a search (False).")
     source_papers: Optional[List[str]] = Field(None, description="List of arXiv IDs of papers to strictly use as context.")
     model_id: Optional[str] = Field(None, description="The model ID to use (e.g., 'darwin-opus' or 'minimax-m2.5').")
+    web_search: Optional[bool] = Field(None, description="Force enable/disable Web Search (True to force web search, False to disable, None to auto-route).")
 
     class Config:
         json_schema_extra = {

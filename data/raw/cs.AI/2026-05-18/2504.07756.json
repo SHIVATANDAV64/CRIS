@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.07756",
+  "title": "Artificial Intelligence, conceptual metaphors and conceptual engineering: Are AI-based framings of human behaviour and cognition successful?",
+  "abstract": "Understanding human behaviour, neuroscience and psychology using concepts from the domain of AI is increasing in popularity. Given the massive integration of AI technologies into our daily lives, AI-related concepts are being used to compare AI systems with human behaviour, brain functions, and cognitive abilities like language acquisition. But scientists and philosophers are also increasingly tempted to take the AI-framing of the human conceptual domain as a literal one. This paper investigates the epistemic and practical success of these 'AI-framings': What does it mean to apply the conceptual constellation of AI to the human conceptual domain? We consider and compare two possible answers: either these examples are conceptual metaphors, or they are attempts at conceptual engineering. Firstly, we argue that when viewed as conceptual metaphors, the AI-framed descriptions risk committing the ''map-territory fallacy''. Secondly, we argue the comparisons also contain a misleading 'double metaphor' because of the metaphorical connection between human psychology and computation at the conceptual foundation of computation. But we also argue that there is a possible semantic catch to the AI-framing, which is captured by the conceptual engineering view. This is that the AI-framings point towards avenues for forms of conceptual engineering. If the challenges of conceptual ethics and reductionism are overcome, some AI-framings might enrich our epistemic and practical lives. So, at its worst - as implicit conceptual metaphor - the AI-framing leads us completely astray; at its best, it prompts us to reflect anew on how the boundaries of our current concepts serve us and how they could be improved.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CY",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T22:58:49.012755"
+}

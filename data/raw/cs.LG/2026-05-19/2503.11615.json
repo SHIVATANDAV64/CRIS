@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.11615",
+  "title": "From Score Matching to Diffusion: A Fine-Grained Error Analysis in the Gaussian Setting",
+  "abstract": "Sampling from an unknown distribution, accessible only through discrete samples, is a fundamental problem at the core of generative AI. The current state-of-the-art methods follow a two-step process: first, estimating the score function (the gradient of a smoothed log-distribution) and then applying a diffusion-based sampling algorithm -- such as Langevin or Diffusion models. The resulting distribution's correctness can be impacted by four major factors: the generalization and optimization errors in score matching, and the discretization and minimal noise amplitude in the diffusion. In this paper, we make the sampling error explicit when using a diffusion sampler in the Gaussian setting. We provide a sharp analysis of the Wasserstein sampling error that arises from these four error sources. This allows us to rigorously track how the anisotropy of the data distribution (encoded by its power spectrum) interacts with key parameters of the end-to-end sampling method, including the number of initial samples, the stepsizes in both score matching and diffusion, and the noise amplitude. Notably, we show that the Wasserstein sampling error can be expressed as a kernel-type norm of the data power spectrum, where the specific kernel depends on the method parameters. This result provides a foundation for further analysis of the tradeoffs involved in optimizing sampling accuracy.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG math.OC",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:04:21.966178"
+}

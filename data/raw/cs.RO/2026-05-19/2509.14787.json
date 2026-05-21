@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.14787",
+  "title": "COMPASS: Confined-space Manipulation Planning with Active Sensing Strategy",
+  "abstract": "Manipulation in confined and cluttered environments remains a significant challenge due to partial observability and complex configuration spaces. Effective manipulation in such environments requires an intelligent exploration strategy to safely understand the scene and search the target. In this paper, we propose COMPASS, a multi-stage exploration and manipulation framework featuring a manipulation-aware sampling-based planner. First, we reduce collision risks with a near-field awareness scan to build a local collision map. Additionally, we employ a multi-objective utility function to find viewpoints that are both informative and conducive to subsequent manipulation. Moreover, we perform a constrained manipulation optimization strategy to generate manipulation poses that respect obstacle constraints. To systematically evaluate method's performance under these difficulties, we propose a benchmark of confined-space exploration and manipulation containing four level challenging scenarios. Compared to exploration methods designed for other robots and only considering information gain, our framework increases manipulation success rate by 24.25% in simulations. Real-world experiments demonstrate our method's capability for active sensing and manipulation in confined environments.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:06:17.893076"
+}

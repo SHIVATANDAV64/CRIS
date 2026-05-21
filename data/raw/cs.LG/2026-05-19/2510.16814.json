@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.16814",
+  "title": "Needles in the Landscape: Semi-Supervised Pseudolabeling for Archaeological Site Discovery under Label Scarcity",
+  "abstract": "Archaeological predictive modelling estimates where undiscovered sites are likely to occur by combining known locations with environmental and geospatial variables, presenting a positive-unlabeled (PU) learning challenge where confirmed sites are rare and most locations are unlabeled rather than truly negative. To overcome this, we propose asymmetric dual pseudolabeling (DPL), an end-to-end deep learning method that learns from sparse positives directly from multi-band geospatial imagery without hand-crafted feature engineering or assumptions about site absence, and evaluate on two prominent archaeological datasets. On the Sagalassos dataset, evaluated against an independent, held-out field survey, DPL outperforms the LAMAP baseline by 12% in F1 and 29% in Recall, while LAMAP maintains advantages in probability ranking. Standard supervised baselines fail catastrophically when negatives are uncertain; positive-only training collapses to predicting everywhere, es- tablishing empirical bounds. On the Cyprus dataset, a pure PU setting without confirmed negatives, SL inverts probability rankings while DPL recovers discrimination. DPL ensembles produce interpretable probability surfaces supporting survey planning, enabling effective site discovery from minimal labeled data.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.CV",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:00:22.097879"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2601.12369",
+  "title": "Can Deep Research Agents Retrieve and Organize? Evaluating the Synthesis Gap with Expert Taxonomies",
+  "abstract": "Deep Research Agents increasingly automate survey generation, yet whether they match human experts at retrieving essential papers and organizing them into expert-like taxonomies remains unclear. Existing benchmarks emphasize writing quality or citation correctness, while standard clustering metrics ignore hierarchical structure. We introduce TaxoBench, a benchmark of 72 highly cited LLM surveys with expert-authored taxonomy trees and 3,815 papers mapped to paper categories. TaxoBench evaluates (1) retrieval via Recall/Precision/F1, and (2) organization at a leaf level (paper-to-category assignment) and a hierarchy level via two new metrics: Unordered Semantic Tree Edit Distance (US-TED/US-NTED) and Semantic Path Similarity (Sem-Path). Two modes are supported: Deep Research (topic-only, end-to-end) and Bottom-Up (expert paper set provided, organization-only). To distinguish disagreement with a single expert reference from genuine model failure, we explicitly partition findings into capability-based (reference-free) and alignment-based (reference-dependent) groups. Evaluating 7 Deep Research Agents and 12 frontier LLMs reveals a dual bottleneck. On the capability side, the best agent retrieves only 20.92% of expert-cited papers, and 1,000 model taxonomies show 75.9% sibling overlap, 51.2% MECE violations, and 83.4% structural imbalance, all detectable without any reference. On the alignment side, all 12 LLMs converge to Sem-Path 28-29%, well below 47-58% achieved by three independent human-annotator groups on the same paper sets. Our benchmark is publicly available at https://github.com/KongLongGeFDU/TaxoBench.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:02:45.575051"
+}

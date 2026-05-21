@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2604.25646",
+  "title": "SAMe: A Semantic Anatomy Mapping Engine for Robotic Ultrasound",
+  "abstract": "Robotic ultrasound has advanced local image-driven control, contact regulation, and view optimization, yet current systems lack the anatomical understanding needed to determine what to scan, where to begin, and how to adapt to individual patient anatomy. These gaps make systems still reliant on expert intervention to initiate scanning. Here we present SAMe, a semantic anatomy mapping engine that provides robotic ultrasound with an explicit anatomical prior layer. SAMe addresses scan initiation as a target-to-anatomy-to-action process: it grounds under-specified clinical complaints into structured target organs, instantiates a patient-specific anatomical representation for the grounded targets from a single external body image, and translates this representation into control-facing 6-DoF probe initialization states without any additional registration using preoperative CT or MRI. The anatomical representation maintained by SAMe is explicit, lightweight (single-organ inference in 0.08s), and compatible with downstream control by design. Across semantic grounding, anatomical instantiation, and real-robot evaluation, SAMe shows strong performance across the full initialization pipeline. In real-robot experiments, centroid-based SAMe initialization outperformed the body-keypoint-based heuristic baseline under a budget-matched single-target setting for both liver (86.7% versus 46.7%) and kidney (80.0% versus 73.3%) initialization. Furthermore, The trial-level organ-hit rate reached 97.3% for liver and 83.3% for kidney when multiple candidate targets were available. These results establish an explicit anatomical prior layer that addresses scan initialization and is designed to support broader downstream autonomous scanning pipelines, providing the anatomical foundation for complaint-driven, anatomically informed robotic ultrasonography.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.RO",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:07:20.994160"
+}

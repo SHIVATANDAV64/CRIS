@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.09067",
+  "title": "Solving Reach- and Stabilize-Avoid Problems Using Discounted Reachability",
+  "abstract": "In this article, we consider the infinite-horizon reach-avoid (RA) and stabilize-avoid (SA) zero-sum game problems for general nonlinear continuous-time systems, where the goal is to find the set of states that can be controlled to reach or stabilize to a target set, without violating constraints even under the worst-case disturbance. Based on the Hamilton-Jacobi reachability method, we address the RA problem by designing a new Lipschitz continuous RA value function, whose zero sublevel set exactly characterizes the RA set. We establish that the associated Bellman backup operator is contractive and that the RA value function is the unique viscosity solution of a Hamilton-Jacobi variational inequality. Finally, we develop a two-step framework for the SA problem by integrating our RA strategies with a recently proposed Robust Control Lyapunov-Value Function, thereby ensuring both target reachability and long-term stability. We numerically verify our RA and SA frameworks on a 3D Dubins car system to demonstrate the efficacy of the proposed approach.",
+  "authors": [
+    null
+  ],
+  "categories": "math.OC cs.RO cs.SY eess.SY",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:06:11.878764"
+}

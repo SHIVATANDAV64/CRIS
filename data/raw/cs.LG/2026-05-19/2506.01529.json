@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.01529",
+  "title": "Learning Abstract World Models with a Group-Structured Latent Space",
+  "abstract": "Learning meaningful abstract models of Markov Decision Processes (MDPs) is crucial for improving generalization from limited data. In this work, we show how geometric priors can be imposed on the low-dimensional representation manifold of a learned transition model. We incorporate known symmetric structures via appropriate choices of the latent space and the associated group actions, which encode prior knowledge about invariances in the environment. In addition, our framework allows the embedding of additional unstructured information alongside these symmetries. We show experimentally that this leads to better predictions of the latent transition model than fully unstructured approaches, as well as better learning on downstream RL tasks, in environments with rotational and translational features, including in first-person views of 3D environments. Additionally, our experiments show that this leads to simpler and more disentangled representations. The full code is available on GitHub to ensure reproducibility.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:04:57.994441"
+}

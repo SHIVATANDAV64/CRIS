@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2507.03122",
+  "title": "Federated Learning for ICD Classification with Lightweight Models and Pretrained Embeddings",
+  "abstract": "This study investigates the feasibility and performance of federated learning (FL) for multi-label ICD code classification using clinical notes from the MIMIC-IV dataset. Unlike previous approaches that rely on centralized training or fine-tuned large language models, we propose a lightweight and scalable pipeline combining frozen text embeddings with simple multilayer perceptron (MLP) classifiers. This design offers a privacy-preserving and deployment-efficient alternative for clinical NLP applications, particularly suited to distributed healthcare settings. Extensive experiments across both centralized and federated configurations were conducted, testing six publicly available embedding models from Massive Text Embedding Benchmark leaderboard and three MLP classifier architectures under two medical coding (ICD-9 and ICD-10). Additionally, ablation studies over ten random stratified splits assess performance stability. Results show that embedding quality substantially outweighs classifier complexity in determining predictive performance, and that federated learning can closely match centralized results in idealized conditions. While the models are orders of magnitude smaller than state-of-the-art architectures and achieved competitive micro and macro F1 scores, limitations remain including the lack of end-to-end training and the simplified FL assumptions. Nevertheless, this work demonstrates a viable way toward scalable, privacy-conscious medical coding systems and offers a step toward for future research into federated, domain-adaptive clinical AI.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.IR cs.CL cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:01:33.480887"
+}

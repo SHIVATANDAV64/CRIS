@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.00286",
+  "title": "Recursive Entropic Risk Optimization in Discounted MDPs: Sample Complexity Bounds with a Generative Model",
+  "abstract": "We study risk-sensitive reinforcement learning in finite discounted MDPs with recursive entropic risk measures (ERM), where the risk parameter $β\\neq 0$ controls the agent's risk attitude: $β>0$ for risk-averse and $β<0$ for risk-seeking behavior. A generative model of the MDP is assumed to be available. Our focus is on the sample complexities of learning the optimal state-action value function (value learning) and an optimal policy (policy learning) under recursive ERM. We introduce a model-based algorithm, called Model-Based ERM $Q$-Value Iteration (MB-RS-QVI), and derive PAC-type bounds on its sample complexity for both value and policy learning. Both PAC bounds scale exponentially with $|β|/(1-γ)$, where $γ$ is the discount factor. We also establish corresponding lower bounds for both value and policy learning, showing that exponential dependence on $|β|/(1-γ)$ is unavoidable in the worst case. The bounds are tight in the number of states and actions ($S$ and $A$), providing the first rigorous sample complexity guarantees for recursive ERM across both risk-averse and risk-seeking regimes.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI math.OC stat.ML",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T22:59:01.022706"
+}

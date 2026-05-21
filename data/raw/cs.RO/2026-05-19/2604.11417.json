@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2604.11417",
+  "title": "Efficient Emotion-Aware Iconic Gesture Prediction for Robot Co-Speech",
+  "abstract": "Co-speech gestures increase engagement and improve speech understanding. Most data-driven robot systems generate rhythmic beat-like motion, yet few integrate semantic emphasis. To address this, we propose a lightweight transformer that derives iconic gesture placement and intensity from text and emotion alone, requiring no audio input at inference time. The model outperforms GPT-4o in both semantic gesture placement classification and intensity regression on the BEAT2 dataset, while remaining computationally compact and suitable for real-time deployment on embodied agents.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.AI",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:07:17.983503"
+}

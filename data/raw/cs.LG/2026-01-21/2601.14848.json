@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2601.14848",
+  "title": "From Observation to Prediction: LSTM for Vehicle Lane Change Forecasting on Highway On/Off-Ramps",
+  "abstract": "On and off-ramps are understudied road sections even though they introduce a higher level of variation in highway interactions. Predicting vehicles' behavior in these areas can decrease the impact of uncertainty and increase road safety. In this paper, the difference between this Area of Interest (AoI) and a straight highway section is studied. Multi-layered LSTM architecture to train the AoI model with ExiD drone dataset is utilized. In the process, different prediction horizons and different models' workflow are tested. The results show great promise on horizons up to 4 seconds with prediction accuracy starting from about 76% for the AoI and 94% for the general highway scenarios on the maximum horizon.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.NE cs.RO",
+  "created": "2026-01-21",
+  "fetched_at": "2026-05-21T23:06:50.943970"
+}

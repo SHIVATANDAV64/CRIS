@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2502.04575",
+  "title": "Complexity Analysis of Normalizing Constant Estimation: from Jarzynski Equality to Annealed Importance Sampling and beyond",
+  "abstract": "Given an unnormalized probability density $π\\propto\\mathrm{e}^{-V}$, estimating its normalizing constant $Z=\\int_{\\mathbb{R}^d}\\mathrm{e}^{-V(x)}\\mathrm{d}x$ or free energy $F=-\\log Z$ is a crucial problem in Bayesian statistics, statistical mechanics, and machine learning. It is challenging especially in high dimensions or when $π$ is multimodal. To mitigate the high variance of conventional importance sampling estimators, annealing-based methods such as Jarzynski equality and annealed importance sampling are commonly adopted, yet their quantitative complexity guarantees remain largely unexplored. We take a first step toward a non-asymptotic analysis of annealed importance sampling. In particular, we derive an oracle complexity of $\\widetilde{O}\\left(\\frac{dβ^2{\\mathcal{A}}^2}{\\varepsilon^4}\\right)$ for estimating $Z$ within $\\varepsilon$ relative error with high probability, where $β$ is the smoothness of $V$ and $\\mathcal{A}$ denotes the action of a curve of probability measures interpolating $π$ and a tractable reference distribution. Our analysis, leveraging Girsanov's theorem and optimal transport, does not explicitly require isoperimetric assumptions on the target distribution. Finally, to tackle the large action of the widely used geometric interpolation, we propose a new algorithm based on reverse diffusion samplers, establish a framework for analyzing its complexity, and empirically demonstrate its efficiency in tackling multimodality.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ML cs.LG cs.NA math.NA physics.comp-ph stat.CO",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:04:12.962375"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2312.02652",
+  "title": "What Machine Learning Can Do for Focusing Aerogel Detectors",
+  "abstract": "Particle identification at the Super Charm-Tau factory experiment will be provided by a Focusing Aerogel Ring Imaging CHerenkov detector (FARICH). The specifics of detector location make proper cooling difficult, therefore a significant number of ambient background hits are captured. They must be mitigated to reduce the data flow and improve particle velocity resolution. In this work we present several approaches to filtering signal hits, inspired by machine learning techniques from computer vision.",
+  "authors": [
+    null
+  ],
+  "categories": "hep-ex cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:03:42.927026"
+}

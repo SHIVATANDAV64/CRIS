@@ -25,9 +25,8 @@ MODEL_DIR = "/model"
 @app.cls(
     gpu="T4",
     image=modal.Image.debian_slim()
-    .apt_install("curl", "git", "git-lfs", "libcublas11", "libcudnn8")
+    .apt_install("curl", "git", "git-lfs")
     .pip_install("sentence-transformers", "huggingface-hub", "requests"),
-    secrets=[modal.Secret.from_name("cris-secrets")] if modal.is_local() else [],
     timeout=600,
     min_containers=0,
     max_containers=5,

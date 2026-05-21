@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.11628",
+  "title": "Critique-Guided Distillation for Robust Reasoning via Refinement",
+  "abstract": "Supervised fine-tuning with expert demonstrations often produces models that imitate outputs without internalizing the reasoning processes needed for robust generalization. While critique-based approaches show promise, training models to generate critiques directly, such as Critique Fine-Tuning (CFT), can lead to output-format drift and degradation of general capabilities. We propose Critique-Guided Distillation (CGD), a training framework that decouples critique consumption from critique generation. During fine-tuning, the student is trained to refine flawed responses conditioned on teacher critiques. CGD treats critiques as a \\textit{training-time-only} supervision signal, encouraging internalization of error-aware reasoning: critiques guide learning but are absent at inference. Controlled ablations confirm that these reasoning gains are directly driven by the specificity and relevance of the teacher's feedback. Across five model families, CGD consistently outperforms CFT and standard distillation on mathematical reasoning benchmarks, yielding 7\\% average improvements and gains of up to +15.0\\% on AMC23 and +12.2\\% on MATH-500. On challenging competition problems such as AIME24 and AIME25, CGD achieves substantially higher Pass@1 and stronger performance at low Pass@k, indicating improved reasoning quality per sample. Importantly, CGD preserves general instruction-following capabilities where CFT degrades significantly ($-$21.3\\% on IFEval). These results position CGD as a practical and compute-efficient intermediate training paradigm for reasoning-centric tasks without introducing architectural inference-time overhead.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:01:21.469166"
+}

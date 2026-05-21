@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.23108",
+  "title": "Artificial Phantasia: Emergent Mental Imagery in Large Language Models",
+  "abstract": "Can visual imagery be driven solely by language? This idea goes against cognitive science's traditional view that visual mental imagery is only possible through pictorial representations. Large Language Models (LLMs) provide nascent evidence not only that visual mental imagery via propositional-representations is possible, but that it can be more robust than human imagination. We created dozens of novel items for an extension to a classic task which is argued to be solvable exclusively via pictorial representations (i.e., language alone would be insufficient). Subjects were asked to imagine a series of compositional letter and shape transformations and identify the resultant \"image\". We found that the best LLMs performed significantly better than humans ($n = 100$ human participants, $p < .0001$), indicating the existence of an artificial phantasia, or emergent \"visual\" mental imagery that may not be pictorial. Furthermore, we tested reasoning models with variable reasoning-token allocation and found that models perform best with longer reasoning chains, demonstrating a linguistic impact on the task -- language alone may be sufficient. We examined three emergent imagery hypotheses: pure propositional imagery, propositional imagery with visio-linguistic priors, or pictorial visual imagery (classical visual imagery). Our study not only presents evidence for a previously unreported emergent cognitive capacity of LLMs, but also reignites debate on the requirement for a pictorial format in mental imagery.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T22:59:49.078314"
+}

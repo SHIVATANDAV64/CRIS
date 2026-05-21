@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2507.10492",
+  "title": "BenchReAD: A systematic benchmark for retinal anomaly detection",
+  "abstract": "Retinal anomaly detection plays a pivotal role in screening ocular and systemic diseases. Despite its significance, progress in the field has been hindered by the absence of a comprehensive and publicly available benchmark, which is essential for the fair evaluation and advancement of methodologies. Due to this limitation, previous anomaly detection work related to retinal images has been constrained by (1) a limited and overly simplistic set of anomaly types, (2) test sets that are nearly saturated, and (3) a lack of generalization evaluation, resulting in less convincing experimental setups. Furthermore, existing benchmarks in medical anomaly detection predominantly focus on one-class supervised approaches (training only with negative samples), overlooking the vast amounts of labeled abnormal data and unlabeled data that are commonly available in clinical practice. To bridge these gaps, we introduce a benchmark for retinal anomaly detection, which is comprehensive and systematic in terms of data and algorithm. Through categorizing and benchmarking previous methods, we find that a fully supervised approach leveraging disentangled representations of abnormalities (DRA) achieves the best performance but suffers from significant drops in performance when encountering certain unseen anomalies. Inspired by the memory bank mechanisms in one-class supervised learning, we propose NFM-DRA, which integrates DRA with a Normal Feature Memory to mitigate the performance degradation, establishing a new SOTA. The benchmark is publicly available at https://github.com/DopamineLcy/BenchReAD.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI cs.LG",
+  "created": "2025-07-14",
+  "fetched_at": "2026-05-21T22:59:13.043720"
+}

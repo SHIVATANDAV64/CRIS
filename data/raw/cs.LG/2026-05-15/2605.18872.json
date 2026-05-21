@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2605.18872",
+  "title": "EUPHORIA: Efficient Universal Planning via Hybrid Optimization for Robust Industrial Robotic Assembly",
+  "abstract": "Robotic assembly in architectural construction faces a persistent bottleneck: existing planners are either highly specialized, requiring prohibitive retraining for every new geometric design, or operationally inefficient, treating structural sequencing and kinematic motion as disjoint processes. We present EUPHORIA, a unified framework that achieves universal few-shot adaptability and dynamic efficiency through a hybrid optimization strategy. To overcome the retraining bottleneck, we propose a Meta-Geometric Encoder based on Graph Hypernetworks: unlike standard contrastive learning, which performs only feature-level recognition, our hypernetwork dynamically generates policy parameters from a minimal support set, enabling parameter-level adaptation to complex topologies (e.g., domes, arches) without gradient-based retraining. For structural reasoning, we introduce a Physics-Informed Graph Transformer trained via Soft Actor-Critic (SAC), with a Physics-Bias Attention mechanism that modulates attention scores using contact forces from Discrete Element Model (DEM) simulations, guiding the planner toward structurally critical connections. We further ensure operational efficiency through Kinematics-Aware Sequencing, where the SAC objective penalizes high-energy transitions. Finally, we bridge the Sim2Real gap via Residual Stability Correction, a differentiable optimization layer that fine-tunes coarse assembly actions by minimizing a joint energy-stability cost prior to execution. Experiments show that EUPHORIA significantly reduces energy consumption over decoupled baselines and achieves state-of-the-art success rates on unseen, non-standard geometries with minimal few-shot examples, fusing meta-learning, physics-informed attention, and residual optimization into a cohesive, generalized planner.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.RO",
+  "created": "2026-05-15",
+  "fetched_at": "2026-05-21T23:07:54.109647"
+}

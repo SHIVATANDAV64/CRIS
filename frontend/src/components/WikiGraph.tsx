@@ -51,6 +51,21 @@ export function WikiGraph() {
             type: e.type || 'links',
           }))
 
+        // Compute degree (number of connections) for each node
+        const degrees: Record<string, number> = {}
+        nodesData.forEach(n => { degrees[n.id] = 0 })
+        edgesData.forEach(e => {
+          const s = typeof e.source === 'string' ? e.source : (e.source as any).id
+          const t = typeof e.target === 'string' ? e.target : (e.target as any).id
+          if (degrees[s] !== undefined) degrees[s]++
+          if (degrees[t] !== undefined) degrees[t]++
+        })
+
+        // Assign degree value to node's val property
+        nodesData.forEach(n => {
+          n.val = degrees[n.id] || 0
+        })
+
         setNodes(nodesData)
         setEdges(edgesData)
       } catch (err) {
@@ -110,40 +125,33 @@ export function WikiGraph() {
 
     svg.call(zoom)
 
-    // Arrow markers for links
-    svg.append('defs').append('marker')
-      .attr('id', 'arrow')
-      .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 18) // Offset to sit outside node radius
-      .attr('refY', 0)
-      .attr('markerWidth', 5)
-      .attr('markerHeight', 5)
-      .attr('orient', 'auto')
-      .append('path')
-      .attr('d', 'M0,-4L10,0L0,4')
-      .attr('fill', 'var(--text-muted)')
-      .style('opacity', 0.5)
+    // Helper to calculate dynamic node radius
+    const getNodeRadius = (d: GraphNode) => {
+      const baseRadius = d.type === 'concept' ? 8 : d.type === 'paper' ? 6 : 5
+      const degreeScale = Math.min(d.val || 0, 15) * 1.5
+      return baseRadius + degreeScale
+    }
 
     // Simulation Setup
     const simulation = d3.forceSimulation<GraphNode>(nodes)
-      .force('link', d3.forceLink<GraphNode, GraphLink>(edges).id(d => d.id).distance(80))
-      .force('charge', d3.forceManyBody().strength(-120))
+      .force('link', d3.forceLink<GraphNode, GraphLink>(edges).id(d => d.id).distance(100))
+      .force('charge', d3.forceManyBody().strength(-150))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(25))
+      .force('collision', d3.forceCollide<GraphNode>().radius(d => getNodeRadius(d) + 12))
 
     simulationRef.current = simulation
 
-    // Link Elements
+    // Link Elements - Styled cleanly like Obsidian vault graph links
     const link = g.append('g')
       .attr('class', 'links')
       .selectAll('line')
       .data(edges)
       .enter()
       .append('line')
-      .attr('stroke', 'var(--border-subtle)')
-      .attr('stroke-width', 1.2)
-      .attr('marker-end', 'url(#arrow)')
-      .style('opacity', 0.4)
+      .attr('stroke', 'var(--text-muted)')
+      .attr('stroke-width', 1.0)
+      .style('opacity', 0.25)
+      .style('transition', 'stroke 0.15s ease, opacity 0.15s ease, stroke-width 0.15s ease')
 
     // Node Elements Group
     const node = g.append('g')
@@ -153,6 +161,7 @@ export function WikiGraph() {
       .enter()
       .append('g')
       .attr('class', 'node-group')
+      .style('cursor', 'pointer')
       .call(d3.drag<SVGGElement, GraphNode>()
         .on('start', dragstarted)
         .on('drag', dragged)
@@ -162,10 +171,48 @@ export function WikiGraph() {
         setSelectedNode(d)
         event.stopPropagation()
       })
+      .on('mouseover', (event, d) => {
+        const connectedNodeIds = new Set<string>()
+        connectedNodeIds.add(d.id)
+
+        // Highlight connected links
+        link.style('stroke', (l: any) => {
+          const sId = typeof l.source === 'object' ? l.source.id : l.source
+          const tId = typeof l.target === 'object' ? l.target.id : l.target
+          if (sId === d.id || tId === d.id) {
+            connectedNodeIds.add(sId)
+            connectedNodeIds.add(tId)
+            return 'var(--accent-coral)'
+          }
+          return 'var(--text-muted)'
+        })
+        .style('opacity', (l: any) => {
+          const sId = typeof l.source === 'object' ? l.source.id : l.source
+          const tId = typeof l.target === 'object' ? l.target.id : l.target
+          return (sId === d.id || tId === d.id) ? 0.8 : 0.05
+        })
+        .style('stroke-width', (l: any) => {
+          const sId = typeof l.source === 'object' ? l.source.id : l.source
+          const tId = typeof l.target === 'object' ? l.target.id : l.target
+          return (sId === d.id || tId === d.id) ? 2.0 : 1.0
+        })
+
+        // Dim unconnected nodes
+        node.style('opacity', (n: any) => {
+          return connectedNodeIds.has(n.id) ? 1.0 : 0.2
+        })
+      })
+      .on('mouseout', () => {
+        // Reset all links & nodes to default styles
+        link.style('stroke', 'var(--text-muted)')
+            .style('opacity', 0.25)
+            .style('stroke-width', 1.0)
+        node.style('opacity', 1.0)
+      })
 
     // Node Circle
     node.append('circle')
-      .attr('r', d => d.type === 'concept' ? 8 : d.type === 'paper' ? 6 : 5)
+      .attr('r', d => getNodeRadius(d))
       .attr('fill', d => {
         if (d.type === 'concept') return 'var(--accent-coral)'
         if (d.type === 'paper') return 'var(--accent-blue)'
@@ -174,10 +221,11 @@ export function WikiGraph() {
       })
       .attr('stroke', 'var(--bg-primary)')
       .attr('stroke-width', 1.5)
+      .style('transition', 'r 0.15s ease')
 
     // Node Label Text
     node.append('text')
-      .attr('dx', 12)
+      .attr('dx', d => getNodeRadius(d) + 6)
       .attr('dy', '.35em')
       .text(d => d.label.length > 25 ? d.label.substring(0, 22) + '...' : d.label)
       .attr('font-size', '0.68rem')

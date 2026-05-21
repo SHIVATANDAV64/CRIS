@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2507.01123",
+  "title": "Landslide Detection and Mapping Using Deep Learning Across Multi-Source Satellite Data and Geographic Regions",
+  "abstract": "Landslides pose severe threats to infrastructure, economies, and human lives, necessitating accurate detection and predictive mapping across diverse geographic regions. With advancements in deep learning and remote sensing, automated landslide detection has become increasingly effective. This study presents a comprehensive approach integrating multi-source satellite imagery and deep learning models to enhance landslide identification and prediction. We leverage Sentinel-2 multispectral data and ALOS PALSAR-derived slope and Digital Elevation Model (DEM) layers to capture critical environmental features influencing landslide occurrences. Various geospatial analysis techniques are employed to assess the impact of terra in characteristics, vegetation cover, and rainfall on detection accuracy. Additionally, we evaluate the performance of multiple stateof-the-art deep learning segmentation models, including U-Net, DeepLabV3+, and Res-Net, to determine their effectiveness in landslide detection. The proposed framework contributes to the development of reliable early warning systems, improved disaster risk management, and sustainable land-use planning. Our findings provide valuable insights into the potential of deep learning and multi-source remote sensing in creating robust, scalable, and transferable landslide prediction models.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.LG eess.IV",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:05:16.007352"
+}

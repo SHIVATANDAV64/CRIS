@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2508.06526",
+  "title": "PiKV: KV Cache Management System for Mixture of Experts",
+  "abstract": "As large-scale language models continue to scale up in both size and context length, the memory and communication cost of key-value (KV) cache storage has become a major bottleneck in multi-GPU and multi-node inference. While MoE-based architectures sparsify computation across experts, the corresponding KV caches remain dense and globally synchronized, resulting in significant overhead. We introduce \\textbf{PiKV}, a parallel and distributed KV cache serving framework tailored for MoE architecture. PiKV leverages \\textit{expert-sharded KV storage} to partition caches across GPUs, \\textit{PiKV routing} to reduce token-to-KV access, and a \\textit{PiKV Scheduling} to adaptively retain query-relevant entries. To further reduce memory usage, PiKV integrates \\textit{PiKV Compression} modules the caching pipeline for acceleration. PiKV is recently publicly available as an open-source software library: \\href{https://github.com/NoakLiu/PiKV}{https://github.com/NoakLiu/PiKV}. PiKV is still a living project, aiming to become a comprehesive KV Cache management system for MoE Architectures.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.DC cs.AI cs.AR",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T22:59:25.050685"
+}

@@ -1,9 +1,25 @@
+export interface Decomposition {
+  literature_queries: string[];
+  hypothesis_candidates: string[];
+  method_analysis_targets: string[];
+  cross_domain_pairs: Array<{ source: string; target: string; rationale: string }>;
+}
+
+export interface CrossDomainConnection {
+  id: string;
+  title: string;
+  domain: string;
+  similarity: number;
+  abstract: string;
+}
+
 export interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
   thinking?: string;
   sources?: Source[];
+  decomposition?: Decomposition;
   timestamp: number;
 }
 

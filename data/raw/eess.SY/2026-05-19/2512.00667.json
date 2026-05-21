@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2512.00667",
+  "title": "Active Learning of Fractional-Order Viscoelastic Model Parameters for Realistic Haptic Rendering",
+  "abstract": "Effective medical simulators necessitate realistic haptic rendering of biological tissues that exhibit viscoelastic material properties, such as creep and stress relaxation. Fractional-order models provide an effective means of describing intrinsically time-dependent viscoelastic dynamics with few parameters, as they naturally capture memory effects. However, due to the unintuitive, frequency-dependent coupling among the order of the fractional element and other parameters, determining appropriate parameter values for fractional-order models that yield high perceived realism remains a significant challenge. In this study, we propose a systematic means of determining the parameters of fractional-order viscoelastic models that optimizes the perceived realism of haptic rendering across general populations. First, we demonstrate that the parameters of fractional-order models can be effectively optimized through active learning, using qualitative feedback-based human-in-the-loop (HiL) optimization, to ensure consistently high realism ratings for each individual. Second, we propose a rigorous method to combine HiL optimization results into an aggregate perceptual map trained on the entire dataset, and demonstrate how to select population-level optimal parameters from this representation that are broadly perceived as realistic across general populations. Finally, we provide evidence of the effectiveness of the generalized fractional-order viscoelastic model parameters for three viscoelastic materials by characterizing their perceived realism through human-subject experiments. Overall, generalized fractional-order viscoelastic models established through the proposed HiL optimization and aggregation approach possess the potential to significantly improve the sim-to-real transition performance of medical training simulators.",
+  "authors": [
+    null
+  ],
+  "categories": "eess.SY cs.RO cs.SY",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:06:26.921624"
+}

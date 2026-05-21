@@ -1,4 +1,4 @@
-import type { Session, Model, Paper, DateGroup, WikiStats, Entity, Note, SearchResult } from './types'
+import type { Session, Model, Paper, DateGroup, WikiStats, Entity, Note, SearchResult, Decomposition, CrossDomainConnection } from './types'
 
 const API = '/api'
 
@@ -80,12 +80,15 @@ export function streamChat(
   sessionId: string | null,
   modelId: string,
   sourcePapers: string[] | null = null,
+  webSearch: boolean | undefined = undefined,
+  useReasoning: boolean = true,
   onSources: (sources: unknown[], sid: string) => void,
   onThinking: (content: string) => void,
   onContent: (content: string) => void,
   onDone: (sid: string) => void,
   onError: (error: string) => void,
   onStatus?: (status: string, message: string) => void,
+  onDecomposition?: (decomp: Decomposition) => void,
 ): AbortController {
   const controller = new AbortController()
 
@@ -95,7 +98,8 @@ export function streamChat(
     signal: controller.signal,
     body: JSON.stringify({
       message,
-      use_reasoning: true,
+      use_reasoning: useReasoning,
+      web_search: webSearch === true ? true : undefined,
       session_id: sessionId,
       source_papers: sourcePapers,
       model_id: modelId,
@@ -128,12 +132,16 @@ export function streamChat(
             onThinking(data.content)
           } else if (data.type === 'content') {
             onContent(data.content)
+          } else if (data.type === 'token') {
+            onContent(data.token)
           } else if (data.type === 'done') {
             onDone(data.session_id || '')
           } else if (data.type === 'error') {
             onError(data.content || 'Unknown error')
           } else if (data.type === 'status' && onStatus) {
             onStatus(data.status || '', data.message || '')
+          } else if (data.type === 'decomposition' && onDecomposition) {
+            onDecomposition(data.decomposition)
           }
         } catch {
           // skip malformed SSE data
@@ -233,8 +241,23 @@ export async function runIngestScript(params: {
   return resp.json()
 }
 
-export async function getIngestStatus(): Promise<{ running: boolean }> {
+export interface IngestStatusDetails {
+  running: boolean
+  current_date: string | null
+  dates_total: number
+  dates_processed: number
+  papers_fetched: number
+  logs: string[]
+  error: string | null
+}
+
+export async function getIngestStatus(): Promise<IngestStatusDetails> {
   const resp = await fetch(`${API}/scripts/ingest/status`)
+  return resp.json()
+}
+
+export async function stopIngestScript() {
+  const resp = await fetch(`${API}/scripts/ingest/stop`, { method: 'POST' })
   return resp.json()
 }
 
@@ -245,6 +268,28 @@ export async function runMigrateScript() {
 
 export async function getMigrateStatus(): Promise<{ running: boolean }> {
   const resp = await fetch(`${API}/scripts/migrate/status`)
+  return resp.json()
+}
+
+export async function discoverCrossDomainConnections(
+  arxivId: string,
+  sourceDomain: string,
+  targetDomains: string[],
+  topK = 5
+): Promise<{ connections: CrossDomainConnection[]; indexing_occurred: boolean }> {
+  const resp = await fetch(`${API}/research/cross-domain`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      arxiv_id: arxivId,
+      source_domain: sourceDomain,
+      target_domains: targetDomains,
+      top_k: topK,
+    }),
+  })
+  if (!resp.ok) {
+    throw new Error(`Failed to discover connections: ${resp.statusText}`)
+  }
   return resp.json()
 }
 

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.19093",
+  "title": "Seeing SDG 6 from space: local-scale monitoring of piped water and sewage system access across Africa using satellite imagery and self-supervised learning",
+  "abstract": "Access to drinking water and sanitation is essential for health and well-being, yet major disparities remain, especially in data-scarce regions such as Africa. SDG 6 aims for universal access, but current monitoring relies on costly, infrequent, and spatially uneven surveys and censuses with long reporting delays. This study develops a scalable remote-sensing framework to estimate piped water and sewage system access at approximately 2.56 km resolution using Sentinel-2 imagery, Afrobarometer survey responses, 30 m population data, and DINO self-supervised Vision Transformer features. The best model achieves AUROC values of 91.54% for piped water and 93.24% for sewage access. Across 50 African countries, population-weighted estimates strongly align with WHO/UNICEF JMP statistics for piped water ($R^2 = 0.92$) and show meaningful agreement for sewage access ($R^2 = 0.72$). In countries without Afrobarometer coverage, MAEs are 9.5% and 10.7%, with estimates within 15% of JMP values for 121.4 million and 159.7 million people, respectively. A Nigeria case study across 767 Local Government Areas (LGAs) shows that the framework reveals fine-scale environmental inequality. The largest no-access burdens reach 1.155 million people for piped water and 1.452 million for sewage, 7.9 and 8.3 times the median LGA burden, while top-decile no-access thresholds of 0.805 and 0.952 indicate that deprivation is widespread. These findings show that DINO-based satellite models can complement household surveys with low-cost, spatially detailed evidence for SDG 6 monitoring, infrastructure targeting, and environmental equity assessment.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.CY cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:04:06.956949"
+}

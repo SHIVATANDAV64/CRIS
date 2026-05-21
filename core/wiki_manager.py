@@ -257,27 +257,97 @@ class WikiManager:
         nodes = []
         edges = []
 
+        # Map canonical ID (case-insensitive) to node metadata
+        node_registry = {}
+
+        # 1. Sources (papers)
         for s in sources:
-            nodes.append({
-                "id": s["arxiv_id"],
+            arxiv_id = s["arxiv_id"]
+            node_registry[arxiv_id.lower()] = {
+                "id": arxiv_id,
                 "type": "paper",
-                "label": s["title"][:30],
-                "domains": s.get("domains", [])
-            })
+                "label": s["title"][:40] if s.get("title") else arxiv_id,
+                "domains": s.get("domains", []),
+                "body": s.get("body", "")
+            }
 
-        for concept in concept_pages.keys():
-            nodes.append({
-                "id": concept,
+        # 2. Concepts
+        for f in self.concepts_dir.glob("*.md"):
+            name = f.stem
+            content = f.read_text(encoding="utf-8")
+            fm, body = self.parse_frontmatter(content)
+            label = fm.get("title") or name
+            node_registry[name.lower()] = {
+                "id": name,
                 "type": "concept",
-                "label": concept
-            })
+                "label": label,
+                "body": body
+            }
 
-        for s in sources:
-            for link in s.get("links", []):
-                edges.append({
-                    "from": s["arxiv_id"],
-                    "to": link
-                })
+        # 3. Notes
+        for f in self.notes_dir.glob("*.md"):
+            name = f.stem
+            content = f.read_text(encoding="utf-8")
+            fm, body = self.parse_frontmatter(content)
+            label = fm.get("title") or name
+            node_registry[name.lower()] = {
+                "id": name,
+                "type": "note",
+                "label": label,
+                "body": body
+            }
+
+        # 4. Entities
+        for f in self.entities_dir.glob("*.md"):
+            name = f.stem
+            content = f.read_text(encoding="utf-8")
+            fm, body = self.parse_frontmatter(content)
+            label = fm.get("title") or name
+            node_registry[name.lower()] = {
+                "id": name,
+                "type": "entity",
+                "label": label,
+                "body": body
+            }
+
+        # Register nodes list
+        for canonical_lower, info in node_registry.items():
+            node_dict = {
+                "id": info["id"],
+                "type": info["type"],
+                "label": info["label"]
+            }
+            if "domains" in info:
+                node_dict["domains"] = info["domains"]
+            nodes.append(node_dict)
+
+        # Parse links and generate edges
+        seen_edges = set()
+        wiki_link_re = re.compile(r'\[\[([^\]|]+)(?:\|[^\]]+)?\]\]')
+
+        for canonical_lower, info in node_registry.items():
+            body = info.get("body", "")
+            links = wiki_link_re.findall(body)
+            source_id = info["id"]
+
+            for link in links:
+                target_clean = link.strip()
+                target_lower = target_clean.lower()
+
+                if target_lower in node_registry:
+                    target_id = node_registry[target_lower]["id"]
+
+                    if source_id == target_id:
+                        continue
+
+                    # Represent as undirected for deduplication
+                    edge_key = tuple(sorted([source_id, target_id]))
+                    if edge_key not in seen_edges:
+                        seen_edges.add(edge_key)
+                        edges.append({
+                            "source": source_id,
+                            "target": target_id
+                        })
 
         graph = {"nodes": nodes, "edges": edges}
         graph_path = self.wiki_dir / "graph.json"

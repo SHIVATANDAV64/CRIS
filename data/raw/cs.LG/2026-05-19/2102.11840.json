@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2102.11840",
+  "title": "Convergence rates for gradient descent in the training of overparameterized artificial neural networks with piecewise affine activation",
+  "abstract": "In recent years, artificial neural networks have developed into a powerful tool for addressing a multitude of problems for which classical solution approaches reach their limits. However, it is still unclear why gradient descent optimization algorithms with random initialization, such as the well-known batch gradient descent, are able to achieve zero training loss in many situations, even though the objective function is non-convex and non-smooth. One of the most promising approaches to solving this issue in the field of supervised learning is the analysis of gradient descent optimization in the so-called overparameterized regime. In this article, we provide a further contribution to this area of research by considering overparameterized fully connected shallow artificial neural networks with piecewise affine activation, such as the rectified linear unit activation. Specifically, given that the activation function is not affine and the training input data are pairwise distinct, we show that, with high probability, the mean squared error of such a randomly initialized artificial neural network optimized via batch gradient descent converges to zero at a linear convergence rate as long as the width of the artificial neural network is sufficiently large and the learning rate is sufficiently small.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.NA math.NA math.PR",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:03:30.915140"
+}

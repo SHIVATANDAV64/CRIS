@@ -112,10 +112,10 @@ class ModelClient:
         wiki_context: Optional[list[dict]] = None,
         system_prompt: Optional[str] = None,
         conversation_history: str = "",
-    ) -> Generator[str, None, None]:
+    ) -> Generator[tuple[str, str], None, None]:
         """
         Generate a streaming response using the reasoning model.
-        Yields chunks of text as they arrive from the model.
+        Yields (token_type, chunk) as they arrive from the model.
         """
         sys_prompt = system_prompt or CHAT_SYSTEM
 
@@ -197,10 +197,10 @@ class ModelClient:
                 "mode": "modal" if not self._use_bedrock else "bedrock",
             }
 
-    def _generate_stream(self, system_prompt: str, user_message: str) -> Generator[str, None, None]:
+    def _generate_stream(self, system_prompt: str, user_message: str) -> Generator[tuple[str, str], None, None]:
         """
         Generate streaming response via Modal or Bedrock endpoint using SSE.
-        Yields tokens IMMEDIATELY as they arrive for true live streaming.
+        Yields (token_type, chunk) IMMEDIATELY as they arrive for true live streaming.
         """
         try:
             payload = {
@@ -234,9 +234,11 @@ class ModelClient:
             if "text/event-stream" not in content_type and "application/json" in content_type:
                 data = response.json()
                 content = data["choices"][0]["message"]["content"] or ""
-                _, answer = self._parse_thinking(content)
+                thinking, answer = self._parse_thinking(content)
+                if thinking:
+                    yield "thinking", thinking
                 if answer:
-                    yield answer
+                    yield "content", answer
                 return
 
             # Streaming mode: yield tokens IMMEDIATELY as they arrive
@@ -258,25 +260,37 @@ class ModelClient:
                     try:
                         data = json.loads(data_str)
                         delta = data.get("choices", [{}])[0].get("delta", {})
-                        chunk = delta.get("content", "")
+                        
+                        # Support direct reasoning_content (e.g. Bedrock/DeepSeek)
+                        reasoning_chunk = delta.get("reasoning_content", "")
+                        if reasoning_chunk:
+                            yield "thinking", reasoning_chunk
+                            continue
 
+                        chunk = delta.get("content", "")
                         if not chunk:
                             continue
 
                         # Handle thinking tags in real-time
-                        if "   <think>  " in chunk:
+                        if "   <think>  " in chunk or "<think>" in chunk:
                             in_thinking = True
-                            parts = chunk.split("   <think>  ", 1)
+                            tag = "   <think>  " if "   <think>  " in chunk else "<think>"
+                            parts = chunk.split(tag, 1)
                             if parts[0] and not saw_answer:
                                 clean_token = self._strip_tool_calls(parts[0])
                                 if clean_token:
                                     saw_answer = True
-                                    yield clean_token
+                                    yield "content", clean_token
+                            if parts[1]:
+                                yield "thinking", parts[1]
                             continue
 
-                        if "剱" in chunk:
+                        if "剱" in chunk or "</think>" in chunk:
                             in_thinking = False
-                            parts = chunk.split("剱", 1)
+                            tag = "剱" if "剱" in chunk else "</think>"
+                            parts = chunk.split(tag, 1)
+                            if parts[0]:
+                                yield "thinking", parts[0]
                             if len(parts) > 1 and parts[1]:
                                 if not saw_answer:
                                     clean_token = self._clean_opening(parts[1])
@@ -285,25 +299,30 @@ class ModelClient:
                                     clean_token = self._strip_tool_calls(parts[1])
                                 if clean_token:
                                     saw_answer = True
-                                    yield clean_token
+                                    yield "content", clean_token
                             continue
 
                         if in_thinking:
-                            continue
-
-                        # Regular token: clean and yield immediately
-                        if not saw_answer:
-                            clean_token = self._clean_opening(chunk)
-                            clean_token = self._strip_tool_calls(clean_token)
-                            saw_answer = True
+                            yield "thinking", chunk
                         else:
-                            clean_token = self._strip_tool_calls(chunk)
+                            # Regular token: clean and yield immediately
+                            if not saw_answer:
+                                clean_token = self._clean_opening(chunk)
+                                clean_token = self._strip_tool_calls(clean_token)
+                                saw_answer = True
+                            else:
+                                clean_token = self._strip_tool_calls(chunk)
 
-                        if clean_token:
-                            yield clean_token
+                            if clean_token:
+                                    yield "content", clean_token
 
                     except json.JSONDecodeError:
                         continue
+
+        except Exception as e:
+            provider = "Bedrock" if self._use_bedrock else "Modal"
+            print(f"[model_client] {provider} streaming error: {e}")
+            yield "content", f"\n\n[Error: {str(e)}]"
 
         except Exception as e:
             provider = "Bedrock" if self._use_bedrock else "Modal"

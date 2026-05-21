@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.13293",
+  "title": "Cross-modal Consistency Guidance for Robust Emotion Control in Auto-Regressive TTS Models",
+  "abstract": "While Text-to-Speech (TTS) systems enable emotional control via natural-language instructions, expressiveness, naturalness, and speech quality degrade when the target emotion conflicts with the textual semantics. We propose a Cross-modal Consistency Guided Classifier-Free Guidance (CCG-CFG) method with dynamic scales based on the degree of inconsistency between the text emotion and the explicit speech emotion, replacing the dropout condition with the text emotion. We also distill the CCG-CFG guidance signal using a hard-sample mining strategy, improving the TTS model's emotional alignment capability. Evaluations on five emotional corpora and two TTS benchmarks show that our approaches applied to CosyVoice2 achieve up to a 12% absolute improvement in emotion-recognition accuracy and a 10% relative improvement in subjective scores, outperforming baselines including HierSpeech++, Qwen3-TTS, and original CosyVoice2, while preserving intelligibility, naturalness, and high speech quality.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:02:15.521450"
+}

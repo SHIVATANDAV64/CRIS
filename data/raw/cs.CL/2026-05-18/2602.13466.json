@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2602.13466",
+  "title": "Language Model Memory and Memory Models for Language",
+  "abstract": "The ability of machine learning models to store input information in hidden layer vector embeddings, analogous to the concept of `memory', is widely employed but not well characterized. We find that language model embeddings typically contain relatively little input information regardless of data and compute scale during training. In contrast, embeddings from autoencoders trained for input regeneration are capable of nearly perfect memory formation. The substitution of memory embeddings for token sequences leads to substantial computational efficiencies, motivating the introduction of a parallelizable encoder-decoder memory model architecture. Upon causal training these models contain information-poor embeddings incapable of arbitrary information access, but by combining causal and information retention objective functions they learn to form and decode information-rich memories. Training can be further streamlined by freezing a high fidelity encoder followed by a curriculum training approach where decoders first learn to process memories and then learn to additionally predict next tokens. We introduce the perspective that next token prediction training alone is poorly suited for accurate memory formation as the objective itself is non-invertible, motivating the use of combined objective functions for models where the entire input is not exposed.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.LG",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:03:06.601968"
+}

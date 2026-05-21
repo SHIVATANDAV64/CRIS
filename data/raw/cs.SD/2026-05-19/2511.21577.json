@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2511.21577",
+  "title": "HarmonicAttack: An Adaptive Cross-Domain Audio Watermark Removal",
+  "abstract": "The availability of high-quality, AI-generated audio raises security challenges such as misinformation campaigns and voice-cloning fraud. A key defense against the misuse of AI-generated audio is by watermarking it, so that it can be easily distinguished from genuine audio. Those seeking to misuse AI-generated audio may attempt to remove audio watermarks, so studying effective watermark removal techniques is critical to objectively evaluate the robustness of audio watermarks. Previous watermark removal schemes typically assume access to the target watermark detector during the removal process. This assumption is often impractical, which may lead to a false sense of confidence in current watermark schemes. We introduce HarmonicAttack, a novel audio watermark removal method that requires no access to the target watermark algorithm. It only needs a number of original and watermarked samples to train a general model capable of removing watermarks from audio samples. We also find that training samples do not need to share the same distribution as target samples, as our attack generalizes to out-of-distribution samples with minimal degradation. Compared with existing watermark removal attacks, HarmonicAttack is more effective at removing watermarks from state-of-the-art schemes, including AudioSeal, WavMark, SilentCipher, and AudioMarkNet, while maintaining high perceptual quality. Although HarmonicAttack is trained on the LibriSpeech dataset against AudioSeal, it generalizes across unseen datasets and watermarking schemes. For instance, on VCTK, HarmonicAttack achieves a 92% ASR against AudioMarkNet, substantially outperforming the best baseline at 38%. On FMA, HarmonicAttack reaches 100% ASR against all watermarks, whereas the best baseline achieves only 2% against AudioSeal and 44% against WavMark.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.SD cs.AI",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:00:40.122086"
+}

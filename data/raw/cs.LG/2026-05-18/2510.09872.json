@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.09872",
+  "title": "WARC-Bench: Web Archive Based Benchmark for GUI Subtask Executions",
+  "abstract": "Training web agents to navigate complex, real-world websites requires them to master $\\textit{subtasks}$ - short-horizon interactions on multiple UI components (e.g., choosing the correct date in a date picker, or scrolling in a container to extract information). We introduce WARC-Bench (Web Archive Benchmark), a novel web navigation benchmark featuring 438 tasks designed to evaluate multimodal AI agents on subtasks. WARC-Bench enables sandboxed interactions with dynamic and realistic webpages using Web ARChive files. We show that WARC-Bench is challenging for leading computer-use models, with the highest observed success rate being 64.8%. To improve open source models on subtask, we explore two common training techniques: supervised fine-tuning (SFT) and reinforcement learning with verifiable rewards (RLVR). Experiments show that SFT models obtain a 48.8% success rate on the benchmark. Training with RLVR over SFT checkpoints, even in data-scarce settings, improves the score to 52.8% on WARC-Bench, outperforming many frontier models. Our analysis concludes that mastering these subtasks is essential for robust web planning and navigation, and is a capability not extensively evaluated by existing benchmarks.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:00:07.090261"
+}

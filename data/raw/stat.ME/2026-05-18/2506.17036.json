@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.17036",
+  "title": "Bayesian Joint Model of Multi-Sensor and Failure Event Data for Multi-Mode Failure Prediction",
+  "abstract": "Modern industrial systems are often subject to multiple failure modes, and their conditions are monitored by multiple sensors, generating multiple time-series signals. Additionally, time-to-failure data are commonly available. Accurately predicting a system's remaining useful life (RUL) requires effectively leveraging multi-sensor time-series data alongside multi-mode failure event data. In most existing models, failure modes and RUL prediction are performed independently, ignoring the inherent relationship between these two tasks. Some models integrate multiple failure modes and event prediction using black-box machine learning approaches, which lack statistical rigor and cannot characterize the inherent uncertainty in the model and data. This paper introduces a unified approach to jointly model the multi-sensor time-series data and failure time concerning multiple failure modes. This proposed model integrate a Cox proportional hazards model, a Convolved Multi-output Gaussian Process, and multinomial failure mode distributions in a hierarchical Bayesian framework with corresponding priors, enabling accurate prediction with robust uncertainty quantification. Posterior distributions are effectively obtained by Variational Bayes, and prediction is performed with Monte Carlo sampling. The advantages of the proposed model is validated through extensive numerical and case studies with jet-engine dataset.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ME cs.LG stat.ML",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:05:13.004570"
+}

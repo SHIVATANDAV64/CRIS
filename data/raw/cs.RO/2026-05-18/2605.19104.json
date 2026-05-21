@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2605.19104",
+  "title": "Neural Operators for Design-Space Surrogate Modeling of Tendon-Actuated Continuum Robots",
+  "abstract": "Continuum robots enable dexterous manipulation in constrained environments, but require accurate and efficient models for real-time manipulation and control. Traditional physics-based models can be computationally expensive and may suffer from inaccuracies due to unmodeled effects, while current learning-based methods often generalize poorly beyond the specific robot on which they are trained. We present a formulation of surrogate modeling for tendon-driven continuum robots as an operator learning problem that maps robot design parameters and tendon actuation inputs to resulting configurations. This formulation enables a single trained model to generalize across a large class of robot designs. We develop four novel neural operator architectures--two based on Deep Operator Networks (DeepONets) and two based on Fourier Neural Operators (FNOs)--and train them on simulation data to predict robot configurations. All architectures achieve good accuracy while allowing for fast and accurate generalization across designs. Our results demonstrate that operator learning provides an effective and generalizable surrogate for continuum robot mechanics in the design space, enabling fast modeling for control, planning, and design optimization in surgical and industrial applications.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.AI",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:08:21.163290"
+}

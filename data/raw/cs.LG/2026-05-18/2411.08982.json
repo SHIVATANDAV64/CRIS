@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.08982",
+  "title": "Lynx: Enabling Efficient MoE Inference through Dynamic Batch-Aware Expert Selection",
+  "abstract": "Selective parameter activation provided by Mixture-of-Expert (MoE) models have made them a popular choice in modern foundational models. However, MoEs face a fundamental tension when employed for serving. Batching, critical for performance in serving, forces the activation of all experts, thereby negating MoEs' benefits and exacerbating memory bandwidth bottlenecks. Existing work on efficient MoE inference are unable to resolve this tension even with extensive workload-specific tuning. We present LYNX, a system that enables efficient MoE inference in a workload-agnostic fashion. LYNX leverages a key property of MoE training: load-balancing losses introduce batch-level expert activation skews and redundancy, which it exploits by remapping low-affinity token-to-expert assignments within each batch using a novel AffinityBinning technique that reduces the total experts invoked. Our evaluation of LYNX on four state-of-the-art model families across nine benchmarks shows that it achieves up to 1.30x improvement in throughput while maintaining accuracy loss of less than 1% points across tasks. Further, LYNX is complementary to existing techniques where it additionally boosts their performance by up to 1.38x.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.DC",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:04:00.954011"
+}

@@ -133,26 +133,45 @@ class ChatService:
             create_session(session_id, title)
         return session_id
 
-    async def fetch_sources(self, query: str, source_papers: Optional[List[str]], is_research: bool, model_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    async def fetch_sources(self, query: str, source_papers: Optional[List[str]], is_research: bool, model_id: Optional[str] = None, decomposition: Optional[Any] = None, web_search: Optional[bool] = None) -> List[Dict[str, Any]]:
         results = []
         web_search_triggered = False
         search_queries = []
 
         # --- Step 1: Determine if web search is needed ---
         if SEARXNG_MODAL_URL:
-            # Tier 1: keyword heuristic (instant)
-            if self.needs_realtime_data(query):
-                search_queries = [query]
+            if web_search is True:
+                # Force Web Search
+                if decomposition and decomposition.literature_queries:
+                    search_queries = decomposition.literature_queries[:3]
+                else:
+                    search_queries = [query]
                 web_search_triggered = True
-                print(f"[chat_service] Heuristic triggered web search for: {query}")
-
-            # Tier 2: LLM router (if heuristic didn't trigger)
-            if not search_queries:
-                intent = self.llm_route_search(query, model_id)
-                if intent.get("needs_search"):
-                    search_queries = intent.get("queries", [query])
+                print(f"[chat_service] Web search forced active for: {query}")
+            elif web_search is False:
+                # Force Web Search disabled
+                print(f"[chat_service] Web search forced inactive for: {query}")
+            else:
+                # Auto-routing fallback (existing logic)
+                # Tier 1: keyword heuristic (instant)
+                if self.needs_realtime_data(query):
+                    if decomposition and decomposition.literature_queries:
+                        search_queries = decomposition.literature_queries[:3]
+                    else:
+                        search_queries = [query]
                     web_search_triggered = True
-                    print(f"[chat_service] LLM triggered web search: {intent.get('reason', '')} -> {search_queries}")
+                    print(f"[chat_service] Heuristic triggered web search for: {query}")
+
+                # Tier 2: LLM router (if heuristic didn't trigger)
+                if not search_queries:
+                    intent = self.llm_route_search(query, model_id)
+                    if intent.get("needs_search"):
+                        if decomposition and decomposition.literature_queries:
+                            search_queries = decomposition.literature_queries[:3]
+                        else:
+                            search_queries = intent.get("queries", [query])
+                        web_search_triggered = True
+                        print(f"[chat_service] LLM triggered web search: {intent.get('reason', '')} -> {search_queries}")
 
         # --- Step 2: Fetch local papers (SKIP if web search is primary source) ---
         if source_papers:
@@ -187,7 +206,19 @@ class ChatService:
         elif is_research and not web_search_triggered:
             # Only fetch local papers if web search ISN'T the primary source
             # This prevents 15 random papers drowning out 5 relevant web results
-            results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
+            if decomposition and decomposition.literature_queries:
+                print(f"[chat_service] Fetching sources using decomposed sub-queries: {decomposition.literature_queries}")
+                seen = set()
+                for sq in decomposition.literature_queries[:3]:
+                    sq_results = search(sq, limit=3)
+                    for r in sq_results:
+                        if r["arxiv_id"] not in seen:
+                            seen.add(r["arxiv_id"])
+                            results.append(r)
+                if not results:
+                    results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
+            else:
+                results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
 
         # --- Step 3: Execute web searches ---
         if search_queries:
@@ -257,12 +288,21 @@ class ChatService:
             sources.append(source)
         return sources
 
-    async def process_chat(self, query: str, session_id: Optional[str], use_reasoning: bool, source_papers: Optional[List[str]], model_id: Optional[str]) -> Dict[str, Any]:
+    async def process_chat(self, query: str, session_id: Optional[str], use_reasoning: bool, source_papers: Optional[List[str]], model_id: Optional[str], web_search: Optional[bool] = None) -> Dict[str, Any]:
         session_id = self.ensure_session(session_id, query)
         add_message(session_id, "user", query)
 
         is_research = self.is_research_query(query)
-        results = await self.fetch_sources(query, source_papers, is_research, model_id=model_id)
+        decomposition = None
+        
+        if is_research and use_reasoning:
+            try:
+                from server.services.research_service import research_service
+                decomposition = await research_service.decompose(query, model_id=model_id)
+            except Exception as e:
+                print(f"[chat] Decomposition failed: {e}")
+
+        results = await self.fetch_sources(query, source_papers, is_research, model_id=model_id, decomposition=decomposition, web_search=web_search)
         sources = self.format_sources_for_response(results)
 
         if use_reasoning:
@@ -281,6 +321,12 @@ class ChatService:
                     result["response"],
                     thinking=result.get("thinking", ""),
                     sources=sources,
+                    decomposition={
+                        'literature_queries': decomposition.literature_queries,
+                        'hypothesis_candidates': decomposition.hypothesis_candidates,
+                        'method_analysis_targets': decomposition.method_analysis_targets,
+                        'cross_domain_pairs': decomposition.cross_domain_pairs
+                    } if decomposition else None
                 )
 
                 try:
@@ -320,18 +366,37 @@ class ChatService:
             "session_id": session_id,
         }
 
-    async def process_chat_stream(self, query: str, session_id: Optional[str], use_reasoning: bool, source_papers: Optional[List[str]], model_id: Optional[str]) -> AsyncGenerator[str, None]:
+    async def process_chat_stream(self, query: str, session_id: Optional[str], use_reasoning: bool, source_papers: Optional[List[str]], model_id: Optional[str], web_search: Optional[bool] = None) -> AsyncGenerator[str, None]:
         session_id = self.ensure_session(session_id, query)
         add_message(session_id, "user", query)
 
         is_research = self.is_research_query(query)
+        decomposition = None
+
+        if is_research and use_reasoning:
+            yield f"data: {json.dumps({'type': 'status', 'status': 'decomposing', 'message': 'Decomposing research query...' })}\n\n"
+            try:
+                from server.services.research_service import research_service
+                decomposition = await research_service.decompose(query, model_id=model_id)
+                # Emit decomposition to UI
+                yield f"data: {json.dumps({
+                    'type': 'decomposition',
+                    'decomposition': {
+                        'literature_queries': decomposition.literature_queries,
+                        'hypothesis_candidates': decomposition.hypothesis_candidates,
+                        'method_analysis_targets': decomposition.method_analysis_targets,
+                        'cross_domain_pairs': decomposition.cross_domain_pairs
+                    }
+                })}\n\n"
+            except Exception as e:
+                print(f"[chat_stream] Decomposition failed: {e}")
 
         # Emit "searching" event if we'll likely search the web
-        will_search = self.needs_realtime_data(query)
+        will_search = True if web_search is True else (False if web_search is False else self.needs_realtime_data(query))
         if will_search and SEARXNG_MODAL_URL:
             yield f"data: {json.dumps({'type': 'status', 'status': 'searching_web', 'message': 'Searching the web...'})}\n\n"
 
-        results = await self.fetch_sources(query, source_papers, is_research, model_id=model_id)
+        results = await self.fetch_sources(query, source_papers, is_research, model_id=model_id, decomposition=decomposition, web_search=web_search)
         sources = self.format_sources_for_response(results)
 
         # Check if web results were found (for non-heuristic LLM-routed searches)
@@ -350,30 +415,42 @@ class ChatService:
             if client:
                 history_context = format_history_for_prompt(session_id)
                 full_response = ""
+                full_thinking = ""
                 stream_timed_out = False
 
                 try:
-                    for chunk in client.generate_stream(
+                    for token_type, chunk in client.generate_stream(
                         user_message=query,
                         wiki_context=results if (is_research or any(r.get('contribution_type') in ('Web', 'News') for r in results)) else None,
                         conversation_history=history_context,
                     ):
-                        full_response += chunk
-                        if chunk:
-                            # Send token event for live streaming
-                            yield f"data: {json.dumps({'type': 'token', 'token': chunk})}\n\n"
+                        if token_type == "thinking":
+                            full_thinking += chunk
+                            if chunk:
+                                yield f"data: {json.dumps({'type': 'thinking', 'content': chunk})}\n\n"
+                        else:
+                            full_response += chunk
+                            if chunk:
+                                yield f"data: {json.dumps({'type': 'token', 'token': chunk})}\n\n"
                 except Exception as e:
                     print(f"[chat_stream] Streaming error: {e}")
                     if not full_response:
                         yield f"data: {json.dumps({'type': 'content', 'content': f'**Error**: {str(e)}'})}\n\n"
                     stream_timed_out = True
 
-                if full_response or stream_timed_out:
+                if full_response or stream_timed_out or full_thinking:
                     add_message(
                         session_id,
                         "assistant",
-                        full_response if full_response else f"Error: {str(e) if 'e' in locals() else 'Stream failed'}",
+                        full_response if (full_response or full_thinking) else f"Error: {str(e) if 'e' in locals() else 'Stream failed'}",
+                        thinking=full_thinking,
                         sources=sources,
+                        decomposition={
+                            'literature_queries': decomposition.literature_queries,
+                            'hypothesis_candidates': decomposition.hypothesis_candidates,
+                            'method_analysis_targets': decomposition.method_analysis_targets,
+                            'cross_domain_pairs': decomposition.cross_domain_pairs
+                        } if decomposition else None
                     )
 
                     try:

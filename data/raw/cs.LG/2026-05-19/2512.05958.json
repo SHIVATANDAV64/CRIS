@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2512.05958",
+  "title": "MaxShapley: Towards Incentive-compatible Generative Search with Fair Context Attribution",
+  "abstract": "Generative search engines based on large language models (LLMs) are replacing traditional search, fundamentally changing how information providers are compensated. To sustain this ecosystem, we need fair mechanisms to attribute and compensate content providers based on their contributions to generated answers. We introduce MaxShapley, an efficient algorithm for fair credit attribution in generative search pipelines that retrieve external sources before generation. MaxShapley is a special case of the celebrated Shapley value; it leverages a de-composable max-sum utility function to compute attributions with polynomial-time computation in the number of documents, as opposed to the exponential cost of Shapley values. We evaluate MaxShapley on three multi-hop QA datasets (HotPotQA, MuSiQUE, MS MARCO); MaxShapley achieves comparable attribution quality to exact Shapley computation, while consuming a fraction of its tokens--for instance, it gives up to a 9x reduction in resource consumption over prior state-of-the-art methods at the same attribution accuracy. We release open-source code and re-calibrated datasets. An educational demo is available at https://fair-search.com.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:00:49.131119"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2511.17166",
+  "title": "Reflection-Based Relative Localization for Cooperative UAV Teams Using Active Markers",
+  "abstract": "Reflections of active markers in the environment are a common source of ambiguity in onboard visual relative localization. This work presents a novel approach that exploits these typically unwanted reflections for onboard relative localization in heterogeneous multi-UAV teams. The method operates without prior knowledge of robot size or predefined marker configurations, remains independent of surface properties, and explicitly accounts for uncertainties caused by surface irregularities, including dynamic water surfaces relevant for marine deployments. We validated the approach in both indoor and outdoor experiments, demonstrating reliable operation across varying lighting conditions and achieving greater effective range (above 30 m) and accuracy than state-of-the-art methods. The video is available under the following link: https://youtu.be/y0zp8cIwkig.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:06:23.916972"
+}

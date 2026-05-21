@@ -21,40 +21,53 @@ class EmbeddingClient:
     def __init__(self):
         self._app = None
         self._service = None
-        self._connect()
+        self._connect_failed = False
 
-    def _connect(self):
-        """Connect to Modal app."""
+    async def connect_async(self):
+        """Connect to Modal app asynchronously."""
+        if self._service is not None:
+            return
         try:
-            self._app = modal.App.lookup("cris-embeddings", create_if_missing=False)
-            self._service = modal.Cls.lookup("cris-embeddings", "EmbedService")()
-            print("[embed_client] Connected to Modal embeddings service")
+            self._app = await modal.App.lookup.aio("cris-embeddings", create_if_missing=False)
+            cls = modal.Cls.from_name("cris-embeddings", "EmbedService")
+            self._service = cls()
+            print("[embed_client] Connected to Modal embeddings service (async)")
+            self._connect_failed = False
         except Exception as e:
-            print(f"[embed_client] Could not connect to Modal: {e}")
+            print(f"[embed_client] Could not connect to Modal asynchronously: {e}")
             self._app = None
             self._service = None
+            self._connect_failed = True
 
     def is_available(self) -> bool:
         """Check if embedding service is available."""
         return self._service is not None
 
+    async def _ensure_connected(self):
+        """Ensure connection is established before calling Modal."""
+        if self._service is None and not self._connect_failed:
+            await self.connect_async()
+
     async def embed_text(self, text: str) -> list[float]:
         """Embed single text. Returns 2560-dim float list."""
+        await self._ensure_connected()
         if not self._service:
             raise RuntimeError("Embedding service not available")
-        return self._service.embed_text.remote(text)
+        return await self._service.embed_text.remote.aio(text)
 
     async def embed_batch(self, texts: list[str]) -> list[list[float]]:
         """Embed multiple texts efficiently."""
+        await self._ensure_connected()
         if not self._service:
             raise RuntimeError("Embedding service not available")
-        return self._service.embed_batch.remote(texts)
+        return await self._service.embed_batch.remote.aio(texts)
 
     async def similarity(self, text1: str, text2: str) -> float:
         """Compute cosine similarity."""
+        await self._ensure_connected()
         if not self._service:
             raise RuntimeError("Embedding service not available")
-        return self._service.similarity.remote(text1, text2)
+        return await self._service.similarity.remote.aio(text1, text2)
 
     async def find_cross_domain_connections(
         self,
@@ -73,10 +86,11 @@ class EmbeddingClient:
         Returns:
             Sorted list of {id, domain, similarity} dicts
         """
+        await self._ensure_connected()
         if not self._service:
             raise RuntimeError("Embedding service not available")
 
-        results = self._service.cross_domain_similarity.remote(source_text, candidates)
+        results = await self._service.cross_domain_similarity.remote.aio(source_text, candidates)
         return results[:top_k]
 
 
@@ -347,7 +361,7 @@ class HybridSearchEngine:
         source_domain: str,
         target_domains: list[str],
         top_k: int = 10,
-    ) -> list[dict]:
+    ) -> dict:
         """
         Find papers in target domains similar to source paper.
         This is the core cross-domain research intelligence feature.
@@ -359,7 +373,7 @@ class HybridSearchEngine:
             top_k: Number of top connections
 
         Returns:
-            List of {arxiv_id, title, domain, similarity, mechanism} dicts
+            Dict containing source, source_domain, connections, and indexing_occurred status
         """
         if not self.embed_client.is_available():
             return {"error": "Embedding service not available", "connections": []}
@@ -372,39 +386,82 @@ class HybridSearchEngine:
 
         source_text = f"{source_paper.get('title', '')} {source_paper.get('abstract', '')}"
 
-        # Gather candidates from target domains
+        # 1. Ensure source paper has an embedding
+        indexing_occurred = False
+        source_emb = await self.embed_store.get_embedding(arxiv_id)
+        if not source_emb:
+            print(f"[cross_domain] Embedding source paper {arxiv_id} on-the-fly...")
+            indexing_occurred = True
+            try:
+                source_emb = await self.embed_client.embed_text(source_text)
+                await self.embed_store.store_embedding(arxiv_id, source_emb)
+            except Exception as e:
+                print(f"[cross_domain] Failed to embed source paper {arxiv_id}: {e}")
+                return {"error": f"Failed to embed source paper: {e}", "connections": []}
+
+        # 2. Gather candidates from target domains
         from core.search_engine import search
         candidates = []
+        missing_candidates = []
+        
         for domain in target_domains:
             domain_results = search(f"domain:{domain}", limit=50)
             for r in domain_results:
                 if r["arxiv_id"] != arxiv_id:
-                    candidates.append({
-                        "id": r["arxiv_id"],
-                        "text": r.get("wiki_content", r.get("title", "")),
-                        "domain": domain,
-                        "title": r.get("title", ""),
-                    })
+                    cand_id = r["arxiv_id"]
+                    emb = await self.embed_store.get_embedding(cand_id)
+                    if not emb:
+                        missing_candidates.append({
+                            "arxiv_id": cand_id,
+                            "text": f"{r.get('title', '')} {r.get('wiki_content', r.get('abstract', ''))}"[:15000]
+                        })
+                    candidates.append(r)
+
+        # 3. Embed missing candidates in batch
+        if missing_candidates:
+            print(f"[cross_domain] Embedding {len(missing_candidates)} missing candidates on-the-fly...")
+            indexing_occurred = True
+            try:
+                texts_to_embed = [mc["text"] for mc in missing_candidates]
+                embeddings = await self.embed_client.embed_batch(texts_to_embed)
+                for j, emb in enumerate(embeddings):
+                    await self.embed_store.store_embedding(missing_candidates[j]["arxiv_id"], emb)
+            except Exception as e:
+                print(f"[cross_domain] Failed to embed missing candidates: {e}")
 
         if not candidates:
-            return {"connections": [], "source": arxiv_id}
+            return {"connections": [], "source": arxiv_id, "indexing_occurred": indexing_occurred}
 
-        # Find semantic similarities
-        connections = await self.embed_client.find_cross_domain_connections(
-            source_text, candidates, top_k=top_k
-        )
+        # 4. Compute local similarities using cached embeddings
+        query_vec = np.array(source_emb)
+        query_norm = np.linalg.norm(query_vec)
+        
+        connections = []
+        for r in candidates:
+            cand_id = r["arxiv_id"]
+            emb = await self.embed_store.get_embedding(cand_id)
+            if emb:
+                vec = np.array(emb)
+                vec_norm = np.linalg.norm(vec)
+                if vec_norm > 0 and query_norm > 0:
+                    sim = float(np.dot(query_vec, vec) / (query_norm * vec_norm))
+                    connections.append({
+                        "id": cand_id,
+                        "title": r.get("title", ""),
+                        "domain": r.get("domains", r.get("categories", "unknown")),
+                        "similarity": sim,
+                        "abstract": r.get("wiki_content", r.get("abstract", ""))[:200]
+                    })
 
-        # Enrich results
-        for conn in connections:
-            paper = get_paper_by_id(conn["id"])
-            if paper:
-                conn["title"] = paper.get("title", "")
-                conn["abstract"] = paper.get("abstract", "")[:200]
+        # Sort by similarity descending
+        connections.sort(key=lambda x: x["similarity"], reverse=True)
+        connections = connections[:top_k]
 
         return {
             "source": arxiv_id,
             "source_domain": source_domain,
             "connections": connections,
+            "indexing_occurred": indexing_occurred
         }
 
 

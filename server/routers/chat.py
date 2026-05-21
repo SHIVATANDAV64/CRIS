@@ -26,7 +26,8 @@ async def chat(
         session_id=req.session_id,
         use_reasoning=req.use_reasoning,
         source_papers=req.source_papers,
-        model_id=req.model_id
+        model_id=req.model_id,
+        web_search=req.web_search
     )
     return ChatResponse(**result)
 
@@ -51,7 +52,8 @@ async def chat_stream(
             session_id=req.session_id,
             use_reasoning=req.use_reasoning,
             source_papers=req.source_papers,
-            model_id=req.model_id
+            model_id=req.model_id,
+            web_search=req.web_search
         ),
         media_type="text/event-stream"
     )

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2410.15362",
+  "title": "Faster-GCG: Efficient Discrete Optimization Jailbreak Attacks against Aligned Large Language Models",
+  "abstract": "Aligned Large Language Models (LLMs) have attracted significant attention for their safety, particularly in the context of jailbreak attacks that attempt to bypass guardrails via adversarial prompts. Among existing approaches, the Greedy Coordinate Gradient (GCG) attack pioneered automated jailbreaks through discrete token optimization; however, its low sample efficiency limits practical applicability. In particular, GCG requires approximately 256K evaluations per harmful behavior to achieve a satisfactory jailbreak success rate, due to the inherent difficulty of the underlying discrete optimization problem. In this work, we identify three key factors that limit the sample efficiency of GCG: inaccurate gradient-based estimation, inefficient uniform sampling, and repeated evaluation of previously explored suffixes. To address these issues, we propose Faster-GCG, a streamlined variant of GCG that incorporates distance-based regularization for improved estimation, temperature-controlled sampling for more effective exploration, and a visited-suffix marking mechanism to avoid redundant evaluations. Faster-GCG reduced the required evaluations to 32K, achieving up to an $8\\times$ improvement in sampling efficiency and a $7\\times$ reduction in wall-clock time compared to GCG. Under this reduced budget, Faster-GCG attained an average jailbreak success rate of 78.1\\% across five aligned LLMs, and achieved 88.7\\% against Qwen3.5-4B, outperforming state-of-the-art white-box jailbreak methods.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.CL cs.CR",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T22:58:33.991472"
+}

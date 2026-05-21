@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2603.05933",
+  "title": "Structured Style-Rewrite with Chain-of-Thought Planning for Low-Resource Character Dialogue",
+  "abstract": "Applying Small Language Models (SLMs) to Chinese character-driven generation remains challenging due to data scarcity and the difficulty of disentangling character style. Standard Supervised Fine-Tuning (SFT) often captures surface-level semantics but produces frequent Out-Of-Character (OOC) outputs. We frame this as a controlled sentence-level style rewriting task, which isolates stylistic quality from dialogue context management. We propose a Structured Style-Rewrite Framework that decomposes character style into interpretable format signature, syntactic, and pragmatic dimensions, combined with Chain-of-Thought (CoT) supervision for explicit style planning. A CoT-Shared Direct Preference Optimization (DPO) stage further aligns style planning with surface realization by ensuring preference learning targets output-level style execution rather than reasoning trace differences. Experiments across eight characters from four diverse source domains demonstrate that our method enables a Qwen3-1.7B model to achieve a Valid Style Score of $0.632$ while maintaining strong semantic fidelity (0.878), placing on the Pareto frontier among the evaluated systems and outperforming significantly larger baselines (e.g., GLM-4.7) on consumer hardware.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:03:21.618575"
+}

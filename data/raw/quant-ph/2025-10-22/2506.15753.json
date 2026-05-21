@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.15753",
+  "title": "QPPG: Quantum-Preconditioned Policy Gradient for Link Adaptation in Rayleigh Fading Channels",
+  "abstract": "Reliable link adaptation is critical for efficient wireless communications in dynamic fading environments. However, reinforcement learning (RL) solutions often suffer from unstable convergence due to poorly conditioned policy gradients, hindering their practical application. We propose the quantum-preconditioned policy gradient (QPPG) algorithm, which leverages Fisher-information-based preconditioning to stabilise and accelerate policy updates. Evaluations in Rayleigh fading scenarios show that QPPG achieves faster convergence, a 28.6% increase in average throughput, and a 43.8% decrease in average transmit power compared to classical methods. This work introduces quantum-geometric conditioning to link adaptation, marking a significant advance in developing robust, quantum-inspired reinforcement learning for future 6G networks, thereby enhancing communication reliability and energy efficiency.",
+  "authors": [
+    null
+  ],
+  "categories": "quant-ph cs.LG cs.SY eess.SY",
+  "created": "2025-10-22",
+  "fetched_at": "2026-05-21T23:05:10.003385"
+}

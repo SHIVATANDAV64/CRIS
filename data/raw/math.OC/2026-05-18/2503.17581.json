@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.17581",
+  "title": "Time-optimal neural feedback control of nilpotent systems as a binary classification problem",
+  "abstract": "A computational method for the synthesis of time-optimal feedback control laws for linear nilpotent systems is proposed. The method is based on the use of the bang-bang theorem, which leads to a characterization of the time-optimal trajectory as a parameter-dependent polynomial system for the control switching sequence. A deflated Newton's method is then applied to exhaust all the real roots of the polynomial system. The root-finding procedure is informed by the Hermite quadratic form, which provides a sharp estimate on the number of real roots to be found. In the second part of the paper, the polynomial systems are sampled and solved to generate a synthetic dataset for the construction of a time-optimal deep neural network -- interpreted as a binary classifier -- via supervised learning. Numerical tests in integrators of increasing dimension assess the accuracy, robustness, and real-time-control capabilities of the approximate control law.",
+  "authors": [
+    null
+  ],
+  "categories": "math.OC cs.LG",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:04:30.974142"
+}

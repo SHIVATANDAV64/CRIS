@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.04929",
+  "title": "Neural Configuration-Space Barriers for Manipulation Planning and Control",
+  "abstract": "Planning and control for high-dimensional robot manipulators in cluttered dynamic environments require computational efficiency and robust safety guarantees. Inspired by recent advances in learning configuration-space distance functions (CDFs) as representations of robot bodies, we propose a unified approach for motion planning and control that formulates safety constraints as CDF barriers. A CDF barrier approximates the local free configuration space, substantially reducing the number of collision-checking operations during motion planning. However, learning a CDF barrier with a neural network and relying on online sensor observations introduces uncertainties that must be considered during control synthesis. To address this, we develop a distributionally robust CDF barrier formulation for control that accounts for modeling errors and sensor noise without assuming a known underlying distribution. Simulations and hardware experiments on a UFactory xArm6 manipulator show that our neural CDF barrier formulation enables efficient planning and robust safe control in cluttered and dynamic environments, relying only on onboard point-cloud observations.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.LG cs.SY eess.SY",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:04:15.963930"
+}

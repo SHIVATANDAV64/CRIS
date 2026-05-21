@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.23507",
+  "title": "A Deep Latent Factor Graph Clustering with Fairness-Utility Trade-off Perspective",
+  "abstract": "Fair graph clustering seeks partitions that respect network structure while maintaining proportional representation across sensitive groups, with applications spanning community detection, team formation, resource allocation, and social network analysis. Many existing approaches enforce rigid constraints or rely on multi-stage pipelines (e.g., spectral embedding followed by $k$-means), limiting trade-off control, interpretability, and scalability. We introduce \\emph{DFNMF}, an end-to-end deep nonnegative tri-factorization tailored to graphs that directly optimizes cluster assignments with a soft statistical-parity regularizer. A single parameter $λ$ tunes the fairness--utility balance, while nonnegativity yields parts-based factors and transparent soft memberships. The optimization uses sparse-friendly alternating updates and scales near-linearly with the number of edges. Across synthetic and real networks, DFNMF achieves substantially higher group balance at comparable modularity, often dominating state-of-the-art baselines on the Pareto front. The code is available at https://github.com/SiamakGhodsi/DFNMF.git.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI cs.IT math.IT",
+  "created": "2025-10-27",
+  "fetched_at": "2026-05-21T23:00:28.102734"
+}

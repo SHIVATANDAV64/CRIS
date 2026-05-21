@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2508.01031",
+  "title": "CADDesigner: Conceptual CAD Model Generation with a General-Purpose Agent",
+  "abstract": "Computer-Aided Design (CAD) is widely used for conceptual design and parametric 3D modeling, but typically requires a high level of expertise from designers. To lower the entry barrier and facilitate early-stage CAD modeling, we present CADDesigner, an LLM-powered agent for conceptual CAD design. The agent accepts both textual descriptions and sketches as input, engaging in interactive dialogue with users to refine and clarify design requirements through comprehensive requirement analysis. Built upon a novel Explicit Context Imperative Paradigm (ECIP), the agent generates high-quality CAD modeling code. During the generation process, the agent incorporates iterative visual feedback to improve model quality. Generated design cases can be stored in a structured knowledge base, providing a mechanism for continual knowledge accumulation and future improvement of code generation. Experimental results show that CADDesigner achieves competitive performance and outperforms representative baselines on conceptual CAD model generation tasks.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T22:59:22.048563"
+}

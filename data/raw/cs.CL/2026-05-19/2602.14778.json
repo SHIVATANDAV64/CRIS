@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2602.14778",
+  "title": "A Geometric Analysis of Small-sized Language Model Hallucinations",
+  "abstract": "Hallucinations -- plausible but factually incorrect responses -- pose a major challenge to the reliability of Large Language Models (LLMs), especially in multi-step or agentic settings. Existing work largely frames hallucinations as a consequence of missing knowledge; we show instead that, even when the relevant factual knowledge is present, models still produce hallucinated answers, pointing to retrieval instability rather than knowledge gaps. Building on this observation, we introduce APORIA (Aggregate Prompt-wise Observation Retrieving Instability via Asymmetry -- the state of puzzlement-in-contradiction that hallucinations embody), a geometric framework that studies repeated responses to the same prompt in sentence-embedding space. Our central hypothesis is that genuine responses cluster more tightly than hallucinated ones; we empirically validate this and show that, after Fisher projection, the two response classes become consistently separable. We leverage this asymmetry in geometry via APORIA-LP, an efficient label-propagation method that classifies large collections of responses from as few as 30--50 annotations, achieving F1 scores above 90% across ten small-sized LLMs. To support further research, we release SOCRATES-300K, a fully labelled dataset of 300,000 responses, together with the code for both dataset generation and result reproduction. Our key finding -- framing hallucinations from a geometric perspective in the embedding space -- complements traditional knowledge-centric and single-response evaluation paradigms, paving the way for further research.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.CY",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:03:12.604169"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "1912.11333",
+  "title": "Audio-based automatic mating success prediction of giant pandas",
+  "abstract": "Giant pandas, stereotyped as silent animals, make significantly more vocal sounds during breeding season, suggesting that sounds are essential for coordinating their reproduction and expression of mating preference. Previous biological studies have also proven that giant panda sounds are correlated with mating results and reproduction. This paper makes the first attempt to devise an automatic method for predicting mating success of giant pandas based on their vocal sounds. Given an audio sequence of mating giant pandas recorded during breeding encounters, we first crop out the segments with vocal sound of giant pandas, and normalize its magnitude, and length. We then extract acoustic features from the audio segment and feed the features into a deep neural network, which classifies the mating into success or failure. The proposed deep neural network employs convolution layers followed by bidirection gated recurrent units to extract vocal features, and applies attention mechanism to force the network to focus on most relevant features. Evaluation experiments on a data set collected during the past nine years obtain promising results, proving the potential of audio-based automatic mating success prediction methods in assisting giant panda reproduction.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.SD cs.LG eess.AS",
+  "created": "2020-06-03",
+  "fetched_at": "2026-05-21T23:03:27.912933"
+}

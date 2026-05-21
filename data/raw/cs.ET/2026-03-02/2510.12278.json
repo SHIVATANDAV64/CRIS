@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.12278",
+  "title": "Quantum Annealing for Staff Scheduling in Educational Environments",
+  "abstract": "We address a novel staff allocation problem that arises in the organization of collaborators among multiple school sites and educational levels. The problem emerges from a real case study in a public school in Calabria, Italy, where staff members must be distributed across kindergartens, primary, and secondary schools under constraints of availability, competencies, and fairness. To tackle this problem, we develop an optimization model and investigate a solution approach based on quantum annealing. Our computational experiments on real-world data show that quantum annealing is capable of producing balanced assignments in short runtimes. These results provide evidence of the practical applicability of quantum optimization methods in educational scheduling and, more broadly, in complex resource allocation tasks.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.ET cs.AI",
+  "created": "2026-03-02",
+  "fetched_at": "2026-05-21T23:00:10.092558"
+}

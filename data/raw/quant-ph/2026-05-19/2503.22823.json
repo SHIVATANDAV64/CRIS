@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.22823",
+  "title": "Quantum Doeblin Coefficients: Interpretations and Applications",
+  "abstract": "In classical information theory, the Doeblin coefficient of a classical channel provides an efficiently computable upper bound on the total-variation contraction coefficient of the channel, leading to what is known as a strong data-processing inequality. Here, we investigate quantum Doeblin coefficients as a generalization of the classical concept. In particular, we define various new quantum Doeblin coefficients, one of which has several desirable properties, including concatenation and multiplicativity, in addition to being efficiently computable. We also develop various interpretations of two of the quantum Doeblin coefficients, including representations as minimal singlet fractions, exclusion values, reverse max-mutual and oveloH informations, reverse robustnesses, and hypothesis testing reverse mutual and oveloH informations. Our interpretations of quantum Doeblin coefficients as either entanglement-assisted or unassisted exclusion values are particularly appealing, indicating that they are proportional to the best possible error probabilities one could achieve in state-exclusion tasks by making use of the channel. We also outline various applications of quantum Doeblin coefficients, ranging from limitations on quantum machine learning algorithms that use parameterized quantum circuits (noise-induced barren plateaus), on error mitigation protocols, on the sample complexity of noisy quantum hypothesis testing, and on mixing, distinguishability, and decoupling times of time-varying channels. All of these applications make use of the fact that quantum Doeblin coefficients appear in upper bounds on various trace-distance contraction coefficients of a channel. Furthermore, in all of these applications, our analysis using Doeblin coefficients provides improvements of various kinds over contributions from prior literature, both in terms of generality and being efficiently computable.",
+  "authors": [
+    null
+  ],
+  "categories": "quant-ph cs.IT cs.LG math.IT",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:04:33.976641"
+}

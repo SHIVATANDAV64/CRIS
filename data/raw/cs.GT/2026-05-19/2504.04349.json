@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.04349",
+  "title": "Tight Regret Bounds for Fixed-Price Bilateral Trade",
+  "abstract": "We examine fixed-price mechanisms in bilateral trade through the lens of regret minimization. Our main results are twofold. (i) For independent values, a near-optimal $\\widetildeΘ(T^{2/3})$ tight bound for $\\textsf{Global Budget Balance}$ fixed-price mechanisms with two-bit/one-bit feedback. (ii) For correlated/adversarial values, a near-optimal $Ω(T^{3/4})$ lower bound for $\\textsf{Global Budget Balance}$ fixed-price mechanisms with two-bit/one-bit feedback, which improves the best known $Ω(T^{5/7})$ lower bound obtained in the work [BCCF24] and, up to polylogarithmic factors, matches the $\\widetilde{\\mathcal{O}}(T^{3 / 4})$ upper bound obtained in the same work. Our work in combination with the previous works [CCCFL24mor, CCCFL24jmlr, AFF24, BCCF24] (essentially) gives a thorough understanding of regret minimization for fixed-price bilateral trade. En route, we have developed two technical ingredients that might be of independent interest: (i) A novel algorithmic paradigm, called $\\textit{fractal elimination}$, to address one-bit feedback and independent values. (ii) A new $\\textit{lower-bound construction}$ with novel proof techniques, to address the $\\textsf{Global Budget Balance}$ constraint and correlated values.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.GT cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:04:39.979505"
+}

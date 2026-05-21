@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2411.10959",
+  "title": "Program Evaluation with Remotely Sensed Outcomes",
+  "abstract": "We study causal inference in experiments and quasi-experiments, where the economic outcome is imperfectly measured by a remotely sensed variable. The remotely sensed variable is low-cost, scalable, and predictive of the economic outcome in observational data; examples include satellite imagery and mobile phone activity. We model the remotely sensed variable as post-outcome: variation in the economic outcome causes variation in the remotely sensed variable. For example, changes in environmental quality cause changes in satellite imagery, not vice versa. Under this assumption, we propose a formula to nonparametrically identify the causal parameter by combining experimental and observational data. We develop a method for n^{-1/2} inference that is robust to misspecification and that does not restrict the algorithms used to process remotely sensed variables.",
+  "authors": [
+    null
+  ],
+  "categories": "econ.EM cs.LG math.ST stat.AP stat.ME stat.ML stat.TH",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:04:03.955049"
+}

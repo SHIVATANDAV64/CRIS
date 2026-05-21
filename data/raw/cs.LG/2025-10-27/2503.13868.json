@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2503.13868",
+  "title": "Out-of-Distribution Generalization in Time Series: A Survey",
+  "abstract": "Time series frequently manifest distribution shifts, diverse latent features, and non-stationary learning dynamics, particularly in open and evolving environments. These characteristics pose significant challenges for out-of-distribution (OOD) generalization. While substantial progress has been made, a systematic synthesis of advancements remains lacking. To address this gap, we present the first comprehensive review of OOD generalization methodologies for time series, organized to delineate the field's evolutionary trajectory and contemporary research landscape. We organize our analysis across three foundational dimensions: data distribution, representation learning, and OOD evaluation. For each dimension, we present several popular algorithms in detail. Furthermore, we highlight key application scenarios, emphasizing their real-world impact. Finally, we identify persistent challenges and propose future research directions. A detailed summary of the methods reviewed for the generalization of OOD in time series can be accessed at https://tsood-generalization.com.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2025-10-27",
+  "fetched_at": "2026-05-21T22:58:46.006694"
+}

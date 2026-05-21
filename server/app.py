@@ -23,6 +23,11 @@ app = FastAPI(
     version="3.0.0",
 )
 
+@app.on_event("startup")
+async def startup_event():
+    from core.embedding_client import embed_client
+    await embed_client.connect_async()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # For dev, restrict in prod

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.16559",
+  "title": "BuildArena: A Physics-Aligned Interactive Benchmark of LLMs for Engineering Construction",
+  "abstract": "Engineering construction automation aims to transform natural language specifications into physically viable structures, requiring complex integrated reasoning under strict physical constraints. While modern LLMs possess broad knowledge and strong reasoning capabilities that make them promising candidates for this domain, their construction competencies remain largely unevaluated. To address this gap, we introduce BuildArena, the first physics-aligned interactive benchmark designed for language-driven engineering construction. It takes a first step towards engineering automation using LLMs. Technically, it contributes to the community in two aspects:(1) an extendable task design strategy spanning static and dynamic mechanics across multiple difficulty tiers; (2) a 3D Spatial Geometric Computation Library for supporting construction based on language instructions. On nine frontier LLMs, BuildArena comprehensively evaluates their capabilities for language-driven and physics-grounded construction automation.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:00:19.096895"
+}

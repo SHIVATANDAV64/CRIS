@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2605.19038",
+  "title": "Guiding Neuro-Symbolic Scenario Generation with Spatio-Temporal Logic",
+  "abstract": "The rapid advancement of autonomous driving (AD) technologies has outpaced the development of robust safety evaluation methods. Conventional testing relies on exposing AD systems to vast numbers of real-world traffic scenes -- a brute-force approach that is prohibitively expensive and statistically ineffective at capturing the rare, safety-critical edge cases essential for validating real-world robustness. To address this fundamental limitation, we introduce STRELGen, a scalable framework for the targeted generation of safety-critical driving scenarios. STRELGen synergistically combines a multi-agent trajectory-generation diffusion model (DM) with Spatio-Temporal Logic (STREL) specifications that encode complex safety and realism properties through a highly interpretable formalism. Crucially, monitoring satisfaction levels of these specifications is differentiable, enabling gradient-based search. At inference time, we optimize directly over the DM latent space to maximize STREL formula satisfaction. The result is efficient generation of highly plausible yet safety-critical multi-agent scenarios that lie within the learned data distribution. STRELGen thus provides a flexible, interpretable, and powerful tool for stress-testing autonomous driving systems, moving beyond the limitations of brute-force data collection.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.LG",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:08:18.143316"
+}

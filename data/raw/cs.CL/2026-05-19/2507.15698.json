@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2507.15698",
+  "title": "CoLD: Counterfactually-Guided Length Debiasing for Process Reward Models in Mathematical Reasoning",
+  "abstract": "Process Reward Models (PRMs) play a central role in evaluating and guiding multi-step reasoning in large language models (LLMs), especially for mathematical problem solving. However, we identify a pervasive length bias in existing PRMs: they tend to assign higher scores to longer reasoning steps, even when the semantic content and logical validity are unchanged. This bias undermines the reliability of reward predictions and leads to overly verbose outputs during inference. To address this issue, we propose CoLD(Counterfactually-Guided Length Debiasing), a unified framework that mitigates length bias through three components: an explicit length-penalty adjustment, a learned bias estimator trained to capture spurious length-related signals, and a joint training strategy that enforces length-invariance in reward predictions. Our approach is grounded in counterfactual reasoning and informed by causal graph analysis. Extensive experiments on MATH500 and GSM-Plus show that CoLD improves accuracy in step selection, and encourages more concise, logically valid reasoning. Furthermore, it consistently improves downstream RL performance and generalizes across domains by mitigating length bias, demonstrating CoLD's strong generalization capability.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T22:59:19.046546"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.19250",
+  "title": "Recovering Wasserstein Distance Matrices from Few Measurements",
+  "abstract": "This paper proposes two algorithms for estimating square Wasserstein distance matrices from a small number of entries. These matrices are used to compute manifold learning embeddings like multidimensional scaling (MDS) or Isomap, but contrary to Euclidean distance matrices, are extremely costly to compute. We analyze matrix completion from upper triangular samples and Nyström completion in which $\\mathcal{O}(d\\log(d))$ columns of the distance matrices are computed where $d$ is the desired embedding dimension, prove stability of MDS under Nyström completion, and show that it can outperform matrix completion for a fixed budget of sample distances. Finally, we show that classification of the OrganCMNIST dataset from the MedMNIST benchmark is stable on data embedded from the Nyström estimation of the distance matrix even when only 10\\% of the columns are computed.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ML cs.LG",
+  "created": "2025-09-23",
+  "fetched_at": "2026-05-21T23:05:46.032995"
+}

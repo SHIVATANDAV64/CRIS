@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2601.12367",
+  "title": "User-to-Vehicle Interaction in Smart Mobility: The GO-DRiVeS Autonomous Ride-Sharing Application",
+  "abstract": "This paper introduces the GO-DRiVeS application, an on demand ride sharing and requesting mobile application tailored specifically to save long walks and challenges which are time consuming and tiring especially during hot days or when carrying heavy items, faced by university students and staff. The GO-DRiVeS application was developed following the Agile methodology for its flexibility. In addition to, using the mobile application system architecture and client-server architecture. GO-DRiVeS was implemented using React Native (Expo) for the frontend, Node.js and Express for the backend, and MongoDB as the database; based on a detailed analyses to the existing transportation application, comparing their frameworks and identifying their essential functionalities. GO-DRiVeS supports core features like user registration, ride requesting and real-time tracking.In addition to handling multiple requests at the same time in a first come first serve manner. The application was developed based on these features, and the results were conducted in the form of multiple experiments that demonstrated stable behavior in handling the requests, as presented in the Methodology and Results chapters.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.HC cs.RO",
+  "created": "2026-01-18",
+  "fetched_at": "2026-05-21T23:06:41.939414"
+}

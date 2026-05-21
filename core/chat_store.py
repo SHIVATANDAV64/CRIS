@@ -50,6 +50,12 @@ def init_chat_store(db_path: Optional[Path] = None):
         )
     """)
 
+    # Dynamically add decomposition column if it doesn't exist
+    try:
+        cursor.execute("ALTER TABLE chat_messages ADD COLUMN decomposition TEXT DEFAULT NULL")
+    except sqlite3.OperationalError:
+        pass
+
     cursor.execute("""
         CREATE INDEX IF NOT EXISTS idx_messages_session
         ON chat_messages(session_id, timestamp)
@@ -144,6 +150,7 @@ def add_message(
     content: str,
     thinking: str = "",
     sources: list[dict] | None = None,
+    decomposition: dict | None = None,
 ) -> int:
     """
     Add a message to a session.
@@ -155,13 +162,14 @@ def add_message(
     cursor = conn.cursor()
 
     sources_json = json.dumps(sources or [])
+    decomposition_json = json.dumps(decomposition) if decomposition else None
 
     cursor.execute(
         """
-        INSERT INTO chat_messages (session_id, role, content, thinking, sources)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO chat_messages (session_id, role, content, thinking, sources, decomposition)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
-        (session_id, role, content, thinking, sources_json)
+        (session_id, role, content, thinking, sources_json, decomposition_json)
     )
 
     cursor.execute(
@@ -187,7 +195,7 @@ def get_messages(session_id: str, limit: int = 100) -> list[dict]:
 
     cursor.execute(
         """
-        SELECT id, session_id, role, content, thinking, sources, timestamp
+        SELECT id, session_id, role, content, thinking, sources, decomposition, timestamp
         FROM chat_messages
         WHERE session_id = ?
         ORDER BY timestamp ASC
@@ -203,6 +211,10 @@ def get_messages(session_id: str, limit: int = 100) -> list[dict]:
             msg["sources"] = json.loads(msg["sources"]) if msg["sources"] else []
         except (json.JSONDecodeError, TypeError):
             msg["sources"] = []
+        try:
+            msg["decomposition"] = json.loads(msg["decomposition"]) if msg["decomposition"] else None
+        except (json.JSONDecodeError, TypeError):
+            msg["decomposition"] = None
         messages.append(msg)
 
     conn.close()

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2605.19009",
+  "title": "Adversarial Stress Testing of SPARK Humanoid Safety Filters",
+  "abstract": "Humanoid robots are difficult to deploy safely because they have high-dimensional bodies, many collision constraints, and must operate near people and obstacles. Safety filters help by modifying a nominal control action when it may violate collision-avoidance constraints. Still, nominal benchmark scores do not fully show how these filters behave in harder environments. In this work, we study the robustness of SPARK humanoid safety filters through replication and stress testing. We replicate the SPARK benchmark case G1SportMode_D1_WG_SO_v1 in MuJoCo and evaluate RSSA, RSSS, SSA, CBF, PFM, and SMA under controlled random seeds. We also built a post-processing pipeline that converts raw SPARK logs into goal-tracking, minimum-distance, and collision-step metrics. Our results show that some methods track the goal more closely, while others reduce collision steps more effectively. The stress tests further indicate that safety behavior can change under obstacle crowding, noisy distance estimates, and delayed obstacle information. These findings suggest that humanoid autonomy should be evaluated beyond nominal performance, using metrics that expose failure modes before deployment.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.SY eess.SY",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:08:06.133919"
+}

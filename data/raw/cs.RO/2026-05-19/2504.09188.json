@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.09188",
+  "title": "Compliant Explicit Reference Governor for Contact Friendly Robotic Manipulators",
+  "abstract": "This paper introduces the Compliant Explicit Reference Governor (CERG), a modular reference management system that enables robots to interact physically with their environment under provable guarantees. The CERG is an intermediate layer that can be placed between a high-level planner and a low-level controller: it enforces operational constraints and enables smooth transitions between free-motion and contact operations. The CERG ensures safety by limiting the total energy available to the robotic arm at the time of contact. In the absence of contact, however, the CERG does not penalize the system performance. Simulation and hardware experiments validate the CERG on increasingly complex systems.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.SY eess.SY",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:06:08.875084"
+}

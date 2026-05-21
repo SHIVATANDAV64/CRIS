@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2112.08507",
+  "title": "Algorithms for Adaptive Experiments that Trade-off Statistical Analysis with Reward: Combining Uniform Random Assignment and Reward Maximization",
+  "abstract": "Traditional randomized A/B experiments assign arms with uniform random (UR) probability, such as 50/50 assignment to two versions of a website to discover whether one version engages users more. To more quickly and automatically use data to benefit users, multi-armed bandit algorithms such as Thompson Sampling (TS) have been advocated. While TS is interpretable and incorporates the randomization key to statistical inference, it can cause biased estimates and increase false positives and false negatives in detecting differences in arm means. We introduce a more Statistically Sensitive algorithm, TS-PostDiff (Posterior Probability of Small Difference), that mixes TS with traditional UR by using an additional adaptive step, where the probability of using UR (vs TS) is proportional to the posterior probability that the difference in arms is small. This allows an experimenter to define what counts as a small difference, below which a traditional UR experiment can obtain informative data for statistical inference at low cost, and above which using more TS to maximize user benefits is key. We evaluate TS-PostDiff against UR, TS, and two other TS variants designed to improve statistical inference. We consider results for the common two-armed experiment across a range of settings inspired by real-world applications. Our results provide insight into when and why TS-PostDiff or alternative approaches provide better tradeoffs between benefiting users (reward) and statistical inference (false positive rate and power). TS-PostDiff's adaptivity helps efficiently reduce false positives and increase statistical power when differences are small, while increasing reward more when differences are large. The work highlights important considerations for future Statistically Sensitive algorithm development that balances reward and statistical analysis in adaptive experimentation.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG stat.ML",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:03:36.921248"
+}

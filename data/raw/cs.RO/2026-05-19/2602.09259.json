@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2602.09259",
+  "title": "Data-centric Design of Learning-based Surgical Gaze Perception Models in Multi-Task Simulation",
+  "abstract": "In robot-assisted minimally invasive surgery (RMIS), reduced haptic feedback and depth cues increase reliance on expert visual perception, motivating gaze-guided training and learning-based surgical perception models. However, operative expert gaze is costly to collect, and it remains unclear how the source of gaze supervision, both expertise level (intermediate vs. novice) and perceptual modality (active execution vs. passive viewing), shapes what attention models learn. We introduce a paired active-passive, multi-task surgical gaze dataset collected on the da Vinci SimNow simulator across four drills. Active gaze was recorded during task execution using a VR headset with eye tracking, and the corresponding videos were reused as stimuli to collect passive gaze from observers, enabling controlled same-video comparisons. We quantify skill- and modality-dependent differences in gaze organization and evaluate the substitutability of passive gaze for operative supervision using fixation density overlap analyses and single-frame saliency modeling. Across settings, MSI-Net produced stable, interpretable predictions, whereas SalGAN was unstable and often poorly aligned with human fixations. Models trained on passive gaze recovered a substantial portion of intermediate active attention, but with predictable degradation, and transfer was asymmetric between active and passive targets. Notably, novice passive labels approximated intermediate-passive targets with limited loss on higher-quality demonstrations, suggesting a practical path for scalable, crowd-sourced gaze supervision in surgical coaching and perception modeling.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.HC",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:06:59.957867"
+}

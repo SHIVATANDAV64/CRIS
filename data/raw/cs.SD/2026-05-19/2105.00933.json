@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2105.00933",
+  "title": "Deep Neural Network for Musical Instrument Recognition using MFCCs",
+  "abstract": "The task of efficient automatic music classification is of vital importance and forms the basis for various advanced applications of AI in the musical domain. Musical instrument recognition is the task of instrument identification by virtue of its audio. This audio, also termed as the sound vibrations are leveraged by the model to match with the instrument classes. In this paper, we use an artificial neural network (ANN) model that was trained to perform classification on twenty different classes of musical instruments. Here we use use only the mel-frequency cepstral coefficients (MFCCs) of the audio data. Our proposed model trains on the full London philharmonic orchestra dataset which contains twenty classes of instruments belonging to the four families viz. woodwinds, brass, percussion, and strings. Based on experimental results our model achieves state-of-the-art accuracy on the same.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.SD cs.AI cs.LG eess.AS",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T22:58:27.972518"
+}

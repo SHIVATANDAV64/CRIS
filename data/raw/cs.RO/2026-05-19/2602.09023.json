@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2602.09023",
+  "title": "TwinRL: Digital Twin-Driven Reinforcement Learning for Real-World Robotic Manipulation",
+  "abstract": "Despite strong generalization capabilities, Vision-Language-Action (VLA) models remain constrained by the high cost of expert demonstrations and limited real-world interaction. While online reinforcement learning (RL) has shown promise, its application to real-world VLA manipulation is hindered by low exploration efficiency and restricted exploration coverage. Through systematic real-world experiments, we observe that the effective exploration space of online RL is largely constrained by the trajectory distribution induced during supervised fine-tuning (SFT). Motivated by this observation, we propose TwinRL, a digital twin-real-world collaborative post-training framework that expands and guides RL exploration for VLA models through three stages: SFT warm-up, twin RL warm-up, and real-world RL. TwinRL first reconstructs a high-fidelity digital twin from smartphone-captured scenes. During the SFT stage, we introduce an exploration space expansion strategy that expands the support of the trajectory distribution beyond real demonstrations, reshaping the exploration space for more effective RL. Rather than treating the twin as a data augmentation tool, we propose a twin RL warm-up strategy that enables it to act as an exploration guide for real-world RL. Specifically, TwinRL performs efficient parallel RL in the digital twin to generate interactive trajectories that populate the replay buffer and stabilize subsequent real-world RL learning. This process also identifies failure-prone yet informative configurations, enabling targeted human-in-the-loop rollouts to further improve on-robot efficiency. Across four tasks, TwinRL achieves near-100% success in both in-distribution and out-of-distribution regions, delivering over 30% faster convergence than prior real-world RL methods with only 20 minutes of on-robot interaction.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:06:56.956075"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2602.17001",
+  "title": "Sonar-TS: Search-Then-Verify Natural Language Querying for Time Series Databases",
+  "abstract": "Natural Language Querying for Time Series Databases (NLQ4TSDB) aims to assist non-expert users retrieve meaningful events, intervals, and summaries from massive temporal records. However, existing Text-to-SQL methods are not designed for continuous morphological intents such as shapes or anomalies, while time series models struggle to handle ultra-long histories. To address these challenges, we propose Sonar-TS, a neuro-symbolic framework that tackles NLQ4TSDB via a Search-Then-Verify pipeline. Analogous to active sonar, it utilizes a feature index to ping candidate windows via SQL, followed by generated Python programs to lock on and verify candidates against raw signals. To enable effective evaluation, we introduce NLQTSBench, the first large-scale benchmark designed for NLQ over TSDB-scale histories. Our experiments highlight the unique challenges within this domain and demonstrate that Sonar-TS effectively navigates complex temporal queries where traditional methods fail. This work presents the first systematic study of NLQ4TSDB, offering a general framework and evaluation standard to facilitate future research.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL cs.DB",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:03:15.608030"
+}

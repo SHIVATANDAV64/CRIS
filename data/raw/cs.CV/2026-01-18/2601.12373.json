@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2601.12373",
+  "title": "CD-TWINSAFE: A ROS-enabled Digital Twin for Scene Understanding and Safety Emerging V2I Technology",
+  "abstract": "In this paper, the CD-TWINSAFE is introduced, a V2I-based digital twin for Autonomous Vehicles. The proposed architecture is composed of two stacks running simultaneously, an on-board driving stack that includes a stereo camera for scene understanding, and a digital twin stack that runs an Unreal Engine 5 replica of the scene viewed by the camera as well as returning safety alerts to the cockpit. The on-board stack is implemented on the vehicle side including 2 main autonomous modules; localization and perception. The position and orientation of the ego vehicle are obtained using on-board sensors. Furthermore, the perception module is responsible for processing 20-fps images from stereo camera and understands the scene through two complementary pipelines. The pipeline are working on object detection and feature extraction including object velocity, yaw and the safety metrics time-to-collision and time-headway. The collected data form the driving stack are sent to the infrastructure side through the ROS-enabled architecture in the form of custom ROS2 messages and sent over UDP links that ride a 4G modem for V2I communication. The environment is monitored via the digital twin through the shared messages which update the information of the spawned ego vehicle and detected objects based on the real-time localization and perception data. Several tests with different driving scenarios to confirm the validity and real-time response of the proposed architecture.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.HC cs.RO",
+  "created": "2026-01-18",
+  "fetched_at": "2026-05-21T23:06:44.941019"
+}

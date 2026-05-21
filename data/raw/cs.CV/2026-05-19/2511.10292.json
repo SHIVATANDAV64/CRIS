@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2511.10292",
+  "title": "Adaptive Residual-Update Steering for Low-Overhead Hallucination Mitigation in Large Vision Language Models",
+  "abstract": "Large Vision-Language Models (LVLMs) typically process visual inputs as a prefix to the language decoder. As the model autoregressively generates text, this initial visual information inevitably undergoes \"dilution\" leading the model to over-rely on language priors and hallucinate objects. Existing interventions attempt to correct this by contrasting logits or iteratively refining outputs, but they incur prohibitive latency costs. We propose Residual-Update Directed DEcoding Regulation (RUDDER), a framework that counters visual dilution by creating a persistent visual anchor. We extract a robust evidence direction (CARD) directly from the model's prefill residual updates, and inject it into the decoding process. This injection is modulated by an adaptive gate, the Beta Gate, which acts as a trust mechanism and ensures the visual reminder is applied only when necessary. Experiments on LLaVA-1.5 (7B/13B), Idefics2, InstructBLIP, and Qwen2.5-VL demonstrate that RUDDER consistently mitigates hallucination (with greedy decoding, RUDDER reduces CHAIR_S by an average of 24.4% and CHAIR_i by 23.6% relative) and scales effectively across architectures, all while maintaining >96.0% throughput.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.AI",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:00:34.107759"
+}

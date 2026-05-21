@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2407.17200",
+  "title": "Generalization Bounds of Surrogate Policies for Combinatorial Optimization Problems",
+  "abstract": "Many real-world decision problems require solving, again and again, combinatorial optimization instances drawn from a common distribution. A recent line of structured learning methods exploits this regularity by learning policies that pair a statistical model with a tractable combinatorial oracle, instead of solving each instance independently. Training such policies is notoriously difficult, however: the resulting empirical risk is piecewise constant in the model parameters, which hinders gradient-based optimization, and only a few theoretical guarantees have been provided so far. We address this issue by analyzing smoothed (perturbed) policies: adding controlled random perturbations to the direction used by the linear oracle yields a differentiable surrogate risk and improves generalization. Our main contribution is a generalization bound that decomposes the excess risk into $(\\mathit{i})$ perturbation bias, $(\\mathit{ii})$ statistical estimation error, and $(\\mathit{iii})$ optimization error. The perturbation bias is controlled by the \\emph{fan-crossing probability}, a new geometric quantity measuring the likelihood that a perturbation changes the oracle solution. We introduce two complementary conditions to bound it--the \\emph{Uniformly Bounded Density} (UBD) property, yielding a sharp ${O}(λ)$ bias, and the weaker \\emph{Uniform Weak moment} (UW) property, yielding a sub-linear bound--both capturing the geometric interaction between the statistical model and the normal fan of the feasible polytope. The statistical estimation error is controlled via a uniform deviation bound over the policy class, with rate ${O}(1/(λ\\sqrt{n}))$ that scales inversely in the smoothing parameter. Concerning the optimization error, we exploit kernel Sum-of-Squares methods to mitigate the curse of dimensionality of global optimization.",
+  "authors": [
+    null
+  ],
+  "categories": "stat.ML cs.LG math.OC stat.ME",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:03:51.941925"
+}

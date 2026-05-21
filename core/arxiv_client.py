@@ -64,6 +64,7 @@ def fetch_papers(
     until_date: Optional[str] = None,
     categories: Optional[list] = None,
     max_papers: Optional[int] = None,
+    is_cancelled: Optional[callable] = None,
 ) -> list[dict]:
     """
     Fetch papers from arXiv via OAI-PMH.
@@ -73,6 +74,7 @@ def fetch_papers(
         until_date: End date in YYYY-MM-DD format (optional)
         categories: List of arXiv categories to filter (optional, uses config default)
         max_papers: Maximum number of papers to fetch (optional, for testing)
+        is_cancelled: Optional callable to check if execution should stop
 
     Returns:
         List of paper dicts with: arxiv_id, title, abstract, authors, categories, created
@@ -84,6 +86,10 @@ def fetch_papers(
     all_papers = []
 
     for category in cats:
+        if is_cancelled and is_cancelled():
+            print("Fetch cancelled by caller.")
+            break
+
         print(f"\nFetching papers from {category} (from {from_date})...")
 
         params = {
@@ -99,6 +105,10 @@ def fetch_papers(
             records = sickle.ListRecords(**params)
 
             for record in records:
+                if is_cancelled and is_cancelled():
+                    print("Fetch cancelled mid-record loop.")
+                    break
+
                 paper = _parse_arxiv_record(record)
                 if paper is None:
                     continue
@@ -114,7 +124,11 @@ def fetch_papers(
                 if max_papers and len(category_papers) >= max_papers:
                     break
 
-                time.sleep(ARXIV_RATE_LIMIT_SECONDS)
+                # Cancel-aware sleep: check is_cancelled every 100ms
+                for _ in range(int(ARXIV_RATE_LIMIT_SECONDS * 10)):
+                    if is_cancelled and is_cancelled():
+                        break
+                    time.sleep(0.1)
 
         except Exception as e:
             error_msg = str(e)

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2510.03485",
+  "title": "Learning Efficient Guardrails for Compliance",
+  "abstract": "Autonomous web agents are increasingly deployed for long-horizon tasks, yet their ability to adhere to real-world policies remains critically underexplored compared to standard safety objectives. To address this gap, we introduce PolicyGuardBench, a benchmark of 60k policy-trajectory pairs designed to evaluate compliance through both full-trajectory and novel prefix-based violation detection tasks. Using this dataset, we train PolicyGuard, a lightweight guardrail model that achieves strong detection accuracy while maintaining high inference efficiency. Notably, our model demonstrates robust generalization capabilities, preserving high performance even on unseen domains. These contributions establish a comprehensive framework for studying policy compliance, showing that accurate and generalizable guardrails are feasible at small scales.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T22:59:58.083674"
+}

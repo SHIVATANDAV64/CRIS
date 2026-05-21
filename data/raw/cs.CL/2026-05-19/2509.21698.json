@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.21698",
+  "title": "GRAB: A Risk Taxonomy--Grounded Benchmark for Unsupervised Topic Discovery in Financial Disclosures",
+  "abstract": "Risk categorization in 10-K risk disclosures matters for oversight and investment, yet no public benchmark evaluates unsupervised topic models for this task. We present GRAB, a finance-specific benchmark with 1.61M sentences from 8,247 filings and span-grounded sentence labels produced without manual annotation by combining FinBERT token attention, YAKE keyphrase signals, and taxonomy-aware collocation matching. Labels are anchored in a risk taxonomy mapping 193 terms to 21 fine-grained types nested under five macro classes; the 21 types guide weak supervision, while evaluation is reported at the macro level. GRAB unifies evaluation with fixed dataset splits and robust metrics--Accuracy, Macro-F1, Topic BERTScore, and the entropy-based Effective Number of Topics. The dataset, labels, and code enable reproducible, standardized comparison across classical, embedding-based, neural, and hybrid topic models on financial disclosures.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:01:51.504914"
+}

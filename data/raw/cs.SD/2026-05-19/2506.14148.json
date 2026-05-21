@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.14148",
+  "title": "Acoustic scattering AI for non-invasive object classifications: A case study on hair assessment",
+  "abstract": "This paper presents a novel non-invasive object classification approach using acoustic scattering, demonstrated through a case study on hair assessment. When an incident wave interacts with an object, it generates a scattered acoustic field encoding structural and material properties. By emitting acoustic stimuli and capturing the scattered signals from head-with-hair-sample objects, we classify hair type and moisture using AI-driven, deep-learning-based sound classification. We benchmark comprehensive methods, including (i) fully supervised deep learning, (ii) embedding-based classification, (iii) supervised foundation model fine-tuning, and (iv) self-supervised model fine-tuning. Our best strategy achieves nearly 90% classification accuracy by fine-tuning all parameters of a self-supervised model. These results highlight acoustic scattering as a privacy-preserving, non-contact alternative to visual classification, opening huge potential for applications in various industries.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.SD cs.CL eess.AS",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:01:27.476494"
+}

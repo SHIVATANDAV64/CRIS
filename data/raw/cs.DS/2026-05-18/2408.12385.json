@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2408.12385",
+  "title": "Sharper Bounds for Chebyshev Moment Matching, with Applications",
+  "abstract": "We study the problem of approximately recovering a probability distribution given noisy measurements of its Chebyshev polynomial moments. This problem arises broadly across algorithms, statistics, and machine learning. By leveraging a global decay bound on the coefficients in the Chebyshev expansion of any Lipschitz function, we sharpen prior work, proving that accurate recovery in the Wasserstein distance is possible with more noise than previously known. Our result immediately yields a number of applications: 1) We give a simple \"linear query\" algorithm for constructing a differentially private synthetic data distribution with Wasserstein-$1$ error $\\tilde{O}(1/n)$ based on a dataset of $n$ points in $[-1,1]$. This bound is optimal up to log factors, and matches a recent result of Boedihardjo, Strohmer, and Vershynin [Probab. Theory. Rel., 2024], which uses a more complex \"superregular random walk\" method. 2) We give an $\\tilde{O}(n^2/ε)$ time algorithm for the linear algebraic problem of estimating the spectral density of an $n\\times n$ symmetric matrix up to $ε$ error in the Wasserstein distance. Our result accelerates prior methods from Chen et al. [ICML 2021] and Braverman et al. [STOC 2022]. 3) We tighten an analysis of Vinayak, Kong, Valiant, and Kakade [ICML 2019] on the maximum likelihood estimator for the statistical problem of \"Learning Populations of Parameters'', extending the parameter regime in which sample optimal results can be obtained. Beyond these main results, we provide an extension of our bound to estimating distributions in $d > 1$ dimensions. We hope that these bounds will find applications more broadly to problems involving distribution recovery from noisy moment information.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.DS cs.LG",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:03:54.944924"
+}

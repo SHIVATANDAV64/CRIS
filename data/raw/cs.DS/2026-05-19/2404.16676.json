@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2404.16676",
+  "title": "Multilayer Correlation Clustering",
+  "abstract": "We establish Multilayer Correlation Clustering, a novel generalization of Correlation Clustering to the multilayer setting. In this model, we are given a series of inputs of Correlation Clustering (called layers) over the common set $V$ of $n$ elements. The goal is to find a clustering of $V$ that minimizes the $\\ell_p$-norm ($p\\geq 1$) of the multilayer-disagreements vector, which is defined as the vector (with dimension equal to the number of layers), each element of which represents the disagreements of the clustering on the corresponding layer. For this generalization, we first design an $O(L\\log n)$-approximation algorithm, where $L$ is the number of layers. We then study an important special case of our problem, namely the problem with the so-called probability constraint. For this case, we first give an $(α+2)$-approximation algorithm, where $α$ is any possible approximation ratio for the single-layer counterpart. Furthermore, we design a $4$-approximation algorithm, which improves the above approximation ratio of $α+2=4.5$ for the general probability-constraint case. Computational experiments using real-world datasets support our theoretical findings and demonstrate the practical effectiveness of our proposed algorithms.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.DS cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:03:48.935240"
+}

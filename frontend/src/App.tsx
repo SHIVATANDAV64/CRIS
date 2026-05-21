@@ -4,13 +4,17 @@ import { ChatPanel } from './components/ChatPanel'
 import { HistoryDashboard } from './components/HistoryDashboard'
 import { WikiGraph } from './components/WikiGraph'
 import { SettingsPanel } from './components/SettingsPanel'
-import { streamChat, listSessions, listModels, getSettings } from './api'
+import { SourcesBrowser } from './components/SourcesBrowser'
+import { IngestionPanel } from './components/IngestionPanel'
+import { streamChat, listSessions, listModels, getSettings, getIngestStatus } from './api'
 import type { Message, Session, Model } from './types'
 
 function App() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
-  const [sidebarTab, setSidebarTab] = useState('chat') // Start on chat page
+  const [sidebarTab, setSidebarTab] = useState(() => {
+    return localStorage.getItem('cris_active_tab') || 'chat'
+  })
   const [sessions, setSessions] = useState<Session[]>([])
   const [selectedModel, setSelectedModel] = useState('darwin-opus')
   const [availableModels, setAvailableModels] = useState<Model[]>([])
@@ -20,6 +24,29 @@ function App() {
   })
   const [droppedPapers, setDroppedPapers] = useState<Map<string, { id: string; title: string }>>(new Map())
   const [searchStatus, setSearchStatus] = useState<string>('')
+  const [webSearchEnabled, setWebSearchEnabled] = useState<boolean>(false)
+  const [reasoningEnabled, setReasoningEnabled] = useState<boolean>(true)
+  const [isIngesting, setIsIngesting] = useState(false)
+
+  // Ingestion status polling
+  useEffect(() => {
+    async function checkIngestion() {
+      try {
+        const res = await getIngestStatus()
+        setIsIngesting(res.running)
+      } catch {
+        // silent
+      }
+    }
+    checkIngestion()
+    const timer = setInterval(checkIngestion, 4000)
+    return () => clearInterval(timer)
+  }, [])
+
+  // Persist sidebar active tab
+  useEffect(() => {
+    localStorage.setItem('cris_active_tab', sidebarTab)
+  }, [sidebarTab])
 
   // Theme
   useEffect(() => {
@@ -139,6 +166,7 @@ function App() {
 
     const assistantId = `msg-${Date.now()}-assistant`
     let fullContent = ''
+    let fullThinking = ''
 
     setMessages(prev => [...prev, {
       id: assistantId,
@@ -155,6 +183,8 @@ function App() {
       sessionId,
       selectedModel,
       sourcePaperIds,
+      webSearchEnabled ? true : undefined,
+      reasoningEnabled,
       (sources, sid) => {
         if (sid) setSessionId(sid)
         setSearchStatus('')
@@ -163,8 +193,9 @@ function App() {
         ))
       },
       (thinking) => {
+        fullThinking += thinking
         setMessages(prev => prev.map(m =>
-          m.id === assistantId ? { ...m, thinking } : m
+          m.id === assistantId ? { ...m, thinking: fullThinking } : m
         ))
       },
       (content) => {
@@ -190,8 +221,16 @@ function App() {
         } else if (status === 'web_results') {
           setSearchStatus(statusMessage || 'Web results found')
           setTimeout(() => setSearchStatus(''), 2000)
+        } else if (status === 'decomposing') {
+          setSearchStatus(statusMessage || 'Decomposing research query...')
         }
       },
+      (decomp) => {
+        setSearchStatus('')
+        setMessages(prev => prev.map(m =>
+          m.id === assistantId ? { ...m, decomposition: decomp } : m
+        ))
+      }
     )
   }
 
@@ -255,6 +294,27 @@ function App() {
             onPaperRemove={handlePaperRemove}
             onToggleSidebar={() => {}}
             searchStatus={searchStatus}
+            webSearchEnabled={webSearchEnabled}
+            onToggleWebSearch={() => setWebSearchEnabled(prev => !prev)}
+            reasoningEnabled={reasoningEnabled}
+            onToggleReasoning={() => setReasoningEnabled(prev => !prev)}
+            theme={theme}
+          />
+        )
+      case 'library':
+        return (
+          <SourcesBrowser
+            activeReferences={droppedPapers}
+            onAddReferences={(papers) => {
+              setDroppedPapers(prev => {
+                const next = new Map(prev)
+                papers.forEach(p => {
+                  next.set(p.id, { id: p.id, title: p.title })
+                })
+                return next
+              })
+              setSidebarTab('chat')
+            }}
           />
         )
       case 'history':
@@ -270,6 +330,8 @@ function App() {
         )
       case 'wiki':
         return <WikiGraph />
+      case 'ingestion':
+        return <IngestionPanel />
       case 'settings':
         return <SettingsPanel />
       default:
@@ -292,6 +354,8 @@ function App() {
         onSelectModel={selectModel}
         onToggleTheme={toggleTheme}
         theme={theme}
+        onPaperDrop={handlePaperDrop}
+        isIngesting={isIngesting}
       />
       {renderActiveTabContent()}
     </div>

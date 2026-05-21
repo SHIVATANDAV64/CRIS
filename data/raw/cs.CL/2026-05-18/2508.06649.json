@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2508.06649",
+  "title": "Measuring Stereotype and Deviation Biases in Large Language Models",
+  "abstract": "Large language models (LLMs) are widely applied across diverse domains, raising concerns about their limitations and potential risks. In this study, we investigate two types of bias that LLMs may display: stereotype bias and deviation bias. Stereotype bias refers to when LLMs consistently associate specific traits with a particular demographic group. Deviation bias reflects the disparity between the demographic distributions extracted from LLM-generated content and real-world demographic distributions. By asking four advanced LLMs to generate profiles of individuals, we examine the associations between each demographic group and attributes such as political affiliation, religion, and sexual orientation. Our experimental results show that all examined LLMs exhibit both significant stereotype bias and deviation bias towards multiple groups. Our findings uncover the biases that occur when LLMs infer user attributes and shed light on the potential harms of LLM-generated outputs.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:01:45.488063"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2508.14134",
+  "title": "ERIS: An Energy-Guided Feature Disentanglement Framework for Out-of-Distribution Time Series Classification",
+  "abstract": "An ideal time series classification (TSC) should be able to capture invariant representations, but achieving reliable performance on out-of-distribution (OOD) data remains a core obstacle. This obstacle arises from the way models inherently entangle domain-specific and label-relevant features, resulting in spurious correlations. While feature disentanglement aims to solve this, current methods are largely unguided, lacking the semantic direction required to isolate truly universal features. To address this, we propose an end-to-end Energy-Regularized Information for Shift-Robustness (ERIS) framework to enable guided and reliable feature disentanglement. The core idea is that effective disentanglement requires not only mathematical constraints but also semantic guidance to anchor the separation process. ERIS incorporates three key mechanisms to achieve this goal. Specifically, we first introduce an energy-guided calibration mechanism, which provides crucial semantic guidance for the separation, enabling the model to self-calibrate. Additionally, a weight-level orthogonality strategy enforces structural independence between domain-specific and label-relevant features, thereby mitigating their interference. Moreover, an auxiliary adversarial generalization mechanism enhances robustness by injecting structured perturbations. Experiments across four benchmarks demonstrate that ERIS achieves a statistically significant improvement over state-of-the-art baselines, consistently securing the top performance rank.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2025-09-26",
+  "fetched_at": "2026-05-21T22:59:28.052462"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2602.11767",
+  "title": "TSR: Trajectory-Search Rollouts for Multi-Turn RL of LLM Agents",
+  "abstract": "Advances in large language models (LLMs) are driving a shift toward using reinforcement learning (RL) to train agents from iterative, multi-turn interactions across tasks. However, multi-turn RL remains challenging as rewards are often sparse or delayed, and environments can be stochastic. In this regime, naive trajectory sampling can hinder exploitation and induce mode collapse. We propose TSR (Trajectory-Search Rollouts), a training-time approach that repurposes test-time scaling ideas for improved per-turn rollout generation. TSR performs lightweight tree-style search to construct high-quality trajectories by selecting high-scoring actions at each turn using state-based feedback. This improves rollout quality and stabilizes learning while remaining compatible with standard policy gradient optimizers, making TSR optimizer-agnostic. We instantiate TSR with best-of-N, beam, and shallow lookahead search, and pair it with PPO and GRPO, achieving up to 15% performance gains and more stable learning on Sokoban, FrozenLake, and WebShop tasks at a modest, one-time increase in training compute. By moving search from inference time to the rollout stage of training, TSR provides a modular and general mechanism for stronger multi-turn agent learning, complementary to existing frameworks and rejection-sampling-style selection methods.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL cs.LG",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:03:03.600667"
+}

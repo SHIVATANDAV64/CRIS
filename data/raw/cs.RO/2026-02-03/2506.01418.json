@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.01418",
+  "title": "SEMNAV: Enhancing Visual Semantic Navigation in Robotics through Semantic Segmentation",
+  "abstract": "Visual Semantic Navigation (VSN) is a fundamental problem in robotics, where an agent must navigate toward a target object in an unknown environment, mainly using visual information. Most state-of-the-art VSN models are trained in simulation environments, where rendered scenes of the real world are used, at best. These approaches typically rely on raw RGB data from the virtual scenes, which limits their ability to generalize to real-world environments due to domain adaptation issues. To tackle this problem, in this work, we propose SEMNAV, a novel approach that leverages semantic segmentation as the main visual input representation of the environment to enhance the agent's perception and decision-making capabilities. By explicitly incorporating this type of high-level semantic information, our model learns robust navigation policies that improve generalization across unseen environments, both in simulated and real world settings. We also introduce the SEMNAV dataset, a newly curated dataset designed for training semantic segmentation-aware navigation models like SEMNAV. Our approach is evaluated extensively in both simulated environments and with real-world robotic platforms. Experimental results demonstrate that SEMNAV outperforms existing state-of-the-art VSN models, achieving higher success rates in the Habitat 2.0 simulation environment, using the HM3D dataset. Furthermore, our real-world experiments highlight the effectiveness of semantic segmentation in mitigating the sim-to-real gap, making our model a promising solution for practical VSN-based robotic applications. The code and datasets are accessible at https://github.com/gramuah/semnav",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.CV",
+  "created": "2026-02-03",
+  "fetched_at": "2026-05-21T23:06:14.883356"
+}

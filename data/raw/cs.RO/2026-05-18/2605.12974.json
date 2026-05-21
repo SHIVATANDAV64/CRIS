@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2605.12974",
+  "title": "Distributionally Robust Safety Under Arbitrary Uncertainties: A Safety Filtering Approach",
+  "abstract": "In this work, we study how to ensure probabilistic safety for nonlinear systems under distributional ambiguity. Our approach builds on a backup-based safety filtering framework that switches between a high-performance nominal policy and a certified backup policy to ensure safety. To handle arbitrary uncertainties from ambiguous distributions, i.e., where the distribution is not of specific structure and the true distribution is unknown, we adopt a distributionally robust (DR) formulation using Wasserstein ambiguity sets. Rather than solving a high-dimensional DR trajectory optimization problem online, we exploit the structure of backup-based safety filtering to reduce safety certification to a one-dimensional search over the switching time between nominal and backup policies. We then develop a sampling-based certification procedure with finite-sample guarantees, where empirical failure probabilities are compared against a Wasserstein-inflated threshold. We validate our method through simulations across three systems, from a Dubins vehicle to a high-speed racing car and a fighter jet, demonstrating the broad applicability and computational efficiency.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO cs.SY eess.SY",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:07:36.031486"
+}

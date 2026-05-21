@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2504.00470",
+  "title": "Less is More: Efficient Black-box Attribution via Minimal Interpretable Subset Selection",
+  "abstract": "To develop a trustworthy AI system, which aim to identify the input regions that most influence the models decisions. The primary task of existing attribution methods lies in efficiently and accurately identifying the relationships among input-prediction interactions. Particularly when the input data is discrete, such as images, analyzing the relationship between inputs and outputs poses a significant challenge due to the combinatorial explosion. In this paper, we propose a novel and efficient black-box attribution mechanism, LiMA (Less input is More faithful for Attribution), which reformulates the attribution of important regions as an optimization problem for submodular subset selection. First, to accurately assess interactions, we design a submodular function that quantifies subset importance and effectively captures their impact on decision outcomes. Then, efficiently ranking input sub-regions by their importance for attribution, we improve optimization efficiency through a novel bidirectional greedy search algorithm. LiMA identifies both the most and least important samples while ensuring an optimal attribution boundary that minimizes errors. Extensive experiments on eight foundation models demonstrate that our method provides faithful interpretations with fewer regions and exhibits strong generalization, shows an average improvement of 36.3% in Insertion and 39.6% in Deletion. Our method also outperforms the naive greedy search in attribution efficiency, being 1.6 times faster. Furthermore, when explaining the reasons behind model prediction errors, the average highest confidence achieved by our method is, on average, 86.1% higher than that of state-of-the-art attribution algorithms. The code is available at https://github.com/RuoyuChen10/LIMA.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.CV",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:04:36.978103"
+}

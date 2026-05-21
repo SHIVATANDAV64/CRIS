@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2410.18856",
+  "title": "Entry-level guide to the use of large language models for medical research",
+  "abstract": "Frontier large language models (LLMs), such as GPT-5, Claude 4.5, Gemini 3, Llama 4, and DeepSeek-R1, represent a transformative class of AI tools capable of revolutionizing various aspects of healthcare by generating human-like responses across diverse contexts and adapting to novel tasks following human instructions. Their potential application spans a broad range of medical tasks, such as clinical documentation, matching patients to clinical trials, and answering medical questions. In this paper, we propose an actionable guideline to help healthcare professionals more effectively and efficiently utilize LLMs in their work, along with a set of best practices. The overall workflow consists of several main phases, including formulating the task, choosing LLMs, prompt engineering, fine-tuning, and model deployment. We start with the discussion of critical considerations in identifying medical tasks that align with the core capabilities of LLMs and selecting models based on the selected task and data, performance requirements, and model interface. We then review the strategies, such as prompt engineering and fine-tuning, to adapt standard LLMs to specialized medical tasks. Deployment considerations, including regulatory compliance, ethical guidelines, and continuous monitoring for fairness and bias, are also discussed. By providing a structured step-by-step methodology, this entry-level tutorial aims to equip healthcare professionals with the tools necessary to effectively integrate LLMs into clinical practice, ensuring that these powerful technologies are applied in a safe, reliable, and impactful manner.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T22:58:36.993183"
+}

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2509.14968",
+  "title": "FAWN: A MultiEncoder Fusion-Attention Wave Network for Integrated Sensing and Communication Indoor Scene Inference",
+  "abstract": "The upcoming generations of wireless technologies promise an era where everything is interconnected and intelligent. As the need for intelligence grows, networks must learn to better understand the physical world. However, deploying dedicated hardware to perceive the environment is not always feasible, mainly due to costs and/or complexity. Integrated Sensing and Communication (ISAC) has made a step forward in addressing this challenge. Within ISAC, passive sensing emerges as a cost-effective solution that reuses wireless communications to sense the environment, without interfering with existing communications. Nevertheless, the majority of current solutions are limited to one technology (mostly Wi-Fi or 5G), constraining the maximum accuracy reachable. As different technologies work with different spectrums, we see a necessity in integrating more than one technology to augment the coverage area. Hence, we take the advantage of ISAC passive sensing, to present FAWN, a MultiEncoder Fusion-Attention Wave Network for ISAC indoor scene inference. FAWN is based on the original transformers architecture, to fuse information from Wi-Fi and 5G, making the network capable of understanding the physical world without interfering with the current communication. To test our solution, we have built a prototype and integrated it in a real scenario. Results show errors below 0.6 m around 84% of times.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.NI",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:05:40.029598"
+}

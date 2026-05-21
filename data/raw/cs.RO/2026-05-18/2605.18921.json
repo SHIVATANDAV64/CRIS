@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2605.18921",
+  "title": "Geo-Data-Driven HD Map Generation Workflow with Integrated Reference-Free Constraint-Based Verification",
+  "abstract": "High-definition (HD) maps are core artifacts for automated driving systems, but their generation commonly relies on sensor-intensive mobile mapping campaigns, while quality assessment often depends on high-precision reference data. These dependencies make HD map engineering costly and difficult to apply in settings where specialised measurement data or independently measured reference maps are unavailable. This paper presents an engineering-oriented geo-data-driven workflow for HD map generation with integrated representation-level verification. The workflow uses openly available geo-engineering datasets as the primary input source and transforms them into lane-level HD map representations of existing road environments through explicit intermediate representations and processing stages. To assess the generated representations without external reference maps, the workflow integrates executable constraint-based verification into the engineering process. Selected constraints are derived from specifications relevant to automated driving and road-design guidelines. They are evaluated directly on the generated lanelet-based representation to detect geometric, topological, and elevation-related inconsistencies. The workflow is evaluated using real-world shapefile-based road-network data from four cities in Lower Saxony, Germany, and controlled defect-injection scenarios. The real-world evaluation shows that the generated map representations satisfy the selected constraints in the evaluated scenarios, while the defect-injection study demonstrates complete detection of the considered defect types without observed false positives. The results indicate that geo-data-driven HD map generation with integrated executable verification can provide a modular and inspectable complement to sensor-intensive mapping workflows under reduced sensing and reference-data availability.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.RO",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:08:00.128607"
+}

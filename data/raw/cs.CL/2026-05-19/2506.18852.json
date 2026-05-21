@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2506.18852",
+  "title": "Mechanistic Interpretability Needs Philosophy",
+  "abstract": "Mechanistic interpretability (MI) aims to explain how neural networks work by uncovering their underlying mechanisms. As the field grows in influence, it is increasingly important to examine not just models themselves, but the assumptions, concepts and explanatory strategies implicit in MI research. We argue that mechanistic interpretability needs philosophy as an ongoing partner in clarifying its concepts, refining its methods, and navigating the epistemic and ethical complexities of interpreting AI systems. There is significant unrealised potential for progress in MI to be gained through deeper engagement with philosophers and philosophical frameworks. Taking three open problems from the MI literature as examples, this paper illustrates the value philosophy can add to MI research, and outlines a path toward deeper interdisciplinary dialogue.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL cs.AI",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T22:59:10.039612"
+}

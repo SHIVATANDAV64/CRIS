@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2512.14700",
+  "title": "Context-Aware Detection and Victim-Centered Response Generation for Online Harassment in Private Messaging",
+  "abstract": "Online harassment is a widespread social and public health concern, yet most computational approaches for detecting and addressing harassment focus on publicly visible social media content rather than private messaging environments. Private conversations present unique challenges because harmful interactions often unfold through context-dependent, multi-turn exchanges, while victims may lack timely support during moments of harassment. In this study, we investigate how large language models (LLMs) can support both the detection of and response to online harassment in private messaging. Using a dataset of 80,053 Instagram direct messages donated by 26 adolescents aged 12-18, including youth with suicide risk factors, we first construct a human-labeled dataset of online harassment in private conversations and develop a context-aware cascading LLM classification pipeline. The proposed pipeline outperforms baseline toxicity classifiers trained primarily on public social media data. We then develop a victim-centered response framework that produces context-sensitive and psychologically-grounded AI-generated responses to online harassment messages. Human evaluators perceived the AI-generated responses as significantly more helpful than the original participant responses (95% CI: 0.767--0.815, p < .001), particularly in terms of emotional support and de-escalation. Our findings highlight the potential of context-aware and victim-centered AI systems to provide just-in-time support during harassment in private messaging environments.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.SI cs.CL cs.CY",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T23:02:33.562532"
+}

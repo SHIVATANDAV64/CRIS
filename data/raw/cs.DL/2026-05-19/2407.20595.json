@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2407.20595",
+  "title": "HALvest-Contrastive: Retrieval-Like Authorship Attribution with Patch-Level Late Interaction",
+  "abstract": "Deciding whether two pieces of text share an author is made difficult by topical confound: two writers covering the same topic often look more alike than one writer covering two topics. We tackle this with HALvest, a 17-billion-token multilingual corpus of open-access scholarly papers, and its English contrastive derivative HALvest-Contrastive, in which same-author passages are drawn from distinct papers within a field to minimize topical overlap. We also revisit how documents are compared. Authorship systems traditionally compress each document into a single vector, we keep a sequence of vectors and compare them with late interaction, then introduce Patch-Level Late Interaction (PLI), which compresses neighboring tokens into patches before matching. Matching at the sequence level greatly improves performance over the single-vector baseline, but the optimal interaction granularity is subtle.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.DL cs.CL",
+  "created": "2026-05-19",
+  "fetched_at": "2026-05-21T23:01:03.446367"
+}

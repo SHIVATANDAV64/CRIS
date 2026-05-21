@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2507.10614",
+  "title": "Fine-tuning Large Language Model for Automated Algorithm Design",
+  "abstract": "The integration of large language models (LLMs) into automated algorithm design has shown promising potential. A prevalent approach embeds LLMs within search routines to iteratively generate and refine candidate algorithms. However, most existing methods rely on off-the-shelf LLMs trained for general coding tasks, leaving a key question open: Do we need LLMs specifically tailored for algorithm design? If so, how can such LLMs be effectively obtained and how well can they generalize across different algorithm design tasks? In this paper, we take a preliminary step toward answering these questions by exploring fine-tuning of LLMs for algorithm design. We introduce a Diversity-Aware Rank-based (DAR) sampling strategy to balance training data diversity and quality, then we leverage direct preference optimization to efficiently align LLM outputs with task objectives. Our experiments are primarily conducted on Llama-3.2-1B-Instruct and Llama-3.1-8BInstruct across three distinct algorithm design tasks, with openPangu-Embedded models additionally included as auxiliary comparisons on the admissible set problem. Results suggest that fine-tuned LLMs can significantly outperform their off-the-shelf counterparts with the smaller Llama-3.2-1B-Instruct and match the larger Llama-3.1-8B-Instruct on the admissible set problem. Moreover, we observe promising generalization: LLMs fine-tuned on specific algorithm design tasks also improve performance on related tasks with varying settings. These findings highlight the value of task-specific adaptation for LLMs in algorithm design and open new avenues for future research. Our code is publicly available at https://github.com/RayZhhh/dpo-aad.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T22:59:16.044959"
+}

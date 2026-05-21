@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { renderMarkdown } from '../utils/markdown'
 import { webSearch, scrapeUrl } from '../api'
-import type { Message, SearchResult } from '../types'
+import type { Message, SearchResult, Decomposition } from '../types'
 
 interface ChatPanelProps {
   messages: Message[]
@@ -11,9 +11,27 @@ interface ChatPanelProps {
   onPaperRemove: (id: string) => void
   onToggleSidebar: () => void
   searchStatus?: string
+  webSearchEnabled: boolean
+  onToggleWebSearch: () => void
+  reasoningEnabled: boolean
+  onToggleReasoning: () => void
+  theme: 'dark' | 'light'
 }
 
-export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPaperRemove, onToggleSidebar, searchStatus }: ChatPanelProps) {
+export function ChatPanel({
+  messages,
+  onSend,
+  droppedPapers,
+  onPaperDrop,
+  onPaperRemove,
+  onToggleSidebar,
+  searchStatus,
+  webSearchEnabled,
+  onToggleWebSearch,
+  reasoningEnabled,
+  onToggleReasoning,
+  theme
+}: ChatPanelProps) {
   const [input, setInput] = useState('')
   const [isDragOver, setIsDragOver] = useState(false)
   const [webSearchVisible, setWebSearchVisible] = useState(false)
@@ -240,6 +258,10 @@ export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPape
                 <ThinkingBlock content={msg.thinking} />
               )}
 
+              {msg.role === 'assistant' && msg.decomposition && (
+                <DecompositionBlock decomposition={msg.decomposition} />
+              )}
+
               {msg.role === 'assistant' && msg.content ? (
                 <div className="message-text" dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
               ) : msg.role === 'assistant' && !msg.content ? (
@@ -367,11 +389,41 @@ export function ChatPanel({ messages, onSend, droppedPapers, onPaperDrop, onPape
             placeholder="Ask a cross-domain research question..."
             rows={1}
           />
-          <button className="send-btn" onClick={handleSend} disabled={!input.trim() || isStreaming}>
-            <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
-              <path d="M4 11L18 4L11 18L10 12L4 11Z" fill="currentColor" />
-            </svg>
-          </button>
+          <div className="input-toolbar">
+            <div className="input-features">
+              <button
+                type="button"
+                className={`feature-toggle-pill web-search-pill ${webSearchEnabled ? 'active' : ''}`}
+                onClick={onToggleWebSearch}
+                title="Search the web for real-time information"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  <path d="M2 12h20" />
+                </svg>
+                <span>Web Search</span>
+              </button>
+
+              <button
+                type="button"
+                className={`feature-toggle-pill reasoning-pill ${reasoningEnabled ? 'active' : ''}`}
+                onClick={onToggleReasoning}
+                title="Enable deep multi-step thinking and planning"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3 3 0 0 1 0-4.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2Z" />
+                  <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3 3 0 0 0 0-4.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2Z" />
+                </svg>
+                <span>Deep Reasoning</span>
+              </button>
+            </div>
+            <button className="send-btn" onClick={handleSend} disabled={!input.trim() || isStreaming} title="Send message">
+              <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
+                <path d="M4 11L18 4L11 18L10 12L4 11Z" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
         </div>
         <p className="input-hint">Enter to send • Shift+Enter for new line • Ctrl+N new chat • Ctrl+E export</p>
       </div>
@@ -398,4 +450,125 @@ function escapeHtml(text: string): string {
   const el = document.createElement('div')
   el.textContent = text
   return el.innerHTML
+}
+
+function DecompositionBlock({ decomposition }: { decomposition: Decomposition }) {
+  const [expanded, setExpanded] = useState(false)
+  if (!decomposition) return null
+
+  return (
+    <div className="decomposition-section" style={{
+      margin: '8px 0 16px 0',
+      borderRadius: '8px',
+      border: '1px solid rgba(124, 172, 248, 0.25)',
+      background: 'rgba(124, 172, 248, 0.04)',
+      overflow: 'hidden'
+    }}>
+      <button 
+        onClick={() => setExpanded(v => !v)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          width: '100%',
+          padding: '10px 14px',
+          background: 'none',
+          border: 'none',
+          color: '#7cacf8',
+          fontSize: '0.85rem',
+          fontWeight: 600,
+          textAlign: 'left',
+          cursor: 'pointer',
+          outline: 'none',
+          transition: 'background 0.2s'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(124, 172, 248, 0.08)'}
+        onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+      >
+        <span style={{ 
+          transform: expanded ? 'rotate(90deg)' : 'none', 
+          transition: 'transform 0.2s',
+          display: 'inline-block',
+          fontSize: '10px'
+        }}>▶</span>
+        <span>🔍 Research Strategy & Decomposition</span>
+      </button>
+      
+      {expanded && (
+        <div style={{ 
+          padding: '12px 16px', 
+          borderTop: '1px solid rgba(124, 172, 248, 0.15)',
+          fontSize: '0.85rem',
+          color: '#e2e8f0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px'
+        }}>
+          {decomposition.literature_queries && decomposition.literature_queries.length > 0 && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, color: '#94a3b8', marginBottom: '4px' }}>
+                <span>📚</span> Literature Search Queries
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', color: '#cbd5e1' }}>
+                {decomposition.literature_queries.map((q, idx) => (
+                  <li key={idx} style={{ marginBottom: '2px' }}>{q}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {decomposition.hypothesis_candidates && decomposition.hypothesis_candidates.length > 0 && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, color: '#94a3b8', marginBottom: '4px' }}>
+                <span>💡</span> Hypothesis Candidates
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', color: '#cbd5e1' }}>
+                {decomposition.hypothesis_candidates.map((h, idx) => (
+                  <li key={idx} style={{ marginBottom: '2px' }}>{h}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {decomposition.method_analysis_targets && decomposition.method_analysis_targets.length > 0 && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, color: '#94a3b8', marginBottom: '4px' }}>
+                <span>⚙️</span> Method Analysis Targets
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', color: '#cbd5e1' }}>
+                {decomposition.method_analysis_targets.map((m, idx) => (
+                  <li key={idx} style={{ marginBottom: '2px' }}>{m}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {decomposition.cross_domain_pairs && decomposition.cross_domain_pairs.length > 0 && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, color: '#94a3b8', marginBottom: '4px' }}>
+                <span>🔄</span> Cross-Domain Mapping Mappings
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '4px' }}>
+                {decomposition.cross_domain_pairs.map((p, idx) => (
+                  <div key={idx} style={{ 
+                    padding: '8px', 
+                    borderRadius: '6px', 
+                    background: 'rgba(255,255,255,0.03)', 
+                    border: '1px solid rgba(255,255,255,0.05)'
+                  }}>
+                    <div style={{ fontWeight: 600, color: '#7cacf8', marginBottom: '2px' }}>
+                      {p.source} ⇄ {p.target}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+                      {p.rationale}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
 }

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2505.18191",
+  "title": "Quantifying the Generalization Gap in Seizure Detection: A Large-Scale Empirical Benchmark via the SzCORE Challenge",
+  "abstract": "Reliable automatic seizure detection from long-term electroencephalography (EEG) remains an unsolved challenge, as current models often fail to generalize across patients or clinical settings. Manual EEG review still is the standard of care, highlighting the need for robust models and standardized evaluation. The current literature often reports high efficacy, yet these models frequently fail when deployed to unseen patient populations. To rigorously assess this generalization gap, we conducted a large-scale empirical study evaluating 28 state-of-the-art algorithmic architectures, ranging from classical feature engineering to modern Deep Learning. These algorithms were collected by organizing a competition. A strictly held-out private dataset of continuous EEG recordings from 65 subjects, totaling 4,360 hours of data, was utilized to evaluate algorithm performance. Expert neurophysiologists annotated these recordings, establishing the ground truth for seizure events. Algorithms were evaluated using event-based metrics from the SzCORE framework, including sensitivity, precision, F1-score, and false positive rate per day. Results revealed significant performance variability among state-of-the-art approaches, with the top F1 score of 32% (sensitivity 37%, precision 29%), highlighting the persistent difficulty of this task. Analysis uncovered a discordance between peak performance and population-level stability. The algorithms achieving the highest aggregate F1-scores did not achieve the most consistent ranking across subjects. This independent evaluation exposed a notable gap between self-reported efficacies and hold-out performance, underscoring the critical need for standardized, rigorous benchmarking. The evaluation infrastructure transitions into a continuously open benchmarking platform, fostering reproducible research and accelerating robust seizure detection algorithm development.",
+  "authors": [
+    null
+  ],
+  "categories": "eess.SP cs.AI cs.LG cs.PF",
+  "created": "2026-05-18",
+  "fetched_at": "2026-05-21T22:58:55.019969"
+}
