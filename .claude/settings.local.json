@@ -23,7 +23,8 @@
       "WebFetch(domain:github.com)",
       "Bash(codegraph init *)",
       "Bash(codegraph sync *)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(findstr -i static)"
     ]
   },
   "enableAllProjectMcpServers": true,
