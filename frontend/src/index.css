@@ -1,4 +1,4 @@
-﻿/* ── Cohere Design System — Exact match to screenshots ── */
+/* ── Cohere Design System — Exact match to screenshots ── */
 
 :root {
   /* Light mode (default) */
@@ -1722,3 +1722,174 @@ html, body {
   .source-chip { font-size: 10px; padding: 2px 6px; }
   .thinking-content { font-size: 0.8rem; }
 }
+
+/* ── Thin Sidebar Styles ── */
+.sidebar.thin-sidebar {
+  width: 64px !important;
+  min-width: 64px !important;
+  padding: 16px 0;
+  align-items: center;
+  overflow: visible;
+}
+.sidebar-header.thin-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  border-bottom: none;
+  width: 100%;
+  padding: 0 0 16px 0;
+}
+.logo.thin-logo {
+  margin: 0;
+}
+.new-chat-btn-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.new-chat-btn-circle:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+.sidebar-nav.thin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: none;
+  width: 100%;
+  align-items: center;
+}
+.nav-tab.thin-tab {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border-left: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  transition: all var(--transition-normal);
+  color: var(--text-tertiary);
+}
+.nav-tab.thin-tab.active {
+  background: rgba(255, 119, 89, 0.12);
+  color: var(--accent-coral);
+}
+.nav-tab.thin-tab:hover:not(.active) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.nav-tab.thin-tab .tooltip {
+  visibility: hidden;
+  position: absolute;
+  left: 72px;
+  background: var(--cohere-black);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  pointer-events: none;
+}
+.nav-tab.thin-tab:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+}
+.sidebar-footer.thin-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0 0 0;
+  border-top: none;
+  width: 100%;
+  margin-top: auto;
+}
+.model-dot-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+.model-dot-btn:hover {
+  border-color: var(--border-active);
+  transform: scale(1.1);
+}
+.model-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.thin-theme-btn {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background var(--transition-fast);
+}
+.thin-theme-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.model-dropdown.thin-dropdown {
+  left: 56px;
+  bottom: 0;
+  width: 240px;
+}
+.dashboard-container {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.dashboard-header {
+  margin-bottom: 24px;
+}
+.dashboard-header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+.dashboard-header p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+

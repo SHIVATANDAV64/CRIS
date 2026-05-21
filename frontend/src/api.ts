@@ -205,3 +205,46 @@ export async function scrapeUrl(url: string) {
   })
   return resp.json()
 }
+
+// ── Graph & Details ──
+export async function getWikiGraph() {
+  const resp = await fetch(`${API}/wiki/graph`)
+  return resp.json()
+}
+
+export async function getWikiDetail(nodeType: string, nodeId: string) {
+  const resp = await fetch(`${API}/wiki/detail/${nodeType}/${encodeURIComponent(nodeId)}`)
+  return resp.json()
+}
+
+// ── Background Script Run Controls ──
+export async function runIngestScript(params: {
+  date?: string
+  days_back?: number
+  categories?: string
+  max_papers?: number
+  domain_mode?: boolean
+}) {
+  const resp = await fetch(`${API}/scripts/ingest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params),
+  })
+  return resp.json()
+}
+
+export async function getIngestStatus(): Promise<{ running: boolean }> {
+  const resp = await fetch(`${API}/scripts/ingest/status`)
+  return resp.json()
+}
+
+export async function runMigrateScript() {
+  const resp = await fetch(`${API}/scripts/migrate`, { method: 'POST' })
+  return resp.json()
+}
+
+export async function getMigrateStatus(): Promise<{ running: boolean }> {
+  const resp = await fetch(`${API}/scripts/migrate/status`)
+  return resp.json()
+}
+

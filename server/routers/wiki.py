@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
+import json
+from pathlib import Path
 
 from server.models.schemas import ChatRequest
 from server.services.wiki_service import WikiService
@@ -67,3 +69,62 @@ async def wiki_notes(wiki_service: WikiService = Depends(get_wiki_service)):
     """List all conversation notes."""
     notes = wiki_service.get_notes()
     return {"count": len(notes), "notes": notes}
+
+
+@router.get("/api/wiki/graph")
+async def wiki_graph(wiki_service: WikiService = Depends(get_wiki_service)):
+    """Get the wiki force-directed graph data."""
+    graph_path = Path(wiki_service.wiki_dir) / "graph.json"
+    if not graph_path.exists():
+        try:
+            wiki_service.rebuild_all()
+        except Exception as e:
+            print(f"Error rebuilding wiki for graph: {e}")
+            
+    if graph_path.exists():
+        try:
+            with open(graph_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to read graph: {e}")
+            
+    return {"nodes": [], "edges": []}
+
+
+@router.get("/api/wiki/detail/{node_type}/{node_id}")
+async def wiki_detail(
+    node_type: str,
+    node_id: str,
+    wiki_service: WikiService = Depends(get_wiki_service)
+):
+    """Get detail content of a wiki node."""
+    mgr = wiki_service.wiki_manager
+    if node_type == "paper":
+        folder = mgr.sources_dir
+    elif node_type == "concept":
+        folder = mgr.concepts_dir
+    elif node_type == "entity":
+        folder = mgr.entities_dir
+    elif node_type == "note":
+        folder = mgr.notes_dir
+    else:
+        raise HTTPException(status_code=400, detail=f"Invalid node type: {node_type}")
+
+    # Slashes are replaced with underscores in filenames for papers (e.g. 2404.12345)
+    safe_id = node_id.replace("/", "_")
+    file_path = folder / f"{safe_id}.md"
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail=f"Wiki entry not found: {node_id} (tried {file_path})")
+
+    try:
+        content = file_path.read_text(encoding="utf-8")
+        fm, body = mgr.parse_frontmatter(content)
+        return {
+            "id": node_id,
+            "type": node_type,
+            "metadata": fm,
+            "content": body
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to read wiki entry: {e}")
+

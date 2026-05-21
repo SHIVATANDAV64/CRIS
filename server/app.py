@@ -15,6 +15,7 @@ from server.routers.search import router as search_router
 from server.routers.wiki import router as wiki_router
 from server.routers.settings import router as settings_router
 from server.routers.web import router as web_router
+from server.routers.scripts import router as scripts_router
 
 app = FastAPI(
     title="CRIS API",
@@ -40,6 +41,7 @@ app.include_router(search_router)
 app.include_router(wiki_router)
 app.include_router(settings_router)
 app.include_router(web_router)
+app.include_router(scripts_router)
 
 # Research Intelligence Router (Phase 2)
 from server.routers.research import router as research_router
@@ -47,18 +49,23 @@ app.include_router(research_router)
 
 # Static and Templates
 BASE_DIR = Path(__file__).resolve().parent
-templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+FRONTEND_DIST = BASE_DIR.parent / "frontend" / "dist"
 
+if FRONTEND_DIST.exists():
+    # Mount assets folder for built React application
+    app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIST / "assets")), name="assets")
+    
+    @app.get("/", tags=["UI"])
+    async def index(request: Request):
+        """Serve the React production bundle."""
+        from fastapi.responses import FileResponse
+        return FileResponse(str(FRONTEND_DIST / "index.html"))
+else:
+    # Fallback to the old templates and static files
+    templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+    app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize search index and chat store on startup."""
-    create_index()
-    init_chat_store()
-
-
-@app.get("/", tags=["UI"])
-async def index(request: Request):
-    """Serve the chat interface."""
-    return templates.TemplateResponse(request, "index.html")
+    @app.get("/", tags=["UI"])
+    async def index(request: Request):
+        """Serve the legacy chat interface."""
+        return templates.TemplateResponse(request, "index.html")

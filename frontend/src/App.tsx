@@ -1,18 +1,20 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Sidebar } from './components/Sidebar'
 import { ChatPanel } from './components/ChatPanel'
+import { HistoryDashboard } from './components/HistoryDashboard'
+import { WikiGraph } from './components/WikiGraph'
+import { SettingsPanel } from './components/SettingsPanel'
 import { streamChat, listSessions, listModels, getSettings } from './api'
 import type { Message, Session, Model } from './types'
 
 function App() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
-  const [sidebarTab, setSidebarTab] = useState('history')
+  const [sidebarTab, setSidebarTab] = useState('chat') // Start on chat page
   const [sessions, setSessions] = useState<Session[]>([])
   const [selectedModel, setSelectedModel] = useState('darwin-opus')
   const [availableModels, setAvailableModels] = useState<Model[]>([])
   const [modelName, setModelName] = useState('CRIS Model')
-  const [sidebarVisible, setSidebarVisible] = useState(window.innerWidth > 768)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     return (localStorage.getItem('cris_theme') as 'dark' | 'light') || 'dark'
   })
@@ -84,6 +86,7 @@ function App() {
       setMessages([])
       setDroppedPapers(new Map())
       loadSessions()
+      setSidebarTab('chat') // Switch active panel to Chat
     } catch {
       // silent
     }
@@ -154,7 +157,7 @@ function App() {
       sourcePaperIds,
       (sources, sid) => {
         if (sid) setSessionId(sid)
-        setSearchStatus('')  // Search is done — clear indicator
+        setSearchStatus('')
         setMessages(prev => prev.map(m =>
           m.id === assistantId ? { ...m, sources: sources as any } : m
         ))
@@ -172,7 +175,7 @@ function App() {
       },
       (sid) => {
         if (sid) setSessionId(sid)
-        setSearchStatus('')  // Stream done — ensure indicator is cleared
+        setSearchStatus('')
         loadSessions()
       },
       (error) => {
@@ -240,33 +243,57 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [sessionId])
 
+  const renderActiveTabContent = () => {
+    switch (sidebarTab) {
+      case 'chat':
+        return (
+          <ChatPanel
+            messages={messages}
+            onSend={sendMessage}
+            droppedPapers={droppedPapers}
+            onPaperDrop={handlePaperDrop}
+            onPaperRemove={handlePaperRemove}
+            onToggleSidebar={() => {}}
+            searchStatus={searchStatus}
+          />
+        )
+      case 'history':
+        return (
+          <HistoryDashboard
+            sessions={sessions}
+            onSessionSelect={(id) => {
+              loadSession(id)
+              setSidebarTab('chat')
+            }}
+            onDeleteSession={deleteSessionFn}
+          />
+        )
+      case 'wiki':
+        return <WikiGraph />
+      case 'settings':
+        return <SettingsPanel />
+      default:
+        return (
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)' }}>
+            Select a view from the sidebar
+          </div>
+        )
+    }
+  }
+
   return (
-    <div className="app-container">
+    <div className="app-container" style={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <Sidebar
-        visible={sidebarVisible}
         currentTab={sidebarTab}
         onTabChange={setSidebarTab}
-        sessions={sessions}
-        onSessionSelect={loadSession}
         onNewChat={createNewChat}
-        onDeleteSession={deleteSessionFn}
-        activeSessionId={sessionId}
         selectedModel={selectedModel}
         availableModels={availableModels}
         onSelectModel={selectModel}
-        modelName={modelName}
         onToggleTheme={toggleTheme}
         theme={theme}
       />
-      <ChatPanel
-        messages={messages}
-        onSend={sendMessage}
-        droppedPapers={droppedPapers}
-        onPaperDrop={handlePaperDrop}
-        onPaperRemove={handlePaperRemove}
-        onToggleSidebar={() => setSidebarVisible(v => !v)}
-        searchStatus={searchStatus}
-      />
+      {renderActiveTabContent()}
     </div>
   )
 }
