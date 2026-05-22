@@ -379,7 +379,7 @@ class ChatService:
                 from server.services.research_service import research_service
                 decomposition = await research_service.decompose(query, model_id=model_id)
                 # Emit decomposition to UI
-                yield f"data: {json.dumps({
+                decomposition_data = {
                     'type': 'decomposition',
                     'decomposition': {
                         'literature_queries': decomposition.literature_queries,
@@ -387,7 +387,8 @@ class ChatService:
                         'method_analysis_targets': decomposition.method_analysis_targets,
                         'cross_domain_pairs': decomposition.cross_domain_pairs
                     }
-                })}\n\n"
+                }
+                yield f"data: {json.dumps(decomposition_data)}\n\n"
             except Exception as e:
                 print(f"[chat_stream] Decomposition failed: {e}")
 
