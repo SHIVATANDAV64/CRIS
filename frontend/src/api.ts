@@ -232,6 +232,7 @@ export async function runIngestScript(params: {
   categories?: string
   max_papers?: number
   domain_mode?: boolean
+  auto_compile?: boolean
 }) {
   const resp = await fetch(`${API}/scripts/ingest`, {
     method: 'POST',
@@ -249,6 +250,7 @@ export interface IngestStatusDetails {
   papers_fetched: number
   logs: string[]
   error: string | null
+  progress_percent?: number
 }
 
 export async function getIngestStatus(): Promise<IngestStatusDetails> {
@@ -261,6 +263,11 @@ export async function stopIngestScript() {
   return resp.json()
 }
 
+export async function clearIngestStatus() {
+  const resp = await fetch(`${API}/scripts/ingest/clear`, { method: 'POST' })
+  return resp.json()
+}
+
 export async function runMigrateScript() {
   const resp = await fetch(`${API}/scripts/migrate`, { method: 'POST' })
   return resp.json()
@@ -268,6 +275,55 @@ export async function runMigrateScript() {
 
 export async function getMigrateStatus(): Promise<{ running: boolean }> {
   const resp = await fetch(`${API}/scripts/migrate/status`)
+  return resp.json()
+}
+
+export interface ScriptStatusDetails {
+  running: boolean
+  logs: string[]
+  error: string | null
+}
+
+export async function runCompileScript(rebuildWiki = true) {
+  const resp = await fetch(`${API}/scripts/compile`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rebuild_wiki: rebuildWiki })
+  })
+  return resp.json()
+}
+
+export async function getCompileStatus(): Promise<ScriptStatusDetails> {
+  const resp = await fetch(`${API}/scripts/compile/status`)
+  return resp.json()
+}
+
+export async function stopCompileScript() {
+  const resp = await fetch(`${API}/scripts/compile/stop`, { method: 'POST' })
+  return resp.json()
+}
+
+export async function clearCompileStatus() {
+  const resp = await fetch(`${API}/scripts/compile/clear`, { method: 'POST' })
+  return resp.json()
+}
+
+export async function runIndexScript(rebuild = true) {
+  const resp = await fetch(`${API}/scripts/index`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rebuild: rebuild })
+  })
+  return resp.json()
+}
+
+export async function getIndexStatus(): Promise<ScriptStatusDetails> {
+  const resp = await fetch(`${API}/scripts/index/status`)
+  return resp.json()
+}
+
+export async function clearIndexStatus() {
+  const resp = await fetch(`${API}/scripts/index/clear`, { method: 'POST' })
   return resp.json()
 }
 

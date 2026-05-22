@@ -203,22 +203,23 @@ class ChatService:
                     seen.add(r["arxiv_id"])
                     unique_results.append(r)
             results = unique_results
-        elif is_research and not web_search_triggered:
-            # Only fetch local papers if web search ISN'T the primary source
-            # This prevents 15 random papers drowning out 5 relevant web results
+        elif is_research:
+            # Fetch local papers
+            # If web search is also triggered, limit the local papers count to prevent drowning out web results
+            local_limit = 3 if web_search_triggered else CONTEXT_ENTRIES_LIMIT
             if decomposition and decomposition.literature_queries:
                 print(f"[chat_service] Fetching sources using decomposed sub-queries: {decomposition.literature_queries}")
                 seen = set()
                 for sq in decomposition.literature_queries[:3]:
-                    sq_results = search(sq, limit=3)
+                    sq_results = search(sq, limit=local_limit)
                     for r in sq_results:
                         if r["arxiv_id"] not in seen:
                             seen.add(r["arxiv_id"])
                             results.append(r)
                 if not results:
-                    results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
+                    results = search(query, limit=local_limit)
             else:
-                results = search(query, limit=CONTEXT_ENTRIES_LIMIT)
+                results = search(query, limit=local_limit)
 
         # --- Step 3: Execute web searches ---
         if search_queries:
@@ -272,7 +273,16 @@ class ChatService:
             except Exception as e:
                 print(f"[chat_service] Web search failed: {e}")
 
-        return results
+        # Deduplicate final merged list by arxiv_id/domain
+        seen = set()
+        unique_results = []
+        for r in results:
+            aid = r.get("arxiv_id")
+            if aid not in seen:
+                seen.add(aid)
+                unique_results.append(r)
+
+        return unique_results
 
     def format_sources_for_response(self, results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         sources = []

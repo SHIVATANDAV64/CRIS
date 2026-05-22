@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2402.11621",
+  "title": "Decoding News Narratives: A Critical Analysis of Large Language Models in Framing Detection",
+  "abstract": "The growing complexity and diversity of news coverage have made framing analysis a crucial yet challenging task in computational social science. Traditional approaches, including manual annotation and fine-tuned models, remain limited by high annotation costs, domain specificity, and inconsistent generalisation. Instruction-based large language models (LLMs) offer a promising alternative, yet their reliability for framing analysis remains insufficiently understood. In this paper, we conduct a systematic evaluation of several LLMs, including GPT-3.5/4, FLAN-T5, and Llama 3, across zero-shot, few-shot, and explanation-based prompting settings. Focusing on domain shift and inherent annotation ambiguity, we show that model performance is highly sensitive to prompt design and prone to systematic errors on ambiguous cases. Although LLMs, particularly GPT-4, exhibit stronger cross-domain generalisation, they also display systematic biases, most notably a tendency to conflate emotional language with framing. To enable principled evaluation under real-world topic diversity, we introduce a new dataset of out-of-domain news headlines covering diverse subjects. Finally, by analysing agreement patterns across multiple models on existing framing datasets, we demonstrate that cross-model consensus provides a useful signal for identifying contested annotations, offering a practical approach to dataset auditing in low-resource settings.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CL",
+  "created": "2026-04-07",
+  "fetched_at": "2026-05-22T10:52:51.188505"
+}

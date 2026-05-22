@@ -19,6 +19,7 @@ class IngestRequest(BaseModel):
     categories: Optional[str] = Field(None, description="Comma-separated arXiv categories (e.g., cs.AI,cs.CL).")
     max_papers: Optional[int] = Field(None, description="Maximum papers per category.")
     domain_mode: bool = Field(True, description="Save papers organized by domain folders.")
+    auto_compile: bool = Field(False, description="Automatically compile wiki and rebuild search index after fetching papers.")
 
 import json
 from pathlib import Path
@@ -34,13 +35,16 @@ def _load_status() -> dict:
         "dates_processed": 0,
         "papers_fetched": 0,
         "logs": [],
-        "error": None
+        "error": None,
+        "progress_percent": 0
     }
     if STATUS_FILE.exists():
         try:
             with open(STATUS_FILE, "r") as f:
                 data = json.load(f)
                 data["running"] = False  # If the server is restarting/starting, it cannot be running
+                if "progress_percent" not in data:
+                    data["progress_percent"] = 0
                 return data
         except Exception:
             pass
@@ -69,7 +73,8 @@ def _run_ingestion_sync(req: IngestRequest):
         "dates_processed": 0,
         "papers_fetched": 0,
         "logs": ["Ingestion task initialized."],
-        "error": None
+        "error": None,
+        "progress_percent": 0
     }
     _save_status()
     try:
@@ -95,6 +100,14 @@ def _run_ingestion_sync(req: IngestRequest):
         print(f"[BACKGROUND TASK] Starting arXiv ingestion for dates: {dates}")
         total_papers = 0
 
+        # Calculate progress parameters
+        total_dates = len(dates)
+        from config.settings import get_config
+        cfg = get_config()
+        default_cats = cfg.get("arxiv", {}).get("categories", ["cs.AI", "cs.CL", "cs.LG"])
+        total_categories = len(categories_list) if categories_list else len(default_cats)
+        total_steps = total_dates * total_categories
+
         def log_callback(msg: str):
             cleaned = msg.strip()
             if cleaned:
@@ -104,6 +117,19 @@ def _run_ingestion_sync(req: IngestRequest):
                     if part_cleaned:
                         _ingest_status["logs"].append(part_cleaned)
                 _save_status()
+
+        def paper_fetched_callback(paper: dict):
+            nonlocal total_papers
+            total_papers += 1
+            _ingest_status["papers_fetched"] = total_papers
+            _save_status()
+
+        def category_start_callback(category: str, cat_idx: int, date_idx: int):
+            # Calculate dynamic progress
+            current_step = (date_idx * total_categories) + cat_idx
+            progress = int((current_step / total_steps) * 100)
+            _ingest_status["progress_percent"] = min(progress, 99)
+            _save_status()
 
         for idx, date_str in enumerate(dates):
             if _ingest_cancelled:
@@ -121,7 +147,9 @@ def _run_ingestion_sync(req: IngestRequest):
                 categories=categories_list,
                 max_papers=req.max_papers,
                 is_cancelled=lambda: _ingest_cancelled,
-                on_log=log_callback
+                on_log=log_callback,
+                on_paper_fetched=paper_fetched_callback,
+                on_category_start=lambda cat, c_idx, d_idx=idx: category_start_callback(cat, c_idx, d_idx)
             )
 
             if _ingest_cancelled:
@@ -136,7 +164,7 @@ def _run_ingestion_sync(req: IngestRequest):
                     save_papers_by_domain(papers, on_log=log_callback)
                 else:
                     save_papers(papers, date_str, on_log=log_callback)
-                total_papers += len(papers)
+                # total_papers is updated dynamically in paper_fetched_callback
                 _ingest_status["papers_fetched"] = total_papers
             else:
                 _ingest_status["logs"].append(f"No papers found for {date_str}.")
@@ -148,6 +176,61 @@ def _run_ingestion_sync(req: IngestRequest):
             _ingest_status["logs"].append("Ingestion aborted by user.")
         else:
             _ingest_status["logs"].append(f"Ingestion completed successfully! Total papers added to library: {total_papers}")
+            _ingest_status["progress_percent"] = 90
+            _save_status()
+            
+            if req.auto_compile:
+                log_callback("\n[Auto-Compile] Starting wiki compilation for all unprocessed papers...")
+                _ingest_status["progress_percent"] = 92
+                _save_status()
+                
+                import subprocess
+                p_compile = subprocess.Popen(
+                    [sys.executable, "scripts/compile_wiki.py", "--all"],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1,
+                    encoding="utf-8"
+                )
+                for line in iter(p_compile.stdout.readline, ""):
+                    if _ingest_cancelled:
+                        p_compile.terminate()
+                        log_callback("[Auto-Compile] Compilation cancelled by user.")
+                        break
+                    log_callback(f"[Compile] {line.strip()}")
+                p_compile.wait()
+                
+                if p_compile.returncode == 0 and not _ingest_cancelled:
+                    log_callback("[Auto-Compile] Wiki compilation finished successfully.")
+                    
+                    log_callback("\n[Auto-Index] Rebuilding search index...")
+                    _ingest_status["progress_percent"] = 97
+                    _save_status()
+                    
+                    p_index = subprocess.Popen(
+                        [sys.executable, "scripts/build_index.py", "--rebuild"],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        bufsize=1,
+                        encoding="utf-8"
+                    )
+                    for line in iter(p_index.stdout.readline, ""):
+                        if _ingest_cancelled:
+                            p_index.terminate()
+                            log_callback("[Auto-Index] Index building cancelled by user.")
+                            break
+                        log_callback(f"[Index] {line.strip()}")
+                    p_index.wait()
+                    if p_index.returncode == 0 and not _ingest_cancelled:
+                        log_callback("[Auto-Index] Search index rebuilt successfully.")
+                    else:
+                        log_callback(f"[Auto-Index] Failed with exit code {p_index.returncode}")
+                else:
+                    log_callback(f"[Auto-Compile] Failed with exit code {p_compile.returncode}")
+            
+            _ingest_status["progress_percent"] = 100
         _save_status()
         print(f"[BACKGROUND TASK] arXiv ingestion completed! Total papers: {total_papers}")
     except Exception as e:
@@ -196,6 +279,25 @@ async def get_ingest_status():
     _ingest_status["running"] = _ingest_running
     return _ingest_status
 
+@router.post("/api/scripts/ingest/clear")
+async def clear_ingest_status():
+    global _ingest_status, _ingest_running
+    if _ingest_running:
+        raise HTTPException(status_code=400, detail="Cannot clear status while ingestion is running.")
+    
+    _ingest_status = {
+        "running": False,
+        "current_date": None,
+        "dates_total": 0,
+        "dates_processed": 0,
+        "papers_fetched": 0,
+        "logs": [],
+        "error": None,
+        "progress_percent": 0
+    }
+    _save_status()
+    return {"status": "cleared", "message": "Ingestion status and logs cleared."}
+
 # Migration task lock
 _migration_running = False
 
@@ -224,3 +326,162 @@ async def trigger_migrate(background_tasks: BackgroundTasks):
 async def get_migration_status():
     global _migration_running
     return {"running": _migration_running}
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# Compilation and Indexing Manual Scripts Background Tasks
+# ─────────────────────────────────────────────────────────────────────────
+
+_compile_running = False
+_compile_cancelled = False
+_compile_status = {
+    "running": False,
+    "logs": [],
+    "error": None
+}
+
+_index_running = False
+_index_status = {
+    "running": False,
+    "logs": [],
+    "error": None
+}
+
+def _run_compile_sync():
+    global _compile_running, _compile_status, _compile_cancelled
+    _compile_cancelled = False
+    _compile_status = {
+        "running": True,
+        "logs": ["Starting manual wiki compilation..."],
+        "error": None
+    }
+    try:
+        import subprocess
+        p_compile = subprocess.Popen(
+            [sys.executable, "scripts/compile_wiki.py", "--all"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+            encoding="utf-8"
+        )
+        for line in iter(p_compile.stdout.readline, ""):
+            if _compile_cancelled:
+                p_compile.terminate()
+                _compile_status["logs"].append("Compilation cancelled by user.")
+                break
+            _compile_status["logs"].append(line.strip())
+        p_compile.wait()
+        if p_compile.returncode == 0 and not _compile_cancelled:
+            _compile_status["logs"].append("Manual wiki compilation completed successfully.")
+        elif not _compile_cancelled:
+            _compile_status["logs"].append(f"Compilation failed with exit code {p_compile.returncode}")
+    except Exception as e:
+        _compile_status["error"] = str(e)
+        _compile_status["logs"].append(f"Error during compilation: {e}")
+    finally:
+        _compile_running = False
+        _compile_status["running"] = False
+
+def _run_index_sync(rebuild: bool):
+    global _index_running, _index_status
+    _index_status = {
+        "running": True,
+        "logs": ["Starting manual search index build..."],
+        "error": None
+    }
+    try:
+        import subprocess
+        args = [sys.executable, "scripts/build_index.py"]
+        if rebuild:
+            args.append("--rebuild")
+            
+        p_index = subprocess.Popen(
+            args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+            encoding="utf-8"
+        )
+        for line in iter(p_index.stdout.readline, ""):
+            _index_status["logs"].append(line.strip())
+        p_index.wait()
+        if p_index.returncode == 0:
+            _index_status["logs"].append("Manual search index build completed successfully.")
+        else:
+            _index_status["logs"].append(f"Indexing failed with exit code {p_index.returncode}")
+    except Exception as e:
+        _index_status["error"] = str(e)
+        _index_status["logs"].append(f"Error during indexing: {e}")
+    finally:
+        _index_running = False
+        _index_status["running"] = False
+
+class CompileRequest(BaseModel):
+    rebuild_wiki: bool = Field(True, description="Rebuild concept pages and index after compilation.")
+
+class IndexRequest(BaseModel):
+    rebuild: bool = Field(True, description="Delete and rebuild index from scratch.")
+
+@router.post("/api/scripts/compile")
+async def trigger_compile(req: CompileRequest, background_tasks: BackgroundTasks):
+    global _compile_running
+    if _compile_running:
+        raise HTTPException(status_code=409, detail="Wiki compilation is already running.")
+    _compile_running = True
+    background_tasks.add_task(_run_compile_sync)
+    return {"status": "started", "message": "Wiki compilation started in the background."}
+
+@router.get("/api/scripts/compile/status")
+async def get_compile_status():
+    global _compile_running, _compile_status
+    _compile_status["running"] = _compile_running
+    return _compile_status
+
+@router.post("/api/scripts/compile/stop")
+async def stop_compile():
+    global _compile_cancelled, _compile_running
+    if not _compile_running:
+        return {"status": "ignored", "message": "No compilation task is currently running."}
+    _compile_cancelled = True
+    return {"status": "stopping", "message": "Stopping wiki compilation task."}
+
+@router.post("/api/scripts/compile/clear")
+async def clear_compile_status():
+    global _compile_status, _compile_running
+    if _compile_running:
+        raise HTTPException(status_code=400, detail="Cannot clear status while compilation is running.")
+    _compile_status = {
+        "running": False,
+        "logs": [],
+        "error": None
+    }
+    return {"status": "cleared", "message": "Compilation status and logs cleared."}
+
+@router.post("/api/scripts/index")
+async def trigger_index(req: IndexRequest, background_tasks: BackgroundTasks):
+    global _index_running
+    if _index_running:
+        raise HTTPException(status_code=409, detail="Search index build is already running.")
+    _index_running = True
+    background_tasks.add_task(_run_index_sync, req.rebuild)
+    return {"status": "started", "message": "Search index build started in the background."}
+
+@router.get("/api/scripts/index/status")
+async def get_index_status():
+    global _index_running, _index_status
+    _index_status["running"] = _index_running
+    return _index_status
+
+@router.post("/api/scripts/index/clear")
+async def clear_index_status():
+    global _index_status, _index_running
+    if _index_running:
+        raise HTTPException(status_code=400, detail="Cannot clear status while indexing is running.")
+    _index_status = {
+        "running": False,
+        "logs": [],
+        "error": None
+    }
+    return {"status": "cleared", "message": "Indexing status and logs cleared."}

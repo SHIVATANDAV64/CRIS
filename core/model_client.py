@@ -153,6 +153,10 @@ class ModelClient:
     def _generate(self, system_prompt: str, user_message: str) -> dict:
         """Generate response via Modal or Bedrock endpoint."""
         try:
+            from datetime import datetime
+            current_date = datetime.now().strftime("%Y-%m-%d")
+            dated_system_prompt = f"Current Date: {current_date}\n\n{system_prompt}"
+
             config = get_config()
             model_config = config.get("model", {})
             bedrock_config = config.get("bedrock", {})
@@ -161,7 +165,7 @@ class ModelClient:
             payload = {
                 "model": self._model_name if self._use_bedrock else None,
                 "messages": [
-                    {"role": "system", "content": system_prompt},
+                    {"role": "system", "content": dated_system_prompt},
                     {"role": "user", "content": user_message},
                 ],
                 "max_tokens": model_config.get("max_tokens", 32768),
@@ -213,6 +217,10 @@ class ModelClient:
         Yields (token_type, chunk) IMMEDIATELY as they arrive for true live streaming.
         """
         try:
+            from datetime import datetime
+            current_date = datetime.now().strftime("%Y-%m-%d")
+            dated_system_prompt = f"Current Date: {current_date}\n\n{system_prompt}"
+
             config = get_config()
             model_config = config.get("model", {})
             bedrock_config = config.get("bedrock", {})
@@ -221,7 +229,7 @@ class ModelClient:
             payload = {
                 "model": self._model_name if self._use_bedrock else None,
                 "messages": [
-                    {"role": "system", "content": system_prompt},
+                    {"role": "system", "content": dated_system_prompt},
                     {"role": "user", "content": user_message},
                 ],
                 "max_tokens": model_config.get("max_tokens", 32768),
@@ -431,10 +439,8 @@ class ModelClient:
         cleaned = re.sub(r'<minimax:tool_call\s*/?\s*>', '', cleaned)
         cleaned = re.sub(r'</?minimax:[^>]*>', '', cleaned)
 
-        cleaned = cleaned.strip()
-
         # If stripping left nothing, the model only output a tool call
-        if not cleaned and content.strip():
+        if not cleaned.strip() and content.strip():
             print(f"[model_client] WARNING: Model output was entirely a tool call, returning fallback")
             return "I have the information from web search results provided in my context. Let me analyze it and provide a response.\n\n*Note: The model attempted to use an external tool instead of using the provided context. Please try again.*"
 

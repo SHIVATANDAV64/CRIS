@@ -78,7 +78,7 @@ class ResearchService:
     DECOMPOSER_PROMPT = """You are a research decomposition expert. Given a research question, break it down into structured sub-queries that can be executed independently.
 
 Analyze the question and produce:
-1. LITERATURE_QUERIES: 2-4 specific search queries to find relevant prior work
+1. LITERATURE_QUERIES: 2-4 specific search queries to find relevant prior work. Do NOT append past years (such as 2024 or earlier) to search queries unless explicitly requested by the user. Keep queries temporal-neutral or use the current year (2026) for recent topics.
 2. HYPOTHESIS_CANDIDATES: 2-3 potential testable hypotheses implicit in the question
 3. METHOD_ANALYSIS_TARGETS: Key methods/techniques to analyze
 4. CROSS_DOMAIN_PAIRS: Pairs of domains that might have relevant connections (e.g., "neuroscience<->machine learning")

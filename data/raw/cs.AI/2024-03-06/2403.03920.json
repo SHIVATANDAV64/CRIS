@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2403.03920",
+  "title": "Enhancing Instructional Quality: Leveraging Computer-Assisted Textual Analysis to Generate In-Depth Insights from Educational Artifacts",
+  "abstract": "This paper explores the transformative potential of computer-assisted textual analysis in enhancing instructional quality through in-depth insights from educational artifacts. We integrate Richard Elmore's Instructional Core Framework to examine how artificial intelligence (AI) and machine learning (ML) methods, particularly natural language processing (NLP), can analyze educational content, teacher discourse, and student responses to foster instructional improvement. Through a comprehensive review and case studies within the Instructional Core Framework, we identify key areas where AI/ML integration offers significant advantages, including teacher coaching, student support, and content development. We unveil patterns that indicate AI/ML not only streamlines administrative tasks but also introduces novel pathways for personalized learning, providing actionable feedback for educators and contributing to a richer understanding of instructional dynamics. This paper emphasizes the importance of aligning AI/ML technologies with pedagogical goals to realize their full potential in educational settings, advocating for a balanced approach that considers ethical considerations, data quality, and the integration of human expertise.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.AI cs.CL cs.HC",
+  "created": "2024-03-06",
+  "fetched_at": "2026-05-22T10:52:54.431604"
+}

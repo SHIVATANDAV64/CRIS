@@ -66,6 +66,8 @@ def fetch_papers(
     max_papers: Optional[int] = None,
     is_cancelled: Optional[callable] = None,
     on_log: Optional[callable] = None,
+    on_paper_fetched: Optional[callable] = None,
+    on_category_start: Optional[callable] = None,
 ) -> list[dict]:
     """
     Fetch papers from arXiv via OAI-PMH.
@@ -77,6 +79,8 @@ def fetch_papers(
         max_papers: Maximum number of papers to fetch (optional, for testing)
         is_cancelled: Optional callable to check if execution should stop
         on_log: Optional callback function to record logs
+        on_paper_fetched: Optional callback for each paper fetched
+        on_category_start: Optional callback when starting a new category fetch
 
     Returns:
         List of paper dicts with: arxiv_id, title, abstract, authors, categories, created
@@ -92,10 +96,13 @@ def fetch_papers(
         if on_log:
             on_log(msg)
 
-    for category in cats:
+    for cat_idx, category in enumerate(cats):
         if is_cancelled and is_cancelled():
             log("Fetch cancelled by caller.")
             break
+
+        if on_category_start:
+            on_category_start(category, cat_idx)
 
         log(f"\nFetching papers from {category} (from {from_date})...")
 
@@ -125,6 +132,8 @@ def fetch_papers(
                     continue
 
                 category_papers.append(paper)
+                if on_paper_fetched:
+                    on_paper_fetched(paper)
                 if len(category_papers) % 10 == 0:
                     log(f"  ... {len(category_papers)} papers so far in {category}")
 

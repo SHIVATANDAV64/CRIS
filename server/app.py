@@ -27,7 +27,8 @@ app = FastAPI(
 async def startup_event():
     init_chat_store()
     from core.embedding_client import embed_client
-    await embed_client.connect_async()
+    import asyncio
+    asyncio.create_task(embed_client.connect_async())
 
 app.add_middleware(
     CORSMiddleware,
