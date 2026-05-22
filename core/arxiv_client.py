@@ -65,6 +65,7 @@ def fetch_papers(
     categories: Optional[list] = None,
     max_papers: Optional[int] = None,
     is_cancelled: Optional[callable] = None,
+    on_log: Optional[callable] = None,
 ) -> list[dict]:
     """
     Fetch papers from arXiv via OAI-PMH.
@@ -75,6 +76,7 @@ def fetch_papers(
         categories: List of arXiv categories to filter (optional, uses config default)
         max_papers: Maximum number of papers to fetch (optional, for testing)
         is_cancelled: Optional callable to check if execution should stop
+        on_log: Optional callback function to record logs
 
     Returns:
         List of paper dicts with: arxiv_id, title, abstract, authors, categories, created
@@ -85,12 +87,17 @@ def fetch_papers(
     sickle = Sickle(ARXIV_OAI_URL)
     all_papers = []
 
+    def log(msg: str):
+        print(msg)
+        if on_log:
+            on_log(msg)
+
     for category in cats:
         if is_cancelled and is_cancelled():
-            print("Fetch cancelled by caller.")
+            log("Fetch cancelled by caller.")
             break
 
-        print(f"\nFetching papers from {category} (from {from_date})...")
+        log(f"\nFetching papers from {category} (from {from_date})...")
 
         params = {
             "metadataPrefix": "arXiv",
@@ -106,7 +113,7 @@ def fetch_papers(
 
             for record in records:
                 if is_cancelled and is_cancelled():
-                    print("Fetch cancelled mid-record loop.")
+                    log("Fetch cancelled mid-record loop.")
                     break
 
                 paper = _parse_arxiv_record(record)
@@ -119,7 +126,7 @@ def fetch_papers(
 
                 category_papers.append(paper)
                 if len(category_papers) % 10 == 0:
-                    print(f"  ... {len(category_papers)} papers so far in {category}")
+                    log(f"  ... {len(category_papers)} papers so far in {category}")
 
                 if max_papers and len(category_papers) >= max_papers:
                     break
@@ -133,23 +140,24 @@ def fetch_papers(
         except Exception as e:
             error_msg = str(e)
             if "noRecordsMatch" in error_msg:
-                print(f"  No papers found for {category} on {from_date}")
+                log(f"  No papers found for {category} on {from_date}")
             else:
-                print(f"  Error fetching {category}: {e}")
+                log(f"  Error fetching {category}: {e}")
 
-        print(f"  Found {len(category_papers)} papers in {category}")
+        log(f"  Found {len(category_papers)} papers in {category}")
         all_papers.extend(category_papers)
 
     return all_papers
 
 
-def save_papers(papers: list[dict], date_str: str) -> Path:
+def save_papers(papers: list[dict], date_str: str, on_log: Optional[callable] = None) -> Path:
     """
     Save fetched papers as individual JSON files organized by date (legacy mode).
 
     Args:
         papers: List of paper dicts from fetch_papers()
         date_str: Date string (YYYY-MM-DD) for directory naming
+        on_log: Optional callback function to record logs
 
     Returns:
         Path to the date directory where papers were saved
@@ -159,6 +167,11 @@ def save_papers(papers: list[dict], date_str: str) -> Path:
 
     saved = 0
     skipped = 0
+
+    def log(msg: str):
+        print(msg)
+        if on_log:
+            on_log(msg)
 
     for paper in papers:
         arxiv_id = paper["arxiv_id"]
@@ -173,14 +186,14 @@ def save_papers(papers: list[dict], date_str: str) -> Path:
             json.dump(paper, f, indent=2, ensure_ascii=False)
         saved += 1
 
-    print(f"\nSaved {saved} papers to {date_dir}")
+    log(f"\nSaved {saved} papers to {date_dir}")
     if skipped:
-        print(f"Skipped {skipped} already existing")
+        log(f"Skipped {skipped} already existing")
 
     return date_dir
 
 
-def save_papers_by_domain(papers: list[dict]) -> dict[str, int]:
+def save_papers_by_domain(papers: list[dict], on_log: Optional[callable] = None) -> dict[str, int]:
     """
     Save papers organized by domain folders.
 
@@ -188,6 +201,7 @@ def save_papers_by_domain(papers: list[dict]) -> dict[str, int]:
 
     Args:
         papers: List of paper dicts from fetch_papers()
+        on_log: Optional callback function to record logs
 
     Returns:
         Dict mapping domain -> count of papers saved
@@ -197,6 +211,11 @@ def save_papers_by_domain(papers: list[dict]) -> dict[str, int]:
     counts = {}
     saved = 0
     skipped = 0
+
+    def log(msg: str):
+        print(msg)
+        if on_log:
+            on_log(msg)
 
     for paper in papers:
         domains = _extract_domains(paper)
@@ -212,9 +231,9 @@ def save_papers_by_domain(papers: list[dict]) -> dict[str, int]:
                 else:
                     skipped += 1
 
-    print(f"\nSaved {saved} papers by domain")
+    log(f"\nSaved {saved} papers by domain")
     if skipped:
-        print(f"Skipped {skipped} already existing")
+        log(f"Skipped {skipped} already existing")
 
     return counts
 

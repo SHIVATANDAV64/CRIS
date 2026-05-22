@@ -9,16 +9,7 @@ import json
 import requests
 from typing import Optional, Generator
 
-from config.settings import (
-    MODAL_API_URL,
-    REASONING_MODEL_ID,
-    REASONING_MAX_TOKENS,
-    REASONING_TEMPERATURE,
-    REASONING_TOP_P,
-    BEDROCK_BASE_URL,
-    BEDROCK_MODEL,
-    BEDROCK_API_KEY,
-)
+from config.settings import get_config
 from config.prompts import CHAT_SYSTEM, CHAT_CONTEXT_TEMPLATE
 
 
@@ -36,24 +27,38 @@ class ModelClient:
         """
         self._model_id = model_id or "darwin-opus"
 
-        if self._model_id == "minimax-m2.5":
-            self._base_url = BEDROCK_BASE_URL.rstrip("/") + "/chat/completions"
-            self._model_name = BEDROCK_MODEL
-            self._use_bedrock = True
-            print(f"[model_client] Using Bedrock ({self._model_name})")
-        else:
-            self._base_url = MODAL_API_URL.rstrip("/")
-            self._model_name = REASONING_MODEL_ID
-            self._use_bedrock = False
-            print(f"[model_client] Connected to Modal ({self._model_name})")
-
     @property
     def model_id(self) -> str:
         return self._model_id
 
     @property
-    def model_name(self) -> str:
-        return self._model_name
+    def _use_bedrock(self) -> bool:
+        return self._model_id == "minimax-m2.5"
+
+    @property
+    def _base_url(self) -> str:
+        config = get_config()
+        if self._use_bedrock:
+            bedrock_config = config.get("bedrock", {})
+            base = bedrock_config.get("base_url", "").rstrip("/")
+            # Auto-detect if it's bedrock-runtime or bedrock-mantle
+            if "bedrock-runtime" in base:
+                if not base.endswith("/openai/v1"):
+                    base = base + "/openai/v1"
+            if not base.endswith("/chat/completions"):
+                return base + "/chat/completions"
+            return base
+        else:
+            model_config = config.get("model", {})
+            return model_config.get("modal_api_url", "").rstrip("/")
+
+    @property
+    def _model_name(self) -> str:
+        config = get_config()
+        if self._use_bedrock:
+            return config.get("bedrock", {}).get("model", "minimax.minimax-m2.5")
+        else:
+            return config.get("model", {}).get("modal_model", "")
 
     def generate(
         self,
@@ -148,22 +153,27 @@ class ModelClient:
     def _generate(self, system_prompt: str, user_message: str) -> dict:
         """Generate response via Modal or Bedrock endpoint."""
         try:
+            config = get_config()
+            model_config = config.get("model", {})
+            bedrock_config = config.get("bedrock", {})
+            api_key = bedrock_config.get("api_key", "")
+
             payload = {
                 "model": self._model_name if self._use_bedrock else None,
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_message},
                 ],
-                "max_tokens": REASONING_MAX_TOKENS,
-                "temperature": REASONING_TEMPERATURE,
-                "top_p": REASONING_TOP_P,
+                "max_tokens": model_config.get("max_tokens", 32768),
+                "temperature": model_config.get("temperature", 0.7),
+                "top_p": model_config.get("top_p", 0.95),
             }
             if not self._use_bedrock:
                 payload.pop("model")
 
             headers = {"Content-Type": "application/json"}
-            if self._use_bedrock and BEDROCK_API_KEY:
-                headers["Authorization"] = f"Bearer {BEDROCK_API_KEY}"
+            if self._use_bedrock and api_key:
+                headers["Authorization"] = f"Bearer {api_key}"
 
             response = requests.post(
                 self._base_url,
@@ -194,7 +204,7 @@ class ModelClient:
                 "response": f"Error generating response: {str(e)}",
                 "thinking": "",
                 "tokens_used": 0,
-                "mode": "modal" if not self._use_bedrock else "bedrock",
+                "mode": "bedrock" if self._use_bedrock else "modal",
             }
 
     def _generate_stream(self, system_prompt: str, user_message: str) -> Generator[tuple[str, str], None, None]:
@@ -203,23 +213,28 @@ class ModelClient:
         Yields (token_type, chunk) IMMEDIATELY as they arrive for true live streaming.
         """
         try:
+            config = get_config()
+            model_config = config.get("model", {})
+            bedrock_config = config.get("bedrock", {})
+            api_key = bedrock_config.get("api_key", "")
+
             payload = {
                 "model": self._model_name if self._use_bedrock else None,
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_message},
                 ],
-                "max_tokens": REASONING_MAX_TOKENS,
-                "temperature": REASONING_TEMPERATURE,
-                "top_p": REASONING_TOP_P,
+                "max_tokens": model_config.get("max_tokens", 32768),
+                "temperature": model_config.get("temperature", 0.7),
+                "top_p": model_config.get("top_p", 0.95),
                 "stream": True,
             }
             if not self._use_bedrock:
                 payload.pop("model")
 
             headers = {"Content-Type": "application/json", "Accept": "text/event-stream"}
-            if self._use_bedrock and BEDROCK_API_KEY:
-                headers["Authorization"] = f"Bearer {BEDROCK_API_KEY}"
+            if self._use_bedrock and api_key:
+                headers["Authorization"] = f"Bearer {api_key}"
 
             response = requests.post(
                 self._base_url,
@@ -249,12 +264,12 @@ class ModelClient:
                 if not line:
                     continue
 
-                line = line.decode("utf-8")
+                line_str = line.decode("utf-8").strip()
 
-                if line.startswith("data: "):
-                    data_str = line[6:]
+                if line_str.startswith("data:"):
+                    data_str = line_str[5:].strip()
 
-                    if data_str.strip() == "[DONE]":
+                    if data_str == "[DONE]":
                         break
 
                     try:
@@ -314,7 +329,7 @@ class ModelClient:
                                 clean_token = self._strip_tool_calls(chunk)
 
                             if clean_token:
-                                    yield "content", clean_token
+                                yield "content", clean_token
 
                     except json.JSONDecodeError:
                         continue
@@ -323,11 +338,6 @@ class ModelClient:
             provider = "Bedrock" if self._use_bedrock else "Modal"
             print(f"[model_client] {provider} streaming error: {e}")
             yield "content", f"\n\n[Error: {str(e)}]"
-
-        except Exception as e:
-            provider = "Bedrock" if self._use_bedrock else "Modal"
-            print(f"[model_client] {provider} streaming error: {e}")
-            yield f"\n\n[Error: {str(e)}]"
 
     def _parse_thinking(self, content: str) -> tuple[str, str]:
         """
@@ -347,7 +357,6 @@ class ModelClient:
             return thinking, self._clean_opening(answer)
 
         # Case 2: Only </think> present (model outputs thinking without opening tag)
-        # e.g., "The user wants...\n</think>\n# Answer..."
         close_idx = content.find('</think>')
         if close_idx != -1:
             thinking = content[:close_idx].strip()

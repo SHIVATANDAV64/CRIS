@@ -120,7 +120,7 @@ class WikiManager:
 
             sources.append({
                 "path": f,
-                "arxiv_id": fm.get("arxiv_id", f.stem),
+                "arxiv_id": str(fm.get("arxiv_id", f.stem)),
                 "title": fm.get("title", ""),
                 "contribution_type": fm.get("contribution_type", ""),
                 "domains": fm.get("domains", []),
@@ -262,7 +262,7 @@ class WikiManager:
 
         # 1. Sources (papers)
         for s in sources:
-            arxiv_id = s["arxiv_id"]
+            arxiv_id = str(s["arxiv_id"])
             node_registry[arxiv_id.lower()] = {
                 "id": arxiv_id,
                 "type": "paper",

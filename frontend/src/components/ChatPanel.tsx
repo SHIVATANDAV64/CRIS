@@ -264,7 +264,7 @@ export function ChatPanel({
 
               {msg.role === 'assistant' && msg.content ? (
                 <div className="message-text" dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
-              ) : msg.role === 'assistant' && !msg.content ? (
+              ) : msg.role === 'assistant' && !msg.content && !msg.thinking ? (
                 <div className="skeleton-message">
                   <div className="skeleton-avatar skeleton"></div>
                   <div className="skeleton-content">

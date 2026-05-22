@@ -94,6 +94,17 @@ def _run_ingestion_sync(req: IngestRequest):
 
         print(f"[BACKGROUND TASK] Starting arXiv ingestion for dates: {dates}")
         total_papers = 0
+
+        def log_callback(msg: str):
+            cleaned = msg.strip()
+            if cleaned:
+                # Support single-line or multi-line messages split by newline
+                for part in cleaned.split("\n"):
+                    part_cleaned = part.strip()
+                    if part_cleaned:
+                        _ingest_status["logs"].append(part_cleaned)
+                _save_status()
+
         for idx, date_str in enumerate(dates):
             if _ingest_cancelled:
                 _ingest_status["logs"].append("Ingestion task stopped by user.")
@@ -109,7 +120,8 @@ def _run_ingestion_sync(req: IngestRequest):
                 from_date=date_str,
                 categories=categories_list,
                 max_papers=req.max_papers,
-                is_cancelled=lambda: _ingest_cancelled
+                is_cancelled=lambda: _ingest_cancelled,
+                on_log=log_callback
             )
 
             if _ingest_cancelled:
@@ -121,9 +133,9 @@ def _run_ingestion_sync(req: IngestRequest):
                 _ingest_status["logs"].append(f"Saving {len(papers)} papers fetched for {date_str}...")
                 _save_status()
                 if req.domain_mode:
-                    save_papers_by_domain(papers)
+                    save_papers_by_domain(papers, on_log=log_callback)
                 else:
-                    save_papers(papers, date_str)
+                    save_papers(papers, date_str, on_log=log_callback)
                 total_papers += len(papers)
                 _ingest_status["papers_fetched"] = total_papers
             else:

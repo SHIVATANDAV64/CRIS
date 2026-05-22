@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 # ── Project Paths ──────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -110,6 +110,7 @@ def update_config(updates: dict) -> dict:
     _user_config = _deep_merge(_user_config, updates)
     _config = _deep_merge(_DEFAULTS, _user_config)
     _save_user_config(_user_config)
+    _sync_globals()
     return _config
 
 
@@ -119,7 +120,52 @@ def reset_config() -> dict:
         CONFIG_FILE.unlink()
     _user_config = {}
     _config = _DEFAULTS.copy()
+    _sync_globals()
     return _config
+
+
+def _sync_globals():
+    global BEDROCK_API_KEY, BEDROCK_REGION, BEDROCK_BASE_URL, BEDROCK_MODEL
+    global ARXIV_OAI_URL, ARXIV_RATE_LIMIT_SECONDS, ARXIV_CATEGORIES
+    global MODAL_API_URL, MODAL_MODEL, BASE_MODEL, COMPILER_MODEL
+    global COMPILER_MAX_TOKENS, COMPILER_TEMPERATURE
+    global REASONING_MODEL_ID, REASONING_MAX_TOKENS, REASONING_TEMPERATURE, REASONING_TOP_P
+    global SEARCH_RESULTS_LIMIT, CONTEXT_ENTRIES_LIMIT, SEARXNG_MODAL_URL
+    global SERVER_HOST, SERVER_PORT
+    global MAX_HISTORY_MESSAGES, MAX_THINKING_LENGTH
+
+    BEDROCK_API_KEY = _config["bedrock"]["api_key"]
+    BEDROCK_REGION = _config["bedrock"]["region"]
+    BEDROCK_BASE_URL = _config["bedrock"]["base_url"]
+    BEDROCK_MODEL = _config["bedrock"]["model"]
+
+    ARXIV_OAI_URL = _config["arxiv"]["oai_url"]
+    ARXIV_RATE_LIMIT_SECONDS = _config["arxiv"]["rate_limit_seconds"]
+    ARXIV_CATEGORIES = _config["arxiv"]["categories"]
+
+    MODAL_API_URL = _config["model"]["modal_api_url"]
+    MODAL_MODEL = _config["model"]["modal_model"]
+    BASE_MODEL = _config["model"].get("base_model", "Qwen/Qwen3.6-35B-A3B")
+
+    COMPILER_MODEL = BEDROCK_MODEL
+    COMPILER_MAX_TOKENS = _config["wiki"]["compiler_max_tokens"]
+    COMPILER_TEMPERATURE = _config["wiki"]["compiler_temperature"]
+
+    REASONING_MODEL_ID = _config["model"]["modal_model"]
+    REASONING_MAX_TOKENS = _config["model"]["max_tokens"]
+    REASONING_TEMPERATURE = _config["model"]["temperature"]
+    REASONING_TOP_P = _config["model"]["top_p"]
+
+    SEARCH_RESULTS_LIMIT = _config["search"]["results_limit"]
+    CONTEXT_ENTRIES_LIMIT = _config["search"]["context_entries_limit"]
+    SEARXNG_MODAL_URL = _config["search"]["searxng_url"]
+
+    SERVER_HOST = _config["server"]["host"]
+    SERVER_PORT = _config["server"]["port"]
+
+    MAX_HISTORY_MESSAGES = _config["chat"]["max_history_messages"]
+    MAX_THINKING_LENGTH = _config["chat"]["max_thinking_length"]
+
 
 
 # ── Backward Compatibility Exports ─────────────────────────────────────────
