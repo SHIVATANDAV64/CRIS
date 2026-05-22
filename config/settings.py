@@ -71,7 +71,7 @@ _DEFAULTS = {
 def _load_user_config() -> dict:
     if CONFIG_FILE.exists():
         try:
-            with open(CONFIG_FILE, "r") as f:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, IOError):
             pass
@@ -79,7 +79,7 @@ def _load_user_config() -> dict:
 
 
 def _save_user_config(config: dict):
-    with open(CONFIG_FILE, "w") as f:
+    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2)
 
 

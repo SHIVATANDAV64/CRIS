@@ -119,10 +119,13 @@ def main():
 
     if saved > 0 and args.rebuild_wiki:
         print("\nRebuilding wiki structure (concept pages, index)...")
+        import os
         import subprocess
         result = subprocess.run(
             [sys.executable, "scripts/build_wiki.py"],
-            capture_output=True, text=True
+            capture_output=True, text=True,
+            encoding="utf-8", errors="replace",
+            env={**os.environ, "PYTHONUTF8": "1"}
         )
         if result.returncode == 0:
             print(result.stdout)

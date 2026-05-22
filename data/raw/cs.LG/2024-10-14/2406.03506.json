@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2406.03506",
+  "title": "Fuzzy Convolution Neural Networks for Tabular Data Classification",
+  "abstract": "Recently, convolution neural networks (CNNs) have attracted a great deal of attention due to their remarkable performance in various domains, particularly in image and text classification tasks. However, their application to tabular data classification remains underexplored. There are many fields such as bioinformatics, finance, medicine where nonimage data are prevalent. Adaption of CNNs to classify nonimage data remains highly challenging. This paper investigates the efficacy of CNNs for tabular data classification, aiming to bridge the gap between traditional machine learning approaches and deep learning techniques. We propose a novel framework fuzzy convolution neural network (FCNN) tailored specifically for tabular data to capture local patterns within feature vectors. In our approach, we map feature values to fuzzy memberships. The fuzzy membership vectors are converted into images that are used to train the CNN model. The trained CNN model is used to classify unknown feature vectors. To validate our approach, we generated six complex noisy data sets. We used randomly selected seventy percent samples from each data set for training and thirty percent for testing. The data sets were also classified using the state-of-the-art machine learning algorithms such as the decision tree (DT), support vector machine (SVM), fuzzy neural network (FNN), Bayes classifier, and Random Forest (RF). Experimental results demonstrate that our proposed model can effectively learn meaningful representations from tabular data, achieving competitive or superior performance compared to existing methods. Overall, our finding suggests that the proposed FCNN model holds promise as a viable alternative for tabular data classification tasks, offering a fresh prospective and potentially unlocking new opportunities for leveraging deep learning in structured data analysis.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.LG cs.AI",
+  "created": "2024-10-14",
+  "fetched_at": "2026-05-22T14:49:36.052115"
+}

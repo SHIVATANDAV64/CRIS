@@ -171,7 +171,7 @@ class EmbeddingStore:
                 # Fallback: store in separate file
                 vector_file = DATA_DIR / "vectors" / f"{arxiv_id}.json"
                 vector_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(vector_file, "w") as f:
+                with open(vector_file, "w", encoding="utf-8") as f:
                     json.dump({"arxiv_id": arxiv_id, "embedding": embedding}, f)
 
             conn.commit()
@@ -198,7 +198,7 @@ class EmbeddingStore:
                 # Fallback from file
                 vector_file = DATA_DIR / "vectors" / f"{arxiv_id}.json"
                 if vector_file.exists():
-                    with open(vector_file) as f:
+                    with open(vector_file, encoding="utf-8") as f:
                         data = json.load(f)
                         return data.get("embedding")
             return None
@@ -255,7 +255,7 @@ class EmbeddingStore:
                 for arxiv_id in arxiv_ids:
                     vector_file = DATA_DIR / "vectors" / f"{arxiv_id}.json"
                     if vector_file.exists():
-                        with open(vector_file) as f:
+                        with open(vector_file, encoding="utf-8") as f:
                             data = json.load(f)
                             vec = np.array(data["embedding"])
                             vec_norm = np.linalg.norm(vec)

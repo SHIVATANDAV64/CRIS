@@ -40,7 +40,7 @@ def _load_status() -> dict:
     }
     if STATUS_FILE.exists():
         try:
-            with open(STATUS_FILE, "r") as f:
+            with open(STATUS_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 data["running"] = False  # If the server is restarting/starting, it cannot be running
                 if "progress_percent" not in data:
@@ -54,7 +54,7 @@ def _save_status():
     global _ingest_status
     try:
         STATUS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(STATUS_FILE, "w") as f:
+        with open(STATUS_FILE, "w", encoding="utf-8") as f:
             json.dump(_ingest_status, f, indent=2)
     except Exception as e:
         print(f"Error saving ingest status: {e}")
@@ -191,7 +191,9 @@ def _run_ingestion_sync(req: IngestRequest):
                     stderr=subprocess.STDOUT,
                     text=True,
                     bufsize=1,
-                    encoding="utf-8"
+                    encoding="utf-8",
+                    errors="replace",
+                    env={**os.environ, "PYTHONUTF8": "1"}
                 )
                 for line in iter(p_compile.stdout.readline, ""):
                     if _ingest_cancelled:
@@ -214,7 +216,9 @@ def _run_ingestion_sync(req: IngestRequest):
                         stderr=subprocess.STDOUT,
                         text=True,
                         bufsize=1,
-                        encoding="utf-8"
+                        encoding="utf-8",
+                        errors="replace",
+                        env={**os.environ, "PYTHONUTF8": "1"}
                     )
                     for line in iter(p_index.stdout.readline, ""):
                         if _ingest_cancelled:
@@ -363,7 +367,9 @@ def _run_compile_sync():
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
-            encoding="utf-8"
+            encoding="utf-8",
+            errors="replace",
+            env={**os.environ, "PYTHONUTF8": "1"}
         )
         for line in iter(p_compile.stdout.readline, ""):
             if _compile_cancelled:
@@ -402,7 +408,9 @@ def _run_index_sync(rebuild: bool):
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
-            encoding="utf-8"
+            encoding="utf-8",
+            errors="replace",
+            env={**os.environ, "PYTHONUTF8": "1"}
         )
         for line in iter(p_index.stdout.readline, ""):
             _index_status["logs"].append(line.strip())

@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2406.07125",
+  "title": "CARACAS: vehiCular ArchitectuRe for detAiled Can Attacks Simulation",
+  "abstract": "Modern vehicles are increasingly vulnerable to attacks that exploit network infrastructures, particularly the Controller Area Network (CAN) networks. To effectively counter such threats using contemporary tools like Intrusion Detection Systems (IDSs) based on data analysis and classification, large datasets of CAN messages become imperative. This paper delves into the feasibility of generating synthetic datasets by harnessing the modeling capabilities of simulation frameworks such as Simulink coupled with a robust representation of attack models to present CARACAS, a vehicular model, including component control via CAN messages and attack injection capabilities. CARACAS showcases the efficacy of this methodology, including a Battery Electric Vehicle (BEV) model, and focuses on attacks targeting torque control in two distinct scenarios.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CR cs.AI cs.LG",
+  "created": "2024-06-11",
+  "fetched_at": "2026-05-22T14:49:39.062359"
+}
