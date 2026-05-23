@@ -171,6 +171,8 @@ def save_papers(papers: list[dict], date_str: str, on_log: Optional[callable] = 
     Returns:
         Path to the date directory where papers were saved
     """
+    from core.domain_manager import find_paper_path_anywhere
+
     date_dir = RAW_DIR / date_str
     date_dir.mkdir(parents=True, exist_ok=True)
 
@@ -184,16 +186,22 @@ def save_papers(papers: list[dict], date_str: str, on_log: Optional[callable] = 
 
     for paper in papers:
         arxiv_id = paper["arxiv_id"]
-        safe_id = arxiv_id.replace("/", "_")
-        filepath = date_dir / f"{safe_id}.json"
-
-        if filepath.exists():
+        
+        # Prevent duplicates
+        if find_paper_path_anywhere(arxiv_id):
             skipped += 1
             continue
+
+        safe_id = arxiv_id.replace("/", "_")
+        filepath = date_dir / f"{safe_id}.json"
 
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(paper, f, indent=2, ensure_ascii=False)
         saved += 1
+
+        # Download PDF
+        from core.pdf_loader import download_pdf
+        download_pdf(arxiv_id, on_log=on_log)
 
     log(f"\nSaved {saved} papers to {date_dir}")
     if skipped:
@@ -215,7 +223,7 @@ def save_papers_by_domain(papers: list[dict], on_log: Optional[callable] = None)
     Returns:
         Dict mapping domain -> count of papers saved
     """
-    from core.domain_manager import save_paper_by_domain, _extract_domains
+    from core.domain_manager import save_paper_by_domain, _extract_domains, find_paper_path_anywhere
 
     counts = {}
     saved = 0
@@ -227,18 +235,24 @@ def save_papers_by_domain(papers: list[dict], on_log: Optional[callable] = None)
             on_log(msg)
 
     for paper in papers:
+        arxiv_id = paper["arxiv_id"]
+
+        # Prevent duplicates
+        if find_paper_path_anywhere(arxiv_id):
+            skipped += 1
+            continue
+
         domains = _extract_domains(paper)
         date_str = paper.get("created", "")[:10] or datetime.now().strftime("%Y-%m-%d")
 
         for domain in domains:
             filepath = save_paper_by_domain(paper, domain, date_str)
-            if filepath.exists():
-                is_new = filepath.stat().st_mtime > time.time() - 5
-                if is_new:
-                    counts[domain] = counts.get(domain, 0) + 1
-                    saved += 1
-                else:
-                    skipped += 1
+            counts[domain] = counts.get(domain, 0) + 1
+            saved += 1
+
+        # Download PDF
+        from core.pdf_loader import download_pdf
+        download_pdf(arxiv_id, on_log=on_log)
 
     log(f"\nSaved {saved} papers by domain")
     if skipped:

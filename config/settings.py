@@ -11,7 +11,7 @@ load_dotenv(override=True)
 
 # ── Project Paths ──────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
+DATA_DIR = Path(os.getenv("CRIS_DATA_DIR", str(BASE_DIR / "data")))
 RAW_DIR = DATA_DIR / "raw"
 WIKI_DIR = DATA_DIR / "wiki"
 SOURCES_DIR = WIKI_DIR / "sources"
@@ -20,8 +20,9 @@ ENTITIES_DIR = WIKI_DIR / "entities"
 DB_PATH = DATA_DIR / "cris.db"
 MODELS_DIR = BASE_DIR / "models"
 CONFIG_FILE = BASE_DIR / "config" / "user_config.json"
+TEMP_PDF_DIR = DATA_DIR / "temp_pdfs"
 
-for d in [RAW_DIR, WIKI_DIR, SOURCES_DIR, CONCEPTS_DIR, ENTITIES_DIR, MODELS_DIR]:
+for d in [RAW_DIR, WIKI_DIR, SOURCES_DIR, CONCEPTS_DIR, ENTITIES_DIR, MODELS_DIR, TEMP_PDF_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
 # ── Default Configuration ──────────────────────────────────────────────────
@@ -45,6 +46,7 @@ _DEFAULTS = {
         "max_tokens": 32768,
         "temperature": 0.7,
         "top_p": 0.95,
+        "modal_compiler_url": os.getenv("MODAL_COMPILER_URL", ""),
     },
     "chat": {
         "max_history_messages": 20,
@@ -133,6 +135,7 @@ def _sync_globals():
     global SEARCH_RESULTS_LIMIT, CONTEXT_ENTRIES_LIMIT, SEARXNG_MODAL_URL
     global SERVER_HOST, SERVER_PORT
     global MAX_HISTORY_MESSAGES, MAX_THINKING_LENGTH
+    global MODAL_COMPILER_URL
 
     BEDROCK_API_KEY = _config["bedrock"]["api_key"]
     BEDROCK_REGION = _config["bedrock"]["region"]
@@ -146,6 +149,7 @@ def _sync_globals():
     MODAL_API_URL = _config["model"]["modal_api_url"]
     MODAL_MODEL = _config["model"]["modal_model"]
     BASE_MODEL = _config["model"].get("base_model", "Qwen/Qwen3.6-35B-A3B")
+    MODAL_COMPILER_URL = _config["model"].get("modal_compiler_url", "")
 
     COMPILER_MODEL = BEDROCK_MODEL
     COMPILER_MAX_TOKENS = _config["wiki"]["compiler_max_tokens"]
@@ -182,6 +186,7 @@ ARXIV_CATEGORIES = _config["arxiv"]["categories"]
 MODAL_API_URL = _config["model"]["modal_api_url"]
 MODAL_MODEL = _config["model"]["modal_model"]
 BASE_MODEL = _config["model"].get("base_model", "Qwen/Qwen3.6-35B-A3B")
+MODAL_COMPILER_URL = _config["model"].get("modal_compiler_url", "")
 
 COMPILER_MODEL = BEDROCK_MODEL
 COMPILER_MAX_TOKENS = _config["wiki"]["compiler_max_tokens"]

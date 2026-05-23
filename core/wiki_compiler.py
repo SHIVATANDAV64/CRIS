@@ -47,19 +47,76 @@ class WikiCompiler:
         Returns:
             Wiki entry as markdown string, or None on failure
         """
+        # If MODAL_COMPILER_URL is set, offload to the Modal compiler endpoint
+        from config.settings import MODAL_COMPILER_URL
+        if MODAL_COMPILER_URL:
+            import httpx
+            url = f"{MODAL_COMPILER_URL.rstrip('/')}/compile"
+            payload = {
+                "arxiv_id": paper.get("arxiv_id", "unknown"),
+                "title": paper.get("title", ""),
+                "authors": [str(a) for a in paper.get("authors", []) if a],
+                "categories": paper.get("categories", ""),
+                "created": paper.get("created", ""),
+                "abstract": paper.get("abstract", "")
+            }
+            try:
+                console.print(f"    [cyan]Offloading compilation of {paper.get('arxiv_id')} to Modal compiler service...[/cyan]")
+                response = httpx.post(url, json=payload, timeout=600)
+                if response.status_code == 200:
+                    return response.json().get("wiki_content")
+                else:
+                    console.print(f"    [red]Modal compilation failed with status {response.status_code}: {response.text}[/red]")
+                    console.print("    [yellow]Falling back to local compilation...[/yellow]")
+            except Exception as e:
+                console.print(f"    [red]Error connecting to Modal compiler: {e}[/red]")
+                console.print("    [yellow]Falling back to local compilation...[/yellow]")
+
         authors_list = [a for a in paper.get("authors", []) if a]
         authors_str = ", ".join(authors_list[:5])
         if len(authors_list) > 5:
             authors_str += f" et al. ({len(paper['authors'])} total)"
 
-        user_message = WIKI_COMPILER_USER.format(
-            arxiv_id=paper.get("arxiv_id", "unknown"),
-            title=paper.get("title", ""),
-            authors=authors_str,
-            categories=paper.get("categories", ""),
-            published=paper.get("created", ""),
-            abstract=paper.get("abstract", ""),
-        )
+        arxiv_id = paper.get("arxiv_id", "unknown")
+        
+        # Try to load and extract PDF text
+        from core.pdf_loader import get_pdf_path, extract_text_from_pdf, download_pdf
+        pdf_path = get_pdf_path(arxiv_id)
+        
+        if not pdf_path.exists():
+            try:
+                download_pdf(arxiv_id)
+            except Exception as e:
+                console.print(f"    [yellow]Warning: PDF download failed for {arxiv_id}: {e}[/yellow]")
+        
+        full_text = ""
+        if pdf_path.exists():
+            try:
+                full_text = extract_text_from_pdf(pdf_path)
+            except Exception as e:
+                console.print(f"    [yellow]Warning: PDF text extraction failed for {arxiv_id}: {e}[/yellow]")
+        
+        if full_text:
+            # Format user prompt with full paper text
+            user_message = f"""Compile this paper into a wiki entry. You are provided with the full text of the paper. Use it to construct a highly detailed, accurate, and deep research wiki entry.
+
+**arXiv ID**: {arxiv_id}
+**Title**: {paper.get("title", "")}
+**Authors**: {authors_str}
+**Categories**: {paper.get("categories", "")}
+**Published**: {paper.get("created", "")}
+
+**Full Paper Content**:
+{full_text[:60000]}"""
+        else:
+            user_message = WIKI_COMPILER_USER.format(
+                arxiv_id=arxiv_id,
+                title=paper.get("title", ""),
+                authors=authors_str,
+                categories=paper.get("categories", ""),
+                published=paper.get("created", ""),
+                abstract=paper.get("abstract", ""),
+            )
 
         max_retries = 3
         base_delay = 5.0

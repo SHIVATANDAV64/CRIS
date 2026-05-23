@@ -47,15 +47,29 @@ def _get_domain_folder(domain: str) -> Path:
     return RAW_DIR / safe_domain
 
 
+def find_paper_path_anywhere(arxiv_id: str) -> Optional[Path]:
+    """Find the path of a paper by its arXiv ID across all storage structures."""
+    if not RAW_DIR.exists():
+        return None
+    safe_id = arxiv_id.replace("/", "_")
+    for path in RAW_DIR.rglob(f"{safe_id}.json"):
+        return path
+    return None
+
+
 def save_paper_by_domain(paper: dict, domain: str, date_str: Optional[str] = None) -> Path:
     if not date_str:
         date_str = paper.get("created", "")[:10] or datetime.now().strftime("%Y-%m-%d")
+
+    arxiv_id = paper["arxiv_id"]
+    existing_path = find_paper_path_anywhere(arxiv_id)
+    if existing_path:
+        return existing_path
 
     domain_folder = _get_domain_folder(domain)
     date_folder = domain_folder / date_str
     date_folder.mkdir(parents=True, exist_ok=True)
 
-    arxiv_id = paper["arxiv_id"]
     safe_id = arxiv_id.replace("/", "_")
     filepath = date_folder / f"{safe_id}.json"
 

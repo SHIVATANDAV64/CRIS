@@ -1,0 +1,11 @@
+{
+  "arxiv_id": "2404.05307",
+  "title": "4D Radar Semantic Segmentation of People in Field Conditions Using Temporal Multi-View Networks",
+  "abstract": "Reliable people detection is crucial for the safe autonomy of mobile robots and heavy vehicles, both on roads and in industrial settings like mining and construction. However, common sensors like cameras or lidars are prone to failure in adverse conditions such as dust, fog, or smoke, which limits their use in real-world robotic systems. Radar, on the other hand, delivers robust measurements in a wide range of environmental conditions. In particular, modern high-resolution 4D imaging radars provide 4D point clouds across range, azimuth, and elevation, as well as per-point Doppler velocity data, well suited for robot perception. We propose TMVA4D, a family of artificial neural network architectures based on CNN and ConvLSTM encoders that leverage the 4D radar modality for semantic segmentation. The architectures are trained to distinguish between background and person classes using a series of 2D projections of the 4D radar data, encompassing elevation, azimuth, range, and Doppler velocity dimensions. Evaluated across several operational sites, our models achieve promising performance (Dice 75.9%, IoU 61.2% for class person) even in low-visibility conditions. The data and code will be made publicly available upon publication.",
+  "authors": [
+    null
+  ],
+  "categories": "cs.CV cs.RO",
+  "created": "2026-05-21",
+  "fetched_at": "2026-05-23T10:16:25.068498"
+}
